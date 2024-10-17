@@ -14,6 +14,13 @@ class Piece extends Model {};
             primaryKey: true,
             autoIncrement: true 
         },
+        square_id:{
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'square',
+                key: 'id',
+            }
+        },
         name: {
             type: DataTypes.STRING,
             allowNull: false

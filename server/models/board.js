@@ -14,30 +14,30 @@ Board.init(
             primaryKey: true,
             autoIncrement: true 
         },
-        player1: {
-            type: DataTypes.INTEGER,
+        player_id: {
+            type: [DataTypes.INTEGER],
             references: {
               model: 'player',
               key: 'id',
               unique: false
             }
         },
-        player2: {
-            type: DataTypes.INTEGER,
-            references: {
-              model: 'player',
-              key: 'id',
-              unique: false
-            }
-        },
-        tiles: {
-            type: [DataTypes.INTEGER], //it is an array of squares
-            references: {
-              model: 'square',
-              key: 'id',
-              unique: false
-            }
-        }
+        // player_id: {
+        //     type: DataTypes.INTEGER,
+        //     references: {
+        //       model: 'player',
+        //       key: 'id',
+        //       unique: false
+        //     }
+        // },
+        // tiles: {
+        //     type: [DataTypes.INTEGER], //it is an array of squares
+        //     references: {
+        //       model: 'square',
+        //       key: 'id',
+        //       unique: false
+        //     }
+        // }
     },
     {
         sequelize,

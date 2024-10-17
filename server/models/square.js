@@ -14,15 +14,24 @@ class Square extends Model {};
             primaryKey: true,
             autoIncrement: true 
         },
-        content: {
+        // I belive content will have to manage itself
+        // content: {
+        //     type: DataTypes.INTEGER,
+        //     allowNull: true,
+        //     references: {
+        //       model: 'pieces',
+        //       key: 'id', //will likely be keyed off of name
+        //       unique: false
+        //     }
+        // },
+        board_id: {
             type: DataTypes.INTEGER,
-            allowNull: true,
             references: {
-              model: 'pieces',
-              key: 'id', //will likely be keyed off of name
-              unique: false
+                model: 'board',
+                key: 'id',
             }
         }
+
     },
     {
         sequelize,
