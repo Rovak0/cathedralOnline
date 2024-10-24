@@ -71,10 +71,10 @@ router.get('/board', async (res, req) => {
 router.get('/players', async (req, res) => {
     try{
         const userData = await Player.findAll();
-        req.status(200).json(userData);
+        res.status(200).json(userData);
     }
     catch (err) {
-        req.status(500).json(err);
+        res.status(500).json(err);
     };
 });
 
