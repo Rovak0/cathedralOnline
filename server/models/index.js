@@ -12,12 +12,16 @@ Board.hasMany(Square, {
     foreignKey: "board_id"
 });
 
-Player.hasOne(Board, {
-    foreignKey: "player_id"
+Player.hasMany(Board, {
+    foreignKey: "player_id1"
+});
+
+Player.hasMany(Board, {
+    foreignKey: "player_id2"
 });
 
 Square.hasOne(Piece, {
     foreignKey: "square_id"
-})
+});
 
 module.exports = {Board, Piece, Player, Square};

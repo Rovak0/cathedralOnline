@@ -27,27 +27,27 @@ class Piece extends Model {};
         },
         moveType: {
             type: [DataTypes.INTEGER],
-            allowNull: false
+            // allowNull: false
         },
         attack: {
             type: DataTypes.INTEGER,
-            allowNull: true
+            // allowNull: true
         },
         toHit: {
             type: DataTypes.INTEGER,
-            allowNull: true
+            // allowNull: true
         },
         health: {
             type: DataTypes.INTEGER,
-            allowNull: true
+            // allowNull: true
         },
         currentHealth : {
             type: DataTypes.INTEGER,
-            allowNull: true
+            // allowNull: true
         },
         ac: {
             type: DataTypes.INTEGER,
-            allowNull: true
+            // allowNull: true
         }
     },
     {

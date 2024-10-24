@@ -14,14 +14,28 @@ Board.init(
             primaryKey: true,
             autoIncrement: true 
         },
-        player_id: {
-            type: [DataTypes.INTEGER],
+        //I need to have 2 players for searching purposes
+        player_id1: {
+            type: DataTypes.INTEGER,
             references: {
               model: 'player',
               key: 'id',
               unique: false
             }
         },
+        player_id1: {
+          type: DataTypes.INTEGER,
+          references: {
+            model: 'player',
+            key: 'id',
+            unique: false
+          }
+        },
+        complete : {
+          type: DataTypes.BOOLEAN,
+          defaultValue : false
+          //this will be referenced to decide which board to show a user
+        }
         // player_id: {
         //     type: DataTypes.INTEGER,
         //     references: {

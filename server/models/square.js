@@ -14,6 +14,14 @@ class Square extends Model {};
             primaryKey: true,
             autoIncrement: true 
         },
+        postitionX: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        postitionY: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         // I belive content will have to manage itself
         // content: {
         //     type: DataTypes.INTEGER,
