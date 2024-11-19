@@ -14,12 +14,15 @@ class Piece extends Model {};
             primaryKey: true,
             autoIncrement: true 
         },
-        square_id:{
+        board_id:{
             type: DataTypes.INTEGER,
             references: {
-                model: 'square',
+                model: 'board',
                 key: 'id',
             }
+        },
+        location:{
+            type: [DataTypes.INTEGER]
         },
         name: {
             type: DataTypes.STRING,
@@ -28,6 +31,13 @@ class Piece extends Model {};
         moveType: {
             type: [DataTypes.INTEGER],
             // allowNull: false
+        },
+        color : {
+            type: DataTypes.STRING,
+        },
+        notMoved: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
         },
         attack: {
             type: DataTypes.INTEGER,

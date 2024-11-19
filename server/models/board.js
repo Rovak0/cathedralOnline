@@ -23,7 +23,7 @@ Board.init(
               unique: false
             }
         },
-        player_id1: {
+        player_id2: {
           type: DataTypes.INTEGER,
           references: {
             model: 'player',
