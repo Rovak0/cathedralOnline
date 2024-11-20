@@ -1126,6 +1126,6 @@ async function knightMove(boardId, knightId, submittedMove){
     }
 }
 
-export default {pawnMove, kingMove, rookMove, bishopMove, queenMove, knightMove};
+module.exports = {pawnMove, kingMove, rookMove, bishopMove, queenMove, knightMove};
 
 // take these functions to the routes, and read the piece id of the requested move to find out which to use
