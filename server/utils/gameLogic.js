@@ -31,38 +31,49 @@ async function pawnMove(boardId, pawnId, submittedMove){
         //pawns can move foward, attack diagonal, and move 2 tiles on the first move
         //break into 2 functions, 1 for black 1 for white
         const pawnColor = pawn.color;
-        const pawnLocation = pawn.location;
+        const pawnLocation = [pawn.locationX, pawn.locationY];
+        // console.log("In pawn move");
+        // console.log(pawnLocation);
+        // console.log(typeof(submittedMove));
+        // console.log(submittedMove);
+        // console.log([pawnLocation[0], pawnLocation[1]+1]);
+        // if(pawnLocation[0] == submittedMove[0] &&  (pawnLocation[1]+1) == submittedMove[1]){
+        //     console.log("if check");
+        // }
         if(pawnColor == "white"){
             //white starts on 2 and moves up
             //I will defy normal computer numbering and have the board use chess numbering
                 // 1a to 8h
             
                 //if the attempted move is moving 2 forward
-            if(submittedMove == [pawnLocation[0], pawnLocation[1]+2]){
+            if(pawnLocation[0] == submittedMove[0] && (pawnLocation[1]+2) == submittedMove[1]){
                 if(pawn.notMoved){
                     //pawn can move 2 forwards
                     //piece location is [x,y]
                         //x is normally letters and y is numbers
                     //go through each piece and check if the location is [x, y+2]
                     //return legality
-                    let legal = 1;
+                    // let legal = 1;
                     //is there a piece in that spot
                     for(piece of boardState){
-                        if(piece.location == [pawnLocation[0], pawnLocation[1]+2]){
+                        if([piece.locationX, piece.locationY] == [pawnLocation[0], pawnLocation[1]+2]){
                             //change legal to false
-                            legal = 0;
+                            return 0;
                         }
                     }
-                    return legal;
+                    // need to put in the change of notMoved
+                    return 1;
                 }
             }
 
             //move 1 foward
-            if(submittedMove == [pawnLocation[0], pawnLocation[1]+1]){
+            // if(submittedMove == [pawnLocation[0], pawnLocation[1]+1]){
+            if(pawnLocation[0] == submittedMove[0] && (pawnLocation[1]+1) == submittedMove[1]){
+                console.log("hello");
                 let legal = 1;
                 //is there a piece in that spot
                 for(piece of boardState){
-                    if(piece.location == [pawnLocation[0], pawnLocation[1]+1]){
+                    if([piece.locationX, piece.locationY] == [pawnLocation[0], pawnLocation[1]+1]){
                         //change legal to false
                         legal = 0;
                     }
@@ -73,7 +84,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
             //take diagonal
             //has a left and right
             //left first
-            if(submittedMove == [pawnLocation[0]-1, pawnLocation[1]+1]){
+            if((pawnLocation[0]-1) == submittedMove[0] && (pawnLocation[1]+1) == submittedMove[1]){
                 let legal = 1;
                 //check if it moved off the board
                 //0 is off the board
@@ -83,7 +94,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 }
                 //check if piece is there
                 for(piece of boardState){
-                    if(piece.location == [pawnLocation[0]-1, pawnLocation[1]+1]){
+                    if([piece.locationX, piece.locationY] == [pawnLocation[0]-1, pawnLocation[1]+1]){
                         //pawn is white, so check if piece is black
                         if(piece.color == "black"){
                             return legal;
@@ -102,7 +113,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
             }
 
             //right side
-            if(submittedMove == [pawnLocation[0]+1, pawnLocation[1]+1]){
+            if((pawnLocation[0]+1) == submittedMove[0] && (pawnLocation[1]+1) == submittedMove[1]){
                 let legal = 1;
                 //check if it moved off the board
                 //9 is off the board
@@ -112,7 +123,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 }
                 //check if piece is there
                 for(piece of boardState){
-                    if(piece.location == [pawnLocation[0]+1, pawnLocation[1]+1]){
+                    if([piece.locationX, piece.locationY] == [pawnLocation[0]+1, pawnLocation[1]+1]){
                         //pawn is white, so check if piece is black
                         //instead check if colors DON'T match
                         if(piece.color != pawnColor){
@@ -142,7 +153,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 // 1a to 8h
             
                 //if the attempted move is moving 2 forward
-            if(submittedMove == [pawnLocation[0], pawnLocation[1]-2]){
+            if(pawnLocation[0] == submittedMove[0] && (pawnLocation[1]-2) == submittedMove[1]){
                 if(pawn.notMoved){
                     //pawn can move 2 forwards
                     //piece location is [x,y]
@@ -152,7 +163,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
                     let legal = 1;
                     //is there a piece in that spot
                     for(piece of boardState){
-                        if(piece.location == [pawnLocation[0], pawnLocation[1]-2]){
+                        if([piece.locationX, piece.locationY] == [pawnLocation[0], pawnLocation[1]-2]){
                             //change legal to false
                             legal = 0;
                         }
@@ -162,11 +173,11 @@ async function pawnMove(boardId, pawnId, submittedMove){
             }
 
             //move 1 foward
-            if(submittedMove == [pawnLocation[0], pawnLocation[1]-1]){
+            if(pawnLocation[0] == submittedMove[0] && (pawnLocation[1]-1) == submittedMove[1]){
                 let legal = 1;
                 //is there a piece in that spot
                 for(piece of boardState){
-                    if(piece.location == [pawnLocation[0], pawnLocation[1]-1]){
+                    if([piece.locationX, piece.locationY] == [pawnLocation[0], pawnLocation[1]-1]){
                         //change legal to false
                         legal = 0;
                     }
@@ -177,7 +188,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
             //take diagonal
             //has a left and right
             //left first
-            if(submittedMove == [pawnLocation[0]-1, pawnLocation[1]-1]){
+            if((pawnLocation[0]-1) == submittedMove[0] && (pawnLocation[1]-1) == submittedMove[1]){
                 let legal = 1;
                 //check if it moved off the board
                 //0 is off the board
@@ -187,7 +198,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 }
                 //check if piece is there
                 for(piece of boardState){
-                    if(piece.location == [pawnLocation[0]-1, pawnLocation[1]-1]){
+                    if([piece.locationX, piece.locationY] == [pawnLocation[0]-1, pawnLocation[1]-1]){
                         //pawn is white, so check if piece is black
                         if(piece.color == "black"){
                             return legal;
@@ -206,7 +217,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
             }
 
             //right side
-            if(submittedMove == [pawnLocation[0]+1, pawnLocation[1]-1]){
+            if((pawnLocation[0]+1) == submittedMove[0] && (pawnLocation[1]-1) == submittedMove[1]){
                 let legal = 1;
                 //check if it moved off the board
                 //9 is off the board
@@ -216,7 +227,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 }
                 //check if piece is there
                 for(piece of boardState){
-                    if(piece.location == [pawnLocation[0]+1, pawnLocation[1]-1]){
+                    if([piece.locationX, piece.locationY] == [pawnLocation[0]+1, pawnLocation[1]-1]){
                         //pawn is white, so check if piece is black
                         if(piece.color != pawnColor){
                             return legal;
@@ -256,14 +267,14 @@ async function kingMove(boardId, kingId, submittedMove){
             }
         );
         const kingColor = king.color;
-        const kingLocation = king.location;
+        const kingLocation = [king.locationX, king.locationY];
         //for all 8 surrounding tiles, check the tile
         // could do top row, bottom row, middle row
         // or could just do all 8 individualy 
         //I'm doing each 1 alone
 
         //top left
-        if(submittedMove == [kingLocation[0]-1, kingLocation[1]+1]){
+        if((submittedMove[0] == kingLocation[0]-1) && (submittedMove[1] == kingLocation[1]+1)){
             //check if it falls off the board
             if((kingLocation[0]-1 <=0) || (kingLocation[1]+1 >=9)){
                 //0 is fail
@@ -271,7 +282,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if(piece.location == [kingLocation[0]-1, kingLocation[1]+1]){
+                if([piece.locationX, piece.locationY] == [kingLocation[0]-1, kingLocation[1]+1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -288,7 +299,8 @@ async function kingMove(boardId, kingId, submittedMove){
         }
 
         //top middle
-        if(submittedMove == [kingLocation[0], kingLocation[1]+1]){
+        // if(submittedMove == [kingLocation[0], kingLocation[1]+1]){
+        if((submittedMove[0] == kingLocation[0]) && (submittedMove[1] == kingLocation[1]+1)){
             //check if it falls off the board
             if((kingLocation[0]<=0) || (kingLocation[1]+1 >=9)){
                 //0 is fail
@@ -296,7 +308,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if(piece.location == [kingLocation[0], kingLocation[1]+1]){
+                if([piece.locationX, piece.locationY] == [kingLocation[0], kingLocation[1]+1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -313,7 +325,8 @@ async function kingMove(boardId, kingId, submittedMove){
         }
 
         //top right
-        if(submittedMove == [kingLocation[0]+1, kingLocation[1]+1]){
+        // if(submittedMove == [kingLocation[0]+1, kingLocation[1]+1]){
+        if((submittedMove[0] == kingLocation[0]+1) && (submittedMove[1] == kingLocation[1]+1)){
             //check if it falls off the board
             if((kingLocation[0]+1 >=9) || (kingLocation[1]+1 >=9)){
                 //0 is fail
@@ -321,7 +334,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if(piece.location == [kingLocation[0]+1, kingLocation[1]+1]){
+                if([piece.locationX, piece.locationY] == [kingLocation[0]+1, kingLocation[1]+1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -338,7 +351,8 @@ async function kingMove(boardId, kingId, submittedMove){
         }
 
         //middle left
-        if(submittedMove == [kingLocation[0]-1, kingLocation[1]]){
+        // if(submittedMove == [kingLocation[0]-1, kingLocation[1]]){
+        if((submittedMove[0] == kingLocation[0]-1) && (submittedMove[1] == kingLocation[1])){
             //check if it falls off the board
             if((kingLocation[0]-1 <=0)){
                 //0 is fail
@@ -346,7 +360,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if(piece.location == [kingLocation[0]-1, kingLocation[1]]){
+                if([piece.locationX, piece.locationY] == [kingLocation[0]-1, kingLocation[1]]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -363,7 +377,8 @@ async function kingMove(boardId, kingId, submittedMove){
         }
 
         //middle right
-        if(submittedMove == [kingLocation[0]+1, kingLocation[1]]){
+        // if(submittedMove == [kingLocation[0]+1, kingLocation[1]]){
+        if((submittedMove[0] == kingLocation[0]+1) && (submittedMove[1] == kingLocation[1])){
             //check if it falls off the board
             if((kingLocation[0]+1 >=9)){
                 //0 is fail
@@ -371,7 +386,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if(piece.location == [kingLocation[0]+1, kingLocation[1]]){
+                if([piece.locationX, piece.locationY] == [kingLocation[0]+1, kingLocation[1]]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -388,7 +403,8 @@ async function kingMove(boardId, kingId, submittedMove){
         }
 
         //bottom left
-        if(submittedMove == [kingLocation[0]-1, kingLocation[1]-1]){
+        // if(submittedMove == [kingLocation[0]-1, kingLocation[1]-1]){
+        if((submittedMove[0] == kingLocation[0]-1) && (submittedMove[1] == kingLocation[1]-1)){
             //check if it falls off the board
             if((kingLocation[0]-1 <=0) || (kingLocation[1]-1 <=0)){
                 //0 is fail
@@ -396,7 +412,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if(piece.location == [kingLocation[0]-1, kingLocation[1]-1]){
+                if([piece.locationX, piece.locationY] == [kingLocation[0]-1, kingLocation[1]-1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -413,7 +429,8 @@ async function kingMove(boardId, kingId, submittedMove){
         }
 
         // bottom middle
-        if(submittedMove == [kingLocation[0], kingLocation[1]-1]){
+        // if(submittedMove == [kingLocation[0], kingLocation[1]-1]){
+        if((submittedMove[0] == kingLocation[0]) && (submittedMove[1] == kingLocation[1]-1)){
             //check if it falls off the board
             if((kingLocation[1]-1 <=0)){
                 //0 is fail
@@ -421,7 +438,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if(piece.location == [kingLocation[0], kingLocation[1]-1]){
+                if([piece.locationX, piece.locationY] == [kingLocation[0], kingLocation[1]-1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -438,7 +455,8 @@ async function kingMove(boardId, kingId, submittedMove){
         }
 
         //bottom right
-        if(submittedMove == [kingLocation[0]+1, kingLocation[1]-1]){
+        // if(submittedMove == [kingLocation[0]+1, kingLocation[1]-1]){
+        if((submittedMove[0] == kingLocation[0]+1) && (submittedMove[1] == kingLocation[1]-1)){
             //check if it falls off the board
             if((kingLocation[0]+1 >=9) || (kingLocation[1]-1 <=0)){
                 //0 is fail
@@ -446,7 +464,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if(piece.location == [kingLocation[0]+1, kingLocation[1]-1]){
+                if([piece.locationX, piece.locationY] == [kingLocation[0]+1, kingLocation[1]-1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -480,7 +498,7 @@ async function rookMove(boardId, rookId, submittedMove){
         );
 
         const rookColor = rook.color;
-        const rookLocation = rook.location;
+        const rookLocation = [rook.locationX, rook.locationY];
 
         //needs a while loop
         //if the rook is moving right
@@ -497,7 +515,7 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if(piece.location == [rookLocation[0]+counter, rookLocation[1]]){
+                    if([piece.locationX, piece.locationY] == [rookLocation[0]+counter, rookLocation[1]]){
                         //if colision, check if it is the destination
                         if([rookLocation[0]+counter, rookLocation[1]] == submittedMove){
                             if(piece.color != rookColor){
@@ -518,7 +536,8 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
-                if([rookLocation[0]+counter, rookLocation[1]] == submittedMove){
+                // if([rookLocation[0]+counter, rookLocation[1]] == submittedMove){
+                if((rookLocation[0]+counter == submittedMove[0]) && (rookLocation[1] == submittedMove[1])){
                     run = false;
                     return 1;
                 }
@@ -541,7 +560,7 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if(piece.location == [rookLocation[0]-counter, rookLocation[1]]){
+                    if([piece.locationX, piece.locationY] == [rookLocation[0]-counter, rookLocation[1]]){
                         //if colision, check if it is the destination
                         if([rookLocation[0]-counter, rookLocation[1]] == submittedMove){
                             if(piece.color != rookColor){
@@ -562,7 +581,8 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
-                if([rookLocation[0]-counter, rookLocation[1]] == submittedMove){
+                // if([rookLocation[0]-counter, rookLocation[1]] == submittedMove){
+                if((rookLocation[0]-counter == submittedMove[0]) && (rookLocation[1] == submittedMove[1])){
                     run = false;
                     return 1;
                 }
@@ -584,7 +604,7 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if(piece.location == [rookLocation[0], rookLocation[1]-counter]){
+                    if([piece.locationX, piece.locationY] == [rookLocation[0], rookLocation[1]-counter]){
                         //if colision, check if it is the destination
                         if([rookLocation[0], rookLocation[1]-counter] == submittedMove){
                             if(piece.color != rookColor){
@@ -605,7 +625,8 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
-                if([rookLocation[0], rookLocation[1]-counter] == submittedMove){
+                // if([rookLocation[0], rookLocation[1]-counter] == submittedMove){
+                if((rookLocation[0] == submittedMove[0]) && (rookLocation[1]-counter == submittedMove[1])){
                     run = false;
                     return 1;
                 }
@@ -629,7 +650,7 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if(piece.location == [rookLocation[0], rookLocation[1]+counter]){
+                    if([piece.locationX, piece.locationY] == [rookLocation[0], rookLocation[1]+counter]){
                         //if colision, check if it is the destination
                         if([rookLocation[0], rookLocation[1]+counter] == submittedMove){
                             if(piece.color != rookColor){
@@ -650,7 +671,8 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
-                if([rookLocation[0], rookLocation[1]+counter] == submittedMove){
+                // if([rookLocation[0], rookLocation[1]+counter] == submittedMove){
+                if((rookLocation[0] == submittedMove[0]) && (rookLocation[1]+counter == submittedMove[1])){
                     run = false;
                     return 1;
                 }
@@ -677,11 +699,12 @@ async function bishopMove(boardId, bishopId, submittedMove){
         );
 
         const bishopColor = bishop.color;
-        const bishopLocation = bishop.location;
+        const bishopLocation = [bishop.locationX, bishop.locationY];
 
         //needs a while loop
         //if the bishop is moving right and up
-        if((submittedMove[0] > bishopLocation[0]) & (submittedMove[1] > bishopLocation[1])){
+        // if((submittedMove[0] > bishopLocation[0]) && (submittedMove[1] > bishopLocation[1])){
+        if((submittedMove[0] > bishopLocation[0]) && (submittedMove[1] > bishopLocation[1])){
             let run = true;
             //counter tracks how far the bishop has moved
             let counter = 0;
@@ -694,7 +717,7 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if(piece.location == [bishopLocation[0]+counter, bishopLocation[1]+counter]){
+                    if([piece.locationX, piece.locationY] == [bishopLocation[0]+counter, bishopLocation[1]+counter]){
                         //if colision, check if it is the destination
                         if([bishopLocation[0]+counter, bishopLocation[1]+counter] == submittedMove){
                             if(piece.color != bishopColor){
@@ -715,7 +738,8 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
-                if([bishopLocation[0]+counter, bishopLocation[1]+counter] == submittedMove){
+                // if([bishopLocation[0]+counter, bishopLocation[1]+counter] == submittedMove){
+                if((bishopLocation[0]+counter == submittedMove[0]) && (bishopLocation[1]+counter == submittedMove[1])){
                     run = false;
                     return 1;
                 }
@@ -726,7 +750,7 @@ async function bishopMove(boardId, bishopId, submittedMove){
         //left and up
         counter = 0;
         run = true;
-        if((submittedMove[0] < bishopLocation[0]) & (bishopLocation[1]+counter > 8)){
+        if((submittedMove[0] < bishopLocation[0]) && (bishopLocation[1]+counter > 8)){
             let run = true;
             //counter tracks how far the bishop has moved
             let counter = 0;
@@ -739,7 +763,7 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if(piece.location == [bishopLocation[0]-counter, bishopLocation[1]+counter]){
+                    if([piece.locationX, piece.locationY] == [bishopLocation[0]-counter, bishopLocation[1]+counter]){
                         //if colision, check if it is the destination
                         if([bishopLocation[0]-counter, bishopLocation[1]+counter] == submittedMove){
                             if(piece.color != bishopColor){
@@ -760,7 +784,8 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
-                if([bishopLocation[0]-counter, bishopLocation[1]+counter] == submittedMove){
+                // if([bishopLocation[0]-counter, bishopLocation[1]+counter] == submittedMove){
+                if((bishopLocation[0]-counter == submittedMove[0]) && (bishopLocation[1]+counter == submittedMove[1])){
                     run = false;
                     return 1;
                 }
@@ -770,22 +795,22 @@ async function bishopMove(boardId, bishopId, submittedMove){
         //down and left
         counter = 0;
         run = true;
-        if((submittedMove[0] < bishopLocation[0]) & (submittedMove[1] < bishopLocation[1])){
+        if((submittedMove[0] < bishopLocation[0]) && (submittedMove[1] < bishopLocation[1])){
             let run = true;
             //counter tracks how far the bishop has moved
             let counter = 0;
             while(run){
                 //increment the counter and break before checking if there is a piece
                 counter++;
-                if((bishopLocation[0]+counter > 8) || (bishopLocation[1]-counter <= 0)){
+                if((bishopLocation[0]-counter <= 0) || (bishopLocation[1]-counter <= 0)){
                     run = false;
                     return 0;
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if(piece.location == [bishopLocation[0]+counter, bishopLocation[1]-counter]){
+                    if([piece.locationX, piece.locationY] == [bishopLocation[0]-counter, bishopLocation[1]-counter]){
                         //if colision, check if it is the destination
-                        if([bishopLocation[0]+counter, bishopLocation[1]-counter] == submittedMove){
+                        if([bishopLocation[0]-counter, bishopLocation[1]-counter] == submittedMove){
                             if(piece.color != bishopColor){
                                 //return takable piece
                                 run = false;
@@ -804,7 +829,8 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
-                if([bishopLocation[0]+counter, bishopLocation[1]-counter] == submittedMove){
+                // if([bishopLocation[0]+counter, bishopLocation[1]-counter] == submittedMove){
+                if((bishopLocation[0]-counter == submittedMove[0]) && (bishopLocation[1]-counter == submittedMove[1])){
                     run = false;
                     return 1;
                 }
@@ -816,7 +842,7 @@ async function bishopMove(boardId, bishopId, submittedMove){
         //right and down
         counter = 0;
         run = true;
-        if((submittedMove[0] > bishopLocation[0]) & submittedMove[1] < bishopLocation[1]){
+        if((submittedMove[0] > bishopLocation[0]) && submittedMove[1] < bishopLocation[1]){
             let run = true;
             //counter tracks how far the bishop has moved
             let counter = 0;
@@ -829,7 +855,7 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if(piece.location == [bishopLocation[0]+counter, bishopLocation[1]-counter]){
+                    if([piece.locationX, piece.locationY] == [bishopLocation[0]+counter, bishopLocation[1]-counter]){
                         //if colision, check if it is the destination
                         if([bishopLocation[0]+counter, bishopLocation[1]-counter] == submittedMove){
                             if(piece.color != bishopColor){
@@ -850,7 +876,8 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
-                if([bishopLocation[0]+counter, bishopLocation[1]-counter] == submittedMove){
+                // if([bishopLocation[0]+counter, bishopLocation[1]-counter] == submittedMove){
+                if((bishopLocation[0]+counter == submittedMove[0]) && (bishopLocation[1]-counter == submittedMove[1])){
                     run = false;
                     return 1;
                 }
@@ -895,11 +922,12 @@ async function knightMove(boardId, knightId, submittedMove){
             }
         );
         const knightColor = knight.color;
-        const knightLocation = knight.location;
+        const knightLocation = [knight.locationX, knight.locationY];
 
         //going clockwise, starting at 12:00
         //top right, left
-        if([knightLocation[0] + 1, knightLocation[1] + 2] == submittedMove){
+        // if([knightLocation[0] + 1, knightLocation[1] + 2] == submittedMove){
+        if((knightLocation[0] + 1 == submittedMove[0]) && (knightLocation[1] + 2 == submittedMove[1])){
             //fall off the board
             if((knightLocation[0] + 1) > 8 || (knightLocation[1] + 2) > 8){
                 return 0;
@@ -907,7 +935,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if(piece.location == submittedMove){
+                if([piece.locationX, piece.locationY] == submittedMove){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -923,7 +951,8 @@ async function knightMove(boardId, knightId, submittedMove){
         }
 
         //top right, right
-        if([knightLocation[0] + 2, knightLocation[1] + 1] == submittedMove){
+        // if([knightLocation[0] + 2, knightLocation[1] + 1] == submittedMove){
+        if((knightLocation[0] + 2 == submittedMove[0]) && (knightLocation[1] + 1 == submittedMove[1])){
             //fall off the board
             if((knightLocation[0] + 2) > 8 || (knightLocation[1] + 1) > 8){
                 return 0;
@@ -931,7 +960,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if(piece.location == submittedMove){
+                if([piece.locationX, piece.locationY] == submittedMove){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -947,7 +976,8 @@ async function knightMove(boardId, knightId, submittedMove){
         }
 
         //bottom right, right
-        if([knightLocation[0] + 2, knightLocation[1] -1] == submittedMove){
+        if((knightLocation[0] + 2 == submittedMove[0]) && (knightLocation[1]-+ 2 == submittedMove[1])){
+        // if([knightLocation[0] + 2, knightLocation[1] -1] == submittedMove){
             //fall off the board
             if((knightLocation[0] + 2) > 8 || (knightLocation[1] -1) <=0){
                 return 0;
@@ -955,7 +985,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if(piece.location == submittedMove){
+                if([piece.locationX, piece.locationY] == submittedMove){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -971,7 +1001,8 @@ async function knightMove(boardId, knightId, submittedMove){
         }
 
         //bottom right, left
-        if([knightLocation[0] + 1, knightLocation[1] -2] == submittedMove){
+        // if([knightLocation[0] + 1, knightLocation[1] -2] == submittedMove){
+        if((knightLocation[0] + 1 == submittedMove[0]) && (knightLocation[1] - 2 == submittedMove[1])){
             //fall off the board
             if((knightLocation[0] + 1) > 8 || (knightLocation[1] -2) <=0){
                 return 0;
@@ -979,7 +1010,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if(piece.location == submittedMove){
+                if([piece.locationX, piece.locationY] == submittedMove){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -996,7 +1027,8 @@ async function knightMove(boardId, knightId, submittedMove){
 
 
         //bottom right, right
-        if([knightLocation[0] + 2, knightLocation[1] -1] == submittedMove){
+        // if([knightLocation[0] + 2, knightLocation[1] -1] == submittedMove){
+        if((knightLocation[0] + 2 == submittedMove[0]) && (knightLocation[1] - 1 == submittedMove[1])){
             //fall off the board
             if((knightLocation[0] + 2) > 8 || (knightLocation[1] -1) <=0){
                 return 0;
@@ -1004,7 +1036,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if(piece.location == submittedMove){
+                if([piece.locationX, piece.locationY] == submittedMove){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1020,7 +1052,8 @@ async function knightMove(boardId, knightId, submittedMove){
         }
 
         //bottom left, left
-        if([knightLocation[0] - 2, knightLocation[1] -1] == submittedMove){
+        if((knightLocation[0] - 2 == submittedMove[0]) && (knightLocation[1] - 1 == submittedMove[1])){
+        // if([knightLocation[0] - 2, knightLocation[1] -1] == submittedMove){
             //fall off the board
             if((knightLocation[0] - 2) <=0 || (knightLocation[1] -1) <=0){
                 return 0;
@@ -1028,7 +1061,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if(piece.location == submittedMove){
+                if([piece.locationX, piece.locationY] == submittedMove){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1044,7 +1077,8 @@ async function knightMove(boardId, knightId, submittedMove){
         }
 
         //bottom left, right
-        if([knightLocation[0] - 1, knightLocation[1] -2] == submittedMove){
+        // if([knightLocation[0] - 1, knightLocation[1] -2] == submittedMove){
+        if((knightLocation[0] - 1 == submittedMove[0]) && (knightLocation[1] - 2 == submittedMove[1])){
             //fall off the board
             if((knightLocation[0] - 1) <=0 || (knightLocation[1] -2) <=0){
                 return 0;
@@ -1052,7 +1086,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if(piece.location == submittedMove){
+                if([piece.locationX, piece.locationY] == submittedMove){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1068,7 +1102,8 @@ async function knightMove(boardId, knightId, submittedMove){
         }
 
         //top left, left
-        if([knightLocation[0] - 2, knightLocation[1] +1] == submittedMove){
+        // if([knightLocation[0] - 2, knightLocation[1] +1] == submittedMove){
+        if((knightLocation[0] - 2 == submittedMove[0]) && (knightLocation[1] + 1 == submittedMove[1])){
             //fall off the board
             if((knightLocation[0] - 2) <=0 || (knightLocation[1] +1) > 8){
                 return 0;
@@ -1076,7 +1111,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if(piece.location == submittedMove){
+                if([piece.locationX, piece.locationY] == submittedMove){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1092,7 +1127,8 @@ async function knightMove(boardId, knightId, submittedMove){
         }
 
         //top left, right
-        if([knightLocation[0] -1, knightLocation[1] +2] == submittedMove){
+        // if([knightLocation[0] -1, knightLocation[1] +2] == submittedMove){
+        if((knightLocation[0] - 1 == submittedMove[0]) && (knightLocation[1] + 2 == submittedMove[1])){
             //fall off the board
             if((knightLocation[0] - 1) <=0 || (knightLocation[1] +2) > 8){
                 return 0;
@@ -1100,7 +1136,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if(piece.location == submittedMove){
+                if([piece.locationX, piece.locationY] == submittedMove){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;

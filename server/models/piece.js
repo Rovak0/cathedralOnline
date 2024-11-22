@@ -21,15 +21,18 @@ class Piece extends Model {};
                 key: 'id',
             }
         },
-        location:{
-            type: [DataTypes.INTEGER]
+        locationX:{
+            type: DataTypes.INTEGER
+        },
+        locationY:{
+            type: DataTypes.INTEGER
         },
         name: {
             type: DataTypes.STRING,
             allowNull: false
         },
         moveType: {
-            type: [DataTypes.INTEGER],
+            type: DataTypes.STRING,
             // allowNull: false
         },
         color : {

@@ -7,27 +7,30 @@ router.post('/move', async (req, res) => {
     //this will recieve a boardId, a pieceId, and a destination
     try{
         const pieceData = await Piece.findByPk(req.body.pieceId); 
+        console.log(pieceData.dataValues.moveType);
         // the move type of the piece is what I'm after
         let moveResult;
         //run through a switch case and return legality
-        switch(pieceData.moveType){
+        switch(pieceData.dataValues.moveType){
             case "pawn":
-                moveResult = pawnMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                console.log("pawn stuff");
+                moveResult = await pawnMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                console.log(moveResult);
                 break;
             case "rook":
-                moveResult = rookMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await rookMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
                 break;
             case "knight":
-                moveResult = knightMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await knightMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
                 break;            
             case "bishop":
-                moveResult = bishopMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await bishopMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
                 break;
             case "queen":
-                moveResult = queenMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await queenMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
                 break;
             case "king":
-                moveResult = kingMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await kingMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
                 break;
             default:
                 moveResult = -1;
@@ -54,6 +57,10 @@ router.post('/move', async (req, res) => {
             res.status(200).json("Piece taken");
             return;
         }
+
+        console.log(moveResult);
+        // if it completely misses
+        res.status(500).json("complete miss");
 
     }
     catch(err){

@@ -12,7 +12,8 @@ async function normalBoard(boardId){
     for(i=1; i <= 8; i++){
         const pawn = await Piece.create({
             board_id: boardId,
-            location: [i, 2],
+            locationX: i,
+            locationY: 2,
             name: "pawn",
             moveType: "pawn",
             color : "white"
@@ -23,7 +24,8 @@ async function normalBoard(boardId){
     for(i=1; i <= 8; i++){
         const pawn = await Piece.create({
             board_id: boardId,
-            location: [i, 2],
+            locationX: i,
+            locationY: 7,
             name: "pawn",
             moveType: "pawn",
             color : "black"
@@ -34,14 +36,16 @@ async function normalBoard(boardId){
     //rooks
     const whiteRook1 = await Piece.create({
         board_id: boardId,
-        location: [1, 1],
+        locationX: 1,
+        locationY: 1,
         name: "rook",
         moveType: "rook",
         color : "white"
     });
     const whiteRook2 = await Piece.create({
         board_id: boardId,
-        location: [8, 1],
+        locationX: 8,
+        locationY: 1,
         name: "rook",
         moveType: "rook",
         color : "white"
@@ -49,14 +53,16 @@ async function normalBoard(boardId){
     //black side
     const blackRook1 = await Piece.create({
         board_id: boardId,
-        location: [1, 8],
+        locationX: 1,
+        locationY: 8,
         name: "rook",
         moveType: "rook",
         color : "black"
     });
     const blackRook2 = await Piece.create({
         board_id: boardId,
-        location: [8, 8],
+        locationX: 8,
+        locationY: 8,
         name: "rook",
         moveType: "rook",
         color : "black"
@@ -69,14 +75,16 @@ async function normalBoard(boardId){
     // knights
     const whiteKnight1 = await Piece.create({
         board_id: boardId,
-        location: [2, 1],
+        locationX: 2,
+        locationY: 1,
         name: "knight",
         moveType: "knight",
         color : "white"
     });
     const whiteKnight2 = await Piece.create({
         board_id: boardId,
-        location: [7, 1],
+        locationX: 7,
+        locationY: 1,
         name: "knight",
         moveType: "knight",
         color : "white"
@@ -84,14 +92,16 @@ async function normalBoard(boardId){
     //black side
     const blackKnight1 = await Piece.create({
         board_id: boardId,
-        location: [2, 8],
+        locationX: 2,
+        locationY: 8,
         name: "knight",
         moveType: "knight",
         color : "black"
     });
     const blackKnight2 = await Piece.create({
         board_id: boardId,
-        location: [7, 8],
+        locationX: 7,
+        locationY: 8,
         name: "knight",
         moveType: "knight",
         color : "black"
@@ -105,14 +115,16 @@ async function normalBoard(boardId){
     //bishops
     const whiteBishop1 = await Piece.create({
         board_id: boardId,
-        location: [3, 1],
+        locationX: 3,
+        locationY: 1,
         name: "bishop",
         moveType: "bishop",
         color : "white"
     });
     const whiteBishop2 = await Piece.create({
         board_id: boardId,
-        location: [6, 1],
+        locationX: 6,
+        locationY: 1,
         name: "bishop",
         moveType: "bishop",
         color : "white"
@@ -120,14 +132,16 @@ async function normalBoard(boardId){
     //black side
     const blackBishop1 = await Piece.create({
         board_id: boardId,
-        location: [3, 8],
+        locationX: 3,
+        locationY: 8,
         name: "bishop",
         moveType: "bishop",
         color : "black"
     });
     const blackBishop2 = await Piece.create({
         board_id: boardId,
-        location: [6, 8],
+        locationX: 6,
+        locationY: 8,
         name: "bishop",
         moveType: "bishop",
         color : "black"
@@ -140,14 +154,16 @@ async function normalBoard(boardId){
     // queens
     const whiteQueen = await Piece.create({
         board_id: boardId,
-        location: [4, 1],
+        locationX: 4,
+        locationY: 1,
         name: "queen",
         moveType: "queen",
         color : "white"
     });
     const blackQueen = await Piece.create({
         board_id: boardId,
-        location: [4, 8],
+        locationX: 4,
+        locationY: 8,
         name: "queen",
         moveType: "queen",
         color : "black"
@@ -158,14 +174,16 @@ async function normalBoard(boardId){
     // kings
     const whiteKing = await Piece.create({
         board_id: boardId,
-        location: [5, 1],
+        locationX: 1,
+        locationY: 8,
         name: "king",
         moveType: "king",
         color : "white"
     });
     const blackKing = await Piece.create({
         board_id: boardId,
-        location: [5, 8],
+        locationX: 5,
+        locationY: 8,
         name: "king",
         moveType: "king",
         color : "black"
