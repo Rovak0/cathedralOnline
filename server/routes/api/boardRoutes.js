@@ -4,7 +4,7 @@ const {Board, Piece, Player} = require("../../models");
 const {normalBoard} = require('../../utils/openingBoards');
 
 //get board
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
     //the req.body.user will fetch the board based off of user id
     const user = req.body.user;
     if(!user){

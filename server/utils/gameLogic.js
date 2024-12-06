@@ -142,8 +142,8 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 return legal;
             }
 
-
-            
+            //if we are here, then it was not a legal move
+            return 0;            
         }
 
         //black side
@@ -245,7 +245,8 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 return legal;
             }
 
-
+            //if we are here, then it was not a legal move
+            return 0;   
             
         }
     }
@@ -479,6 +480,9 @@ async function kingMove(boardId, kingId, submittedMove){
             //checked if legal, checked if collides, must be empty legal tiles
             return 1;
         }
+
+        //if we are here, after all possible legal moves, then it was not a legal move
+        return 0;   
     }
     catch(err){
         return -1;
@@ -678,6 +682,9 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
             }
         }
+
+        //if we are here, after all possible legal moves, then it was not a legal move
+        return 0;  
 
     }
     catch(err){
@@ -884,6 +891,9 @@ async function bishopMove(boardId, bishopId, submittedMove){
             }
         }
 
+        //if we are here, after all possible legal moves, then it was not a legal move
+        return 0;  
+
     }
     catch(err){
         console.log(err);
@@ -935,7 +945,8 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == submittedMove){
+                // piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -960,7 +971,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == submittedMove){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -985,7 +996,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == submittedMove){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1010,7 +1021,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == submittedMove){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1036,7 +1047,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == submittedMove){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1061,7 +1072,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == submittedMove){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1086,7 +1097,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == submittedMove){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1111,7 +1122,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == submittedMove){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
@@ -1136,7 +1147,7 @@ async function knightMove(boardId, knightId, submittedMove){
             //check if the tile is occupied
             //submitted move is the same as the knight's position
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == submittedMove){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     //legal take
                     if(piece.color != knightColor){
                         return 2;
