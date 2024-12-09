@@ -64,7 +64,8 @@ submitButton.addEventListener('click', async function() {
     // then wait for a response
     console.log("submit");
     const myRequest = PORT + "/api/board";
-    const boardRequest = await fetch(myRequest, {
+    // const boardRequest = await fetch(myRequest, {
+    const boardRequest = await fetch("/routes/api/pieceRoutes/move", {
         method: 'POST',
         body: JSON.stringify({"user": 1}),
         headers: { 'Content-Type': 'application/json' }

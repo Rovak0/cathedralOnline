@@ -4,14 +4,43 @@
     "description": "",
     "main": "server/server.js",
     "scripts": {
-      "start": "node server/server.js --ignore client",
+      "start": "node server.js --ignore client",
       "develop": "concurrently \"cd server && npm run start\" \"cd client && npm run dev\"",
-      "install": "cd server && npm i && cd ../client && npm i"
+      "dev-client": "webpack-dev-server",
+      "build-client": "webpack --mode production",
+      "start-client": "webpack --watch",
+      "server-start": "node server.js",
+      "start-sever": "node server.js"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
+    "dependencies": {
+      "connect-session-sequelize": "^7.1.7",
+      "dotenv": "^8.2.0",
+      "express": "^4.17.1",
+      "express-session": "^1.17.1",
+      "pg": "^8.11.3",
+      "sequelize": "^6.33.0"
+    },
     "devDependencies": {
-      "concurrently": "^8.2.0"
+      "concurrently": "^8.2.0",
+      "@babel/core": "^7.15.0",
+      "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+      "@babel/plugin-transform-runtime": "^7.15.0",
+      "@babel/preset-env": "^7.15.0",
+      "@babel/runtime": "^7.15.3",
+      "babel-loader": "^8.2.2",
+      "css-loader": "^6.2.0",
+      "dotenv": "^8.2.0",
+      "html-webpack-plugin": "^5.3.2",
+      "http-server": "^0.11.1",
+      "style-loader": "^3.2.1",
+      "webpack": "^5.51.1",
+      "webpack-cli": "^4.8.0",
+      "webpack-dev-server": "^4.0.0",
+      "webpack-pwa-manifest": "^4.3.0",
+      "workbox-webpack-plugin": "^6.2.4",
+      "nodemon": "^2.0.4"
     }
   }
