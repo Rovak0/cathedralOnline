@@ -19,7 +19,10 @@ async function pawnMove(boardId, pawnId, submittedMove){
     try{
         //technically don't need to find the board because I have the id and the pieces have the board id
         const board = await Board.findByPk(boardId);
+        
+        //the piece must be found with a search
         const pawn = await Piece.findByPk(pawnId);
+
         //the board can be used to get all pieces on the board
         const boardState = await Piece.findAll(
             {where: 

@@ -174,8 +174,8 @@ async function normalBoard(boardId){
     // kings
     const whiteKing = await Piece.create({
         board_id: boardId,
-        locationX: 1,
-        locationY: 8,
+        locationX: 5,
+        locationY: 1,
         name: "king",
         moveType: "king",
         color : "white"

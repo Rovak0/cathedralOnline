@@ -41,12 +41,12 @@ router.post('/', async (req, res) => {
         // console.log("Before if blocks");
         // console.log(boardData1);
         if(boardData1[0]){
-            console.log("In if blocks");
+            // console.log("In if blocks");
             boardData = boardData1[0];
             otherPlayer = boardData.player_id2;
         }
         else if(boardData2[0]){
-            console.log("Middle if blocks");
+            // console.log("Middle if blocks");
             boardData = boardData2[0];
             otherPlayer = boardData.player_id1;
         }
@@ -62,20 +62,20 @@ router.post('/', async (req, res) => {
         console.log(boardData.dataValues.id);
         // if there are multiple board states found, bad things happen
         if(boardData){
-            console.log("Board data");
+            // console.log("Board data");
             boardState = await Piece.findAll(
                 {
                     where: 
                         {board_id : boardData.dataValues.id}
                 }
             );
-            console.log("Board data after");
+            // console.log("Board data after");
 
         }
         else{
             boardState = "No board state";
         }
-        console.log(boardState);
+        // console.log(boardState);
         // console.log("piece stuff");
         // need to send the board so that the other player is sent
         // actually, just send the other player's name
@@ -84,7 +84,10 @@ router.post('/', async (req, res) => {
             boardData: boardData,
             returnBoardState: boardState,
             opponent: otherName
-        }
+        };
+        console.log(returnItem);
+        console.log("returnItem");
+
         res.status(200).json(returnItem);
         return;
     }

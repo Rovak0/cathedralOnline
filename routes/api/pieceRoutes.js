@@ -6,31 +6,55 @@ const {pawnMove, kingMove, rookMove, bishopMove, queenMove, knightMove} = requir
 router.post('/move', async (req, res) => {
     //this will recieve a boardId, a pieceId, and a destination
     try{
-        const pieceData = await Piece.findByPk(req.body.pieceId); 
-        console.log(pieceData.dataValues.moveType);
+        console.log(req.body);
+        // console.log(req.body.startingMove);
+        // const pieceData = await Piece.findAll({
+        //     where: {
+        //         locationX : req.body.startingMove[0],
+        //         locationY : req.body.startingMove[1],
+        //     }
+        // });
+        // console.log(pieceData.dataValues.moveType);
+        const boardState = await Piece.findAll(
+            {
+                where: 
+                    {board_id : req.body.boardId}
+            }
+        );
+        // console.log("past first find")
+        let pieceData;
+        for(piece of boardState){
+            // console.log(piece.locationX);
+            // console.log(piece.locationY);
+            if((piece.locationX == req.body.startingMove[0]) & (piece.locationY == req.body.startingMove[1])){
+                console.log("in the if block");
+                pieceData = piece;
+            }
+        }
+        console.log(pieceData.id);
         // the move type of the piece is what I'm after
         let moveResult;
         //run through a switch case and return legality
         switch(pieceData.dataValues.moveType){
             case "pawn":
                 // console.log("pawn stuff");
-                moveResult = await pawnMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await pawnMove(req.body.boardId,  pieceData.id, req.body.submittedMove);
                 // console.log(moveResult);
                 break;
             case "rook":
-                moveResult = await rookMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await rookMove(req.body.boardId,  pieceData.id, req.body.submittedMove);
                 break;
             case "knight":
-                moveResult = await knightMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await knightMove(req.body.boardId, pieceData.id, req.body.submittedMove);
                 break;            
             case "bishop":
-                moveResult = await bishopMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await bishopMove(req.body.boardId, pieceData.id, req.body.submittedMove);
                 break;
             case "queen":
-                moveResult = await queenMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await queenMove(req.body.boardId, pieceData.id, req.body.submittedMove);
                 break;
             case "king":
-                moveResult = await kingMove(req.body.boardId, req.body.pieceId, req.body.submittedMove);
+                moveResult = await kingMove(req.body.boardId, pieceData.id, req.body.submittedMove);
                 break;
             default:
                 moveResult = -1;
