@@ -1,7 +1,13 @@
 const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 const sequelize = require('../config/connection');
 
-class Player extends Model {};
+class Player extends Model {
+    //give functions to the Player class
+    checkPassword(loginPw) { //gives the user class a function called checkpasswor
+        return bcrypt.compareSync(loginPw, this.password);
+      }
+};
 
 // define what goes into a board
 // needs an id, squares, and the 2 users
@@ -17,9 +23,20 @@ class Player extends Model {};
         username: {
             type: DataTypes.STRING,
             unique: true
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false
         }
     },
     {
+        hooks: {
+            //protect the password
+            async beforeCreate(newUserData) {
+                newUserData.password = await bcrypt.hash(newUserData.password, 10);
+                return newUserData;
+            },
+        },
         sequelize,
         timestamps: false,
         freezeTableName: true,

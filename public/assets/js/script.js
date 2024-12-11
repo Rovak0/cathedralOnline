@@ -1,6 +1,22 @@
 const gameId = document.querySelector('#gameHolder');
 const gameBoard = document.querySelector('#gameBoard');
-const submitButton = document.querySelector("#submitButton");
+const submitButton = document.querySelector("#submitMoveButton");
+
+const loginForm = document.querySelector("#loginForm");
+const loginButton = document.querySelector("#loginSubmitButton");
+const loginUsername = document.querySelector("#usernameBox");
+const loginPassword = document.querySelector("#passwordBox");
+
+
+// console.log(loginForm);
+// console.log(loginButton);
+
+// create my session variables
+sessionStorage.setItem("logged_in", false);
+sessionStorage.setItem("user_id", false);
+
+let loggedIn = sessionStorage.getItem('logged_in');
+console.log(loggedIn);
 
 //process.env.PORT || 
 const PORT = "http://localhost:3001";
@@ -271,7 +287,8 @@ loadBoard();
 
 //run the board load every second
 setInterval(function() {
-    loadBoard();
+    //comment out the loadboard call to stop sending requests during development
+    // loadBoard();
 }, 1000);
 
 //handle the submit button
@@ -308,3 +325,42 @@ submitButton.addEventListener('click', async function() {
     }
     // console.log(myRequest);
 });
+
+loginButton.addEventListener('click', async function () {
+    event.preventDefault();
+    // console.log(loginUsername.value.trim());
+    let username = loginUsername.value.trim();
+    let password = loginPassword.value.trim();
+    //.trim removes any blank space that may ruin things
+
+    if(username && password){
+        console.log(username + password);
+        const login = await fetch('/api/user/login', {
+            method: 'Post',
+            body: JSON.stringify({
+                "username" : username,
+                "password": password
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        console.log(login);
+        if(login.ok){
+            // console.log("Logged in");
+            // console.log(login);
+            let parsedString
+            for await(const chunk of login.body){
+                // console.log(chunk);
+                let decodedString = new TextDecoder().decode(chunk);
+                // console.log(decodedString);
+                parsedString = JSON.parse(decodedString);
+                // console.log(parsedString);
+            }
+            console.log(parsedString);
+            user = parsedString;
+        }
+        else{
+            console.log("Fail");
+        }
+    }
+})

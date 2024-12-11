@@ -12,4 +12,7 @@ router.use('/pieces', pieceRoutes);
 const boardRoutes = require('./boardRoutes');
 router.use('/board', boardRoutes);
 
+const userRoutes = require('./userRoutes');
+router.use('/user', userRoutes);
+
 module.exports = router;

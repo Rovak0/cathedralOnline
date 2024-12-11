@@ -18,7 +18,7 @@ app.use(routes);
 
 const sess = { //figure out what this does    // used for cookies
   cookie : {
-        // maxAge sets the maximum age for the cookie to be valid. Here, the cookie (and session) will expire after one minute. The time should be given in milliseconds.
+        // maxAge sets the maximum age for the cookie to be valid. Here, the cookie (and session) will expire after 15 minutes. The time should be given in milliseconds.
         maxAge: 60 * 15 * 1000,
         // httpOnly tells express-session to only store session cookies when the protocol being used to connect to the server is HTTP.
         httpOnly: true,
