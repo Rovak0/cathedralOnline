@@ -7,6 +7,10 @@ const loginButton = document.querySelector("#loginSubmitButton");
 const loginUsername = document.querySelector("#usernameBox");
 const loginPassword = document.querySelector("#passwordBox");
 
+const signupForm = document.querySelector("#signupForm");
+const signupButton = document.querySelector("#signupSubmitButton");
+const signupUsername = document.querySelector("#signupName");
+const signupPassword = document.querySelector("#signupPassword");
 
 // console.log(loginForm);
 // console.log(loginButton);
@@ -16,7 +20,9 @@ sessionStorage.setItem("logged_in", false);
 sessionStorage.setItem("user_id", false);
 
 let loggedIn = sessionStorage.getItem('logged_in');
-console.log(loggedIn);
+let user = sessionStorage.getItem('user_id');
+
+// console.log(loggedIn);
 
 //process.env.PORT || 
 const PORT = "http://localhost:3001";
@@ -24,7 +30,7 @@ const PORT = "http://localhost:3001";
 
 // for each square, it will needs its own event listner
 
-const selectedList = [];
+let selectedList = [];
 
 //make a list of lists to use during board reset
 const resetList = [
@@ -110,9 +116,8 @@ const resetList = [
     ],
 ]
 
-let user;
 let board;
-user = 1;
+// user = 1;
 
 // const tester = "abc";
 // console.log(tester[0]);
@@ -146,7 +151,7 @@ async function getBoard () {
 };
 
 // window.onload = getBoard();
-let myBoard = getBoard();
+// let myBoard = getBoard();
 
 //attach a listener to each tile of the board to handle selection
 for (kid of gameBoard.children){
@@ -163,7 +168,13 @@ for (kid of gameBoard.children){
                 // console.log(tile.style.backgroundColor);
                 if(tile.style.backgroundColor == "lightblue"){
                     // console.log("Currently blue");
-                    tile.style.backgroundColor = "white";
+                    // console.log(tile.className);
+                    if(tile.className == "white"){
+                        tile.style.backgroundColor = "white";
+                    }
+                    else{
+                        tile.style.backgroundColor = "rgb(72, 70, 70)";
+                    }
                     // if deselecting, remove the item from the select list
                     for (index in selectedList){
                         if(selectedList[index] == tile.id){
@@ -185,7 +196,13 @@ for (kid of gameBoard.children){
                         //grab the tile based on it's stored id
                         const clearTile = document.querySelector(`#${selectedList[0]}`);
                         // console.log(clearTile);
-                        clearTile.style.backgroundColor = "white";
+                        // clearTile.style.backgroundColor = "white";
+                        if(clearTile.className == "white"){
+                            clearTile.style.backgroundColor = "white";
+                        }
+                        else{
+                            clearTile.style.backgroundColor = "rgb(72, 70, 70)";
+                        }
                         selectedList.splice(0, 1);
                     }
                     console.log(selectedList);
@@ -217,11 +234,23 @@ async function loadBoard () {
     //use the indexs to move through the resetList
     let indexX = 0;
     let indexY = 0;
+    let tileImage;
     for(child of rowList){
         // console.log(child.children);
         for(kid of child.children){
             // console.log(kid);
+            // console.log(kid.children);
             kid.textContent = resetList[indexX][indexY];
+
+            tileImage = document.querySelector(`#img${indexX}${indexY}`);
+            // console.log(tileImage);
+            if(tileImage){
+                tileImage.parentElement.removeChild(tileImage);
+            }
+            tileImage = null;
+            //if there is an image, clear it
+            // tileImage = document.getElementById()
+
             indexY++;
         }
         indexY = 0;
@@ -231,49 +260,89 @@ async function loadBoard () {
     //declaring these variables outside of the for loop for memory
     let column;
     let tile;
+    let imageId;
     for(piece of boardState){
         // console.log(piece);
         // go through each piece and read there coords
         // then compare it to the tile id [4]/[5] to place them
         pieceX = piece.locationX;
         pieceY = piece.locationY;
-        // if(8 == '8'){
-        //     console.log("works");
-        // }
-        // these are ints, not strings
-        //doesnt matter, 8 == "8"
 
-        
-        //instead of looking for the corrent child, find based off of x y coords
-        //the coords are based off of chess cords, so 1-8 / 1-8
-        // row = gameBoard.children[pieceX-1];
-        // console.log(gameBoard.children);
-        // console.log(row);
-        // console.log((row[pieceY-1]).id);
         column = rowList[7- (pieceY-1)];
         tile = (column.children)[pieceX-1];
         // console.log(tile);
         
         //I have the tile and I have the piece
         // run the piece through a switch case to place the right thing into the tile
+
+        //make the image element that will be attached to the tile
+        //give the image an id that is its x/y coords
+        imageId = `${pieceX-1}${pieceY-1}`;
+        // console.log(typeof(imageId));
+        let pieceImage = document.createElement("img");
+        // pieceImage.setAttribute(id, `${imageId}`);
+        pieceImage.id = `img${imageId}`;
+
         switch(piece.name){
             case("pawn"):
-                tile.textContent="P";
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-pawn.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-pawn.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
                 break;
             case("rook"):
-                tile.textContent="R";
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-rook.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-rook.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
                 break;
             case("knight"):
-                tile.textContent="Kn";
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-knight.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-knight.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
                 break;
             case("bishop"):
-                tile.textContent="B";
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-bishop.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-bishop.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
                 break;
             case("queen"):
-                tile.textContent="Q";
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-queen.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-queen.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
                 break;
             case("king"):
-                tile.textContent="Ki";
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-king.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-king.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
                 break;
             default:
                 break;        
@@ -283,19 +352,13 @@ async function loadBoard () {
     }
 }
 
-loadBoard();
 
-//run the board load every second
-setInterval(function() {
-    //comment out the loadboard call to stop sending requests during development
-    // loadBoard();
-}, 1000);
-
-//handle the submit button
-submitButton.addEventListener('click', async function() {
+//event handler functions
+async function submitButtonHandler(event){
     // need to collect the data from the cells and bundle them into a json packet
     // need to then send the json packet 
     // then wait for a response
+    event.preventDefault();
     console.log("submit");
     if(selectedList.length !=2){
         console.log("Not the right number of tiles");
@@ -318,15 +381,30 @@ submitButton.addEventListener('click', async function() {
         headers: { 'Content-Type': 'application/json' }
     });
     if(boardRequest.ok) {
-        console.log("WORKING");
+        for(tile of selectedList){
+            //tile is the id of the tile, not the tile itself
+            // console.log(tile);
+            // console.log(document.querySelector(`#${tile}`))
+            // document.querySelector(`#${tile}`).style.backgroundColor = "white";
+            if(document.querySelector(`#${tile}`).className == "white"){
+                document.querySelector(`#${tile}`).style.backgroundColor = "white";
+            }
+            else{
+                document.querySelector(`#${tile}`).style.backgroundColor = "rgb(72, 70, 70)";
+            }
+            // tile
+        }
+        selectedList = []
+        loadBoard();
+        // console.log("WORKING");
     }
     else{
-        console.log("fail");
+        // console.log("fail");
     }
     // console.log(myRequest);
-});
+}
 
-loginButton.addEventListener('click', async function () {
+async function loginHandler(event){
     event.preventDefault();
     // console.log(loginUsername.value.trim());
     let username = loginUsername.value.trim();
@@ -334,7 +412,7 @@ loginButton.addEventListener('click', async function () {
     //.trim removes any blank space that may ruin things
 
     if(username && password){
-        console.log(username + password);
+        // console.log(username + password);
         const login = await fetch('/api/user/login', {
             method: 'Post',
             body: JSON.stringify({
@@ -344,7 +422,7 @@ loginButton.addEventListener('click', async function () {
             headers: { 'Content-Type': 'application/json' }
         });
 
-        console.log(login);
+        // console.log(login);
         if(login.ok){
             // console.log("Logged in");
             // console.log(login);
@@ -356,11 +434,75 @@ loginButton.addEventListener('click', async function () {
                 parsedString = JSON.parse(decodedString);
                 // console.log(parsedString);
             }
-            console.log(parsedString);
+            // console.log(parsedString);
+            user = parsedString;
+            sessionStorage.setItem('user_id', parsedString);
+            sessionStorage.setItem('loggedIn', true);
+            
+            // console.log(user);
+        }
+        else{
+            console.log("Fail");
+        }
+    }
+}
+
+async function signupHandler(event){
+    event.preventDefault();
+
+    let username = signupUsername.value.trim();
+    let password = signupPassword.value.trim();
+
+    if(username && password){
+        // console.log(username + password);
+        const login = await fetch('/api/user/create', {
+            method: 'Post',
+            body: JSON.stringify({
+                "username" : username,
+                "password": password
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        // console.log(login);
+        if(login.ok){
+            // console.log("Logged in");
+            // console.log(login);
+            let parsedString
+            for await(const chunk of login.body){
+                // console.log(chunk);
+                let decodedString = new TextDecoder().decode(chunk);
+                // console.log(decodedString);
+                parsedString = JSON.parse(decodedString);
+                // console.log(parsedString);
+            }
+            // console.log(parsedString);
             user = parsedString;
         }
         else{
             console.log("Fail");
         }
     }
-})
+}
+
+//handle the submit button
+submitButton.addEventListener('click', submitButtonHandler);
+
+loginButton.addEventListener('click',loginHandler);
+
+signupButton.addEventListener('click', signupHandler);
+
+//these are the things that run on load or continously
+//user is a string
+if(user != 'false'){
+    loadBoard();
+}
+
+//run the board load every second
+setInterval(function() {
+    //comment out the loadboard call to stop sending requests during development
+    // console.log(user);
+    if(user != 'false'){
+        loadBoard();
+    }
+}, 1000);

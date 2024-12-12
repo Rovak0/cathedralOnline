@@ -1,6 +1,6 @@
 table {
-    height: 500px;
-    width : 500px;
+    height: 750px;
+    width : 750px;
     padding : 0px;
     border : 5px solid green;
 }
@@ -12,6 +12,22 @@ table td {
     /* background-color: blue; */
 }
 
+td img{
+    height: 75px;
+    width: auto;
+}
+
 /* form{
     display: flex
 } */
+
+.black{
+    text-align: center;
+    background-color: rgb(72, 70, 70);
+    color: white;
+}
+
+.white{
+    text-align: center;
+    background-color: white;
+}

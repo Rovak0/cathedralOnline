@@ -760,7 +760,7 @@ async function bishopMove(boardId, bishopId, submittedMove){
         //left and up
         counter = 0;
         run = true;
-        if((submittedMove[0] < bishopLocation[0]) && (bishopLocation[1]+counter > 8)){
+        if((submittedMove[0] < bishopLocation[0]) && (submittedMove[1] < bishopLocation[1])){
             let run = true;
             //counter tracks how far the bishop has moved
             let counter = 0;
