@@ -59,7 +59,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
                     // let legal = 1;
                     //is there a piece in that spot
                     for(piece of boardState){
-                        if([piece.locationX, piece.locationY] == [pawnLocation[0], pawnLocation[1]+2]){
+                        if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                             //change legal to false
                             return 0;
                         }
@@ -72,11 +72,11 @@ async function pawnMove(boardId, pawnId, submittedMove){
             //move 1 foward
             // if(submittedMove == [pawnLocation[0], pawnLocation[1]+1]){
             if(pawnLocation[0] == submittedMove[0] && (pawnLocation[1]+1) == submittedMove[1]){
-                console.log("hello");
                 let legal = 1;
                 //is there a piece in that spot
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [pawnLocation[0], pawnLocation[1]+1]){
+                    if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
+                        console.log(piece);
                         //change legal to false
                         legal = 0;
                     }
@@ -97,10 +97,10 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 }
                 //check if piece is there
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [pawnLocation[0]-1, pawnLocation[1]+1]){
+                    if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                         //pawn is white, so check if piece is black
                         if(piece.color == "black"){
-                            return legal;
+                            return 2;
                         }
                         else{
                             //change legal to false
@@ -126,11 +126,11 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 }
                 //check if piece is there
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [pawnLocation[0]+1, pawnLocation[1]+1]){
+                    if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                         //pawn is white, so check if piece is black
                         //instead check if colors DON'T match
                         if(piece.color != pawnColor){
-                            return legal;
+                            return 2;
                         }
                         else{
                             //change legal to false
@@ -166,7 +166,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
                     let legal = 1;
                     //is there a piece in that spot
                     for(piece of boardState){
-                        if([piece.locationX, piece.locationY] == [pawnLocation[0], pawnLocation[1]-2]){
+                        if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                             //change legal to false
                             legal = 0;
                         }
@@ -180,7 +180,7 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 let legal = 1;
                 //is there a piece in that spot
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [pawnLocation[0], pawnLocation[1]-1]){
+                    if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                         //change legal to false
                         legal = 0;
                     }
@@ -201,10 +201,10 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 }
                 //check if piece is there
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [pawnLocation[0]-1, pawnLocation[1]-1]){
-                        //pawn is white, so check if piece is black
-                        if(piece.color == "black"){
-                            return legal;
+                    if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
+                        //pawn is black, so check if piece is white
+                        if(piece.color == "white"){
+                            return 2;
                         }
                         else{
                             //change legal to false
@@ -230,10 +230,10 @@ async function pawnMove(boardId, pawnId, submittedMove){
                 }
                 //check if piece is there
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [pawnLocation[0]+1, pawnLocation[1]-1]){
+                    if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                         //pawn is white, so check if piece is black
                         if(piece.color != pawnColor){
-                            return legal;
+                            return 2;
                         }
                         else{
                             //change legal to false
@@ -286,7 +286,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == [kingLocation[0]-1, kingLocation[1]+1]){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -312,7 +312,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == [kingLocation[0], kingLocation[1]+1]){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -338,7 +338,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == [kingLocation[0]+1, kingLocation[1]+1]){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -364,7 +364,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == [kingLocation[0]-1, kingLocation[1]]){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -390,7 +390,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == [kingLocation[0]+1, kingLocation[1]]){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -416,7 +416,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == [kingLocation[0]-1, kingLocation[1]-1]){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -442,7 +442,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == [kingLocation[0], kingLocation[1]-1]){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -468,7 +468,7 @@ async function kingMove(boardId, kingId, submittedMove){
             }
             //check if it hits a piece
             for(piece of boardState){
-                if([piece.locationX, piece.locationY] == [kingLocation[0]+1, kingLocation[1]-1]){
+                if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                     if(piece.color != kingColor){
                         //2 is colides and can take
                         return 2;
@@ -492,6 +492,7 @@ async function kingMove(boardId, kingId, submittedMove){
     }
 };
 
+//rook is done
 async function rookMove(boardId, rookId, submittedMove){
     //this will move fowards in a straight line, one at a time, until it hits a stop
     try{
@@ -522,24 +523,32 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [rookLocation[0]+counter, rookLocation[1]]){
+                    if((piece.locationX == rookLocation[0]+counter) && (piece.locationY == rookLocation[1])){
                         //if colision, check if it is the destination
-                        if([rookLocation[0]+counter, rookLocation[1]] == submittedMove){
-                            if(piece.color != rookColor){
-                                //return takable piece
-                                run = false;
+                        // console.log("collide");
+                        // if((rookLocation[0]+counter == submittedMove[0]) && (rookLocation[1] == submittedMove[1])){
+                        if(piece.color != rookColor){
+                            //return takable piece
+                            run = false;
+                            if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                                 return 2;
                             }
                             else{
-                                //return illegal
-                                run = false;
                                 return 0;
                             }
                         }
-                        // if the colision isn't the destination, the move is illegal
-                        run = false;
-                        return 0;
+                        else{
+                            //return illegal
+                            // console.log("friendly fire");
+                            run = false;
+                            return 0;
+                        }
+                        // }
                     }
+                        // // if the colision isn't the destination, the move is illegal
+                        // run = false;
+                        // return 0;
+                    // }
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
@@ -552,6 +561,7 @@ async function rookMove(boardId, rookId, submittedMove){
         }
 
         //repeat for the other directions
+        //left
         counter = 0;
         run = true;
         if(submittedMove[0] < rookLocation[0]){
@@ -567,23 +577,24 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [rookLocation[0]-counter, rookLocation[1]]){
+                    if((piece.locationX == rookLocation[0]-counter) && (piece.locationY == rookLocation[1])){
                         //if colision, check if it is the destination
-                        if([rookLocation[0]-counter, rookLocation[1]] == submittedMove){
-                            if(piece.color != rookColor){
-                                //return takable piece
-                                run = false;
+                        if(piece.color != rookColor){
+                            //return takable piece
+                            run = false;
+                            if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                                 return 2;
                             }
                             else{
-                                //return illegal
-                                run = false;
                                 return 0;
                             }
                         }
-                        // if the colision isn't the destination, the move is illegal
-                        run = false;
-                        return 0;
+                        else{
+                            //return illegal
+                            // console.log("friendly fire");
+                            run = false;
+                            return 0;
+                        }
                     }
                 }
                 //check if the destination is empty
@@ -596,6 +607,7 @@ async function rookMove(boardId, rookId, submittedMove){
             }
         }
 
+        //down
         counter = 0;
         run = true;
         if(submittedMove[1] < rookLocation[1]){
@@ -611,23 +623,24 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [rookLocation[0], rookLocation[1]-counter]){
+                    if((piece.locationX == rookLocation[0]) && (piece.locationY == rookLocation[1]-counter)){
                         //if colision, check if it is the destination
-                        if([rookLocation[0], rookLocation[1]-counter] == submittedMove){
-                            if(piece.color != rookColor){
-                                //return takable piece
-                                run = false;
+                        if(piece.color != rookColor){
+                            //return takable piece
+                            run = false;
+                            if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                                 return 2;
                             }
                             else{
-                                //return illegal
-                                run = false;
                                 return 0;
                             }
                         }
-                        // if the colision isn't the destination, the move is illegal
-                        run = false;
-                        return 0;
+                        else{
+                            //return illegal
+                            // console.log("friendly fire");
+                            run = false;
+                            return 0;
+                        }
                     }
                 }
                 //check if the destination is empty
@@ -642,6 +655,7 @@ async function rookMove(boardId, rookId, submittedMove){
 
 
         /////////////////////////////
+        //up
         counter = 0;
         run = true;
         if(submittedMove[1] > rookLocation[1]){
@@ -657,23 +671,24 @@ async function rookMove(boardId, rookId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [rookLocation[0], rookLocation[1]+counter]){
+                    if((piece.locationX == rookLocation[0]) && (piece.locationY == rookLocation[1]+counter)){
                         //if colision, check if it is the destination
-                        if([rookLocation[0], rookLocation[1]+counter] == submittedMove){
-                            if(piece.color != rookColor){
-                                //return takable piece
-                                run = false;
+                        if(piece.color != rookColor){
+                            //return takable piece
+                            run = false;
+                            if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
                                 return 2;
                             }
                             else{
-                                //return illegal
-                                run = false;
                                 return 0;
                             }
                         }
-                        // if the colision isn't the destination, the move is illegal
-                        run = false;
-                        return 0;
+                        else{
+                            //return illegal
+                            // console.log("friendly fire");
+                            run = false;
+                            return 0;
+                        }
                     }
                 }
                 //check if the destination is empty
@@ -696,10 +711,11 @@ async function rookMove(boardId, rookId, submittedMove){
     }
 };
 
+//bishop is done
 async function bishopMove(boardId, bishopId, submittedMove){
     //this will move fowards in a straight line, one at a time, until it hits a stop
     try{
-        const board = await Board.findByPk(boardId);
+        // const board = await Board.findByPk(boardId);
         const bishop = await Piece.findByPk(bishopId);
         const boardState = await Piece.findAll(
             {
@@ -727,9 +743,12 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [bishopLocation[0]+counter, bishopLocation[1]+counter]){
+                    // if([piece.locationX, piece.locationY] == [bishopLocation[0]+counter, bishopLocation[1]+counter]){
+                    if((piece.locationX == bishopLocation[0]+counter) && (piece.locationY == bishopLocation[1]+counter)){
+                        // (piece.locationX == rookLocation[0]+counter) && (piece.locationY == rookLocation[1])
                         //if colision, check if it is the destination
-                        if([bishopLocation[0]+counter, bishopLocation[1]+counter] == submittedMove){
+                        // if([bishopLocation[0]+counter, bishopLocation[1]+counter] == submittedMove){
+                        if((bishopLocation[0]+counter == submittedMove[0]) && (bishopLocation[1]+counter == submittedMove[1])){
                             if(piece.color != bishopColor){
                                 //return takable piece
                                 run = false;
@@ -750,6 +769,7 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 //already checked if there is a piece
                 // if([bishopLocation[0]+counter, bishopLocation[1]+counter] == submittedMove){
                 if((bishopLocation[0]+counter == submittedMove[0]) && (bishopLocation[1]+counter == submittedMove[1])){
+                    // console.log("reached")
                     run = false;
                     return 1;
                 }
@@ -760,7 +780,7 @@ async function bishopMove(boardId, bishopId, submittedMove){
         //left and up
         counter = 0;
         run = true;
-        if((submittedMove[0] < bishopLocation[0]) && (submittedMove[1] < bishopLocation[1])){
+        if((submittedMove[0] < bishopLocation[0]) && (submittedMove[1] > bishopLocation[1])){
             let run = true;
             //counter tracks how far the bishop has moved
             let counter = 0;
@@ -773,9 +793,12 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [bishopLocation[0]-counter, bishopLocation[1]+counter]){
+                    // if([piece.locationX, piece.locationY] == [bishopLocation[0]-counter, bishopLocation[1]+counter]){
+                    if((piece.locationX == bishopLocation[0]-counter) && (piece.locationY == bishopLocation[1]+counter)){
+                        // console.log("collide");
                         //if colision, check if it is the destination
-                        if([bishopLocation[0]-counter, bishopLocation[1]+counter] == submittedMove){
+                        // if([bishopLocation[0]-counter, bishopLocation[1]+counter] == submittedMove){
+                        if((bishopLocation[0]-counter == submittedMove[0]) && (bishopLocation[1]+counter == submittedMove[1])){
                             if(piece.color != bishopColor){
                                 //return takable piece
                                 run = false;
@@ -788,14 +811,17 @@ async function bishopMove(boardId, bishopId, submittedMove){
                             }
                         }
                         // if the colision isn't the destination, the move is illegal
-                        run = false;
-                        return 0;
+                        else{
+                            run = false;
+                            return 0;
+                        }
                     }
                 }
                 //check if the destination is empty
                 //already checked if there is a piece
                 // if([bishopLocation[0]-counter, bishopLocation[1]+counter] == submittedMove){
                 if((bishopLocation[0]-counter == submittedMove[0]) && (bishopLocation[1]+counter == submittedMove[1])){
+                    // console.log("destination");
                     run = false;
                     return 1;
                 }
@@ -818,9 +844,10 @@ async function bishopMove(boardId, bishopId, submittedMove){
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [bishopLocation[0]-counter, bishopLocation[1]-counter]){
+                    // if([piece.locationX, piece.locationY] == [bishopLocation[0]-counter, bishopLocation[1]-counter]){
+                    if((piece.locationX == bishopLocation[0]-counter) && (piece.locationY == bishopLocation[1]-counter)){
                         //if colision, check if it is the destination
-                        if([bishopLocation[0]-counter, bishopLocation[1]-counter] == submittedMove){
+                        if((bishopLocation[0]-counter == submittedMove[0]) && (bishopLocation[1]-counter == submittedMove[1])){
                             if(piece.color != bishopColor){
                                 //return takable piece
                                 run = false;
@@ -859,15 +886,18 @@ async function bishopMove(boardId, bishopId, submittedMove){
             while(run){
                 //increment the counter and break before checking if there is a piece
                 counter++;
-                if((bishopLocation[1]+counter > 8) || (bishopLocation[1]-counter <= 0)){
+                if((bishopLocation[0]+counter > 8) || (bishopLocation[1]-counter <= 0)){
                     run = false;
                     return 0;
                 }
                 // for loop to look through the board pieces
                 for(piece of boardState){
-                    if([piece.locationX, piece.locationY] == [bishopLocation[0]+counter, bishopLocation[1]-counter]){
+                    if((piece.locationX == bishopLocation[0]+counter) && (piece.locationY == bishopLocation[1]-counter)){
+                        // if([piece.locationX, piece.locationY] == [bishopLocation[0]+counter, bishopLocation[1]-counter]){
+                        
                         //if colision, check if it is the destination
-                        if([bishopLocation[0]+counter, bishopLocation[1]-counter] == submittedMove){
+                        if((bishopLocation[0]+counter == submittedMove[0]) && (bishopLocation[1]-counter == submittedMove[1])){
+                            // if([bishopLocation[0]+counter, bishopLocation[1]-counter] == submittedMove){
                             if(piece.color != bishopColor){
                                 //return takable piece
                                 run = false;
@@ -924,6 +954,7 @@ async function queenMove(boardId, queenId, submittedMove){
     }
 };
 
+//knight just works
 async function knightMove(boardId, knightId, submittedMove){
     try{
         const board = await Board.findByPk(boardId);

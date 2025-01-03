@@ -42,6 +42,11 @@ class Piece extends Model {};
             type: DataTypes.BOOLEAN,
             defaultValue: true
         },
+        //start of cathedral stuff
+        canTake: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
+        },
         attack: {
             type: DataTypes.INTEGER,
             // allowNull: true

@@ -27,6 +27,10 @@ class Player extends Model {
         password: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        inQueue: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     },
     {

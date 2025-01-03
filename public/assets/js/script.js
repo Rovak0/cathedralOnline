@@ -368,6 +368,7 @@ async function submitButtonHandler(event){
     // const boardRequest = await fetch(myRequest, {
 
     //make the submitted move and the piece id parts
+    //selected list is a list holding strings, so to get the x/y grab the chars at index's 4/5
     let submittedMove = [selectedList[1][4], selectedList[1][5]];
     let startingMove = [selectedList[0][4], selectedList[0][5]];
     // console.log(submittedMove);

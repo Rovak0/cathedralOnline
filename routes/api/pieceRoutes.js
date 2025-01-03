@@ -26,8 +26,8 @@ router.post('/move', async (req, res) => {
         for(piece of boardState){
             // console.log(piece.locationX);
             // console.log(piece.locationY);
-            if((piece.locationX == req.body.startingMove[0]) & (piece.locationY == req.body.startingMove[1])){
-                console.log("in the if block");
+            if((piece.locationX == req.body.startingMove[0]) && (piece.locationY == req.body.startingMove[1])){
+                // console.log("in the if block");
                 pieceData = piece;
             }
         }
@@ -60,6 +60,7 @@ router.post('/move', async (req, res) => {
                 moveResult = -1;
         }
 
+        console.log(moveResult);
         //if the result is -1, there was an error
         if(moveResult == -1){
             res.status(500).json("move check error");
@@ -81,6 +82,8 @@ router.post('/move', async (req, res) => {
             pieceData.locationX = req.body.submittedMove[0];
             // console.log(pieceData.locationX);
             pieceData.locationY = req.body.submittedMove[1];
+            //the piece has moved, so save that 
+            pieceData.notMoved = false;
             await pieceData.save();
             res.status(200).json("Legal empty move");
             return;
@@ -105,6 +108,8 @@ router.post('/move', async (req, res) => {
             //save the moved piece
             pieceData.locationX = req.body.submittedMove[0];
             pieceData.locationY = req.body.submittedMove[1];
+            //the piece has moved, so save that 
+            pieceData.notMoved = false;
             await pieceData.save();
 
             res.status(200).json("Piece taken");

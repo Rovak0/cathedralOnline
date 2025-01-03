@@ -3,6 +3,8 @@ const router = require('express').Router();
 const {Board, Piece, Player} = require("../../models");
 const {normalBoard} = require('../../utils/openingBoards');
 
+const {joinQueue} = require('../../utils/queue');
+
 //get board
 router.post('/', async (req, res) => {
     //the req.body.user will fetch the board based off of user id
@@ -98,8 +100,100 @@ router.post('/', async (req, res) => {
 });
 
 
-//make a generic board
+//make a generic board with the queue
 router.post('/normal', async (req, res) => {
+    try{
+        //the req.body needs to have a player_id1 and player_id2
+        //make sure there are no ongoing games with the player id
+        //this needs to be fed the ids, not the usernames
+
+        //req.body.user is the joining user
+        let joinAttempt = joinQueue(req.body.user);
+        //the breaks
+        if(joinAttempt == -1){
+            res.status(500).json("pair error");
+            return;
+        }
+        if(joinAttempt == 1){
+            res.status(200).json("Waiting for second player");
+            return;
+        }
+
+        // boards can be made like this or by queue jumping
+            //I have to check for boards
+        
+        const user1id = joinAttempt[0];
+        const user2id = joinAttempt[1];
+
+        // console.log("check for board");
+        //check for boards for both users
+        const boardData1 = await Board.findAll({
+            where : {
+                player_id1 : user1id,
+                complete : false
+            }
+        });
+        const boardData2 = await Board.findAll({
+            where : {
+                player_id2 : user1id,
+                complete : false
+            }
+        });
+
+        //check user 2
+        const boardData3 = await Board.findAll({
+            where : {
+                player_id1 : user2id,
+                complete : false
+            }
+        });
+        const boardData4 = await Board.findAll({
+            where : {
+                player_id2 : user2id,
+                complete : false
+            }
+        });
+
+        //close all found boards
+        if (boardData1){
+            for (board of boardData1){
+                board.complete = true;
+                await board.save();
+            }
+        };
+        if (boardData2){
+            for (board of boardData2){
+                board.complete = true;
+                await board.save();
+            }
+        };
+        if (boardData3){
+            for (board of boardData3){
+                board.complete = true;
+                await board.save();
+            }
+        };
+        if (boardData4){
+            for (board of boardData4){
+                board.complete = true;
+                await board.save();
+            }
+        };
+
+        //create the board
+        const newBoard = await Board.create(req.body);
+        //normalBoard is a function that take in a board id
+        const boardState = normalBoard(newBoard.id);
+        res.status(200).json([newBoard, boardState]);
+
+    }
+    catch(err){
+        res.status(500).json(err);
+    }
+});
+
+//make a generic board with 2 specific players
+router.post('/jumpQueue', async (req, res) => {
     try{
         //the req.body needs to have a player_id1 and player_id2
         //make sure there are no ongoing games with the player id
@@ -177,5 +271,6 @@ router.post('/normal', async (req, res) => {
         res.status(500).json(err);
     }
 });
+
 
 module.exports = router;
