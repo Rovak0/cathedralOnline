@@ -59,4 +59,19 @@ router.post("/login", async (req, res) => {
     }
 });
 
+router.post("/dropQueue", async (req, res) => {
+    let user = req.body.user;
+    try{
+        user = await Player.findByPk(user);
+        user.inQueue = false;
+        await user.save();
+        res.status(200).json("Dropped from queue");
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).json(err);
+        return;
+    }
+});
+
 module.exports = router;

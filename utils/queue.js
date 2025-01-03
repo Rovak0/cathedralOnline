@@ -15,6 +15,7 @@ async function joinQueue(joinPlayer){
         //therefore return status codes
     let playerList;
     try{
+        joinPlayer = await Player.findByPk(joinPlayer);
         playerList = await Player.findAll(
             {
                 where:
@@ -26,21 +27,25 @@ async function joinQueue(joinPlayer){
         // 
         return -1;
     }
+    // console.log(playerList);
     //playerList is now every player in the queue
     if(playerList.length == 0){
         //there are no players in the queue
         //put the new player in the queue
+        console.log("all alone");
         try{
             joinPlayer.inQueue = true;
             await joinPlayer.save();
+            return 1;
         }
         catch(err){
+            console.log(err);
             return -1;
         }
-        return 1;
     }
 
     //there are players in the queue
+    // console.log("matching players");
     let randomizer = Math.random();
     //this gives a random index
     randomizer = Math.floor(randomizer*playerList.length);
@@ -49,13 +54,16 @@ async function joinQueue(joinPlayer){
         //the game is started on the routes
     try{
         pairedPlayer.inQueue = false;
-        await joinPlayer.save();
+        await pairedPlayer.save();
     }
     catch(err){
         return -1;
     }
 
     //returns are -1, 0, and [players]
+    // console.log("2 players");
+    // console.log(joinPlayer, pairedPlayer);
     return [joinPlayer, pairedPlayer];
 }
 
+module.exports = {joinQueue};

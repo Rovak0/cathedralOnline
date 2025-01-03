@@ -108,7 +108,8 @@ router.post('/normal', async (req, res) => {
         //this needs to be fed the ids, not the usernames
 
         //req.body.user is the joining user
-        let joinAttempt = joinQueue(req.body.user);
+        let joinAttempt = await joinQueue(req.body.user);
+        console.log("After joinqueue");
         //the breaks
         if(joinAttempt == -1){
             res.status(500).json("pair error");
@@ -122,8 +123,8 @@ router.post('/normal', async (req, res) => {
         // boards can be made like this or by queue jumping
             //I have to check for boards
         
-        const user1id = joinAttempt[0];
-        const user2id = joinAttempt[1];
+        const user1id = joinAttempt[0].id;
+        const user2id = joinAttempt[1].id;
 
         // console.log("check for board");
         //check for boards for both users
@@ -181,7 +182,10 @@ router.post('/normal', async (req, res) => {
         };
 
         //create the board
-        const newBoard = await Board.create(req.body);
+        const newBoard = await Board.create({
+            player_id1: user1id,
+            player_id2: user2id,
+        });
         //normalBoard is a function that take in a board id
         const boardState = normalBoard(newBoard.id);
         res.status(200).json([newBoard, boardState]);

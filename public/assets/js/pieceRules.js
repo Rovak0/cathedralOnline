@@ -5,6 +5,14 @@
     //there will be 2 lists, a move list and a take list
     //the board will look at both to color the 2 lists differently
 
+//I can give the whole boardstate, but no the piece itself
+    //the tiles don't know what sql piece it holds, just the type
+    //the board is stored and can be passed
+
+//I may be able to pass the piece if I store the piece id as part of the type
+
+//I can find the piece based off of x/y going to locationX/locationY
+
 function pawnMove(pawn, boardState){
     //pawn's x,y and can it cap a piece
     const pawnX = pawn.locationX;
@@ -552,6 +560,119 @@ function knightMove(knight, boardState){
             if(emptyTile){
                 moveList.push([knightX+1, knightY+2]);
             }
+        };
+
+        if((knightX - 1) >=1){
+            for(piece of boardState){
+                if((piece.locationX == knightX - 1) && (piece.locationY == knightY + 2)){
+                    emptyTile = false;
+                    if(piece.color != knight.color){
+                        takeList.push([knightX-1, knightY+2]);
+                    }
+                }
+            }
+            if(emptyTile){
+                moveList.push([knightX-1, knightY+2]);
+            }
         }
-    }
+    };
+
+    //right up/down
+    if((knightX + 2) <= 8){
+        //right
+        if((knightY + 1) <= 8){
+            for(piece of boardState){
+                if((piece.locationX == knightX + 2) && (piece.locationY == knightY + 1)){
+                    emptyTile = false;
+                    if(piece.color != knight.color){
+                        takeList.push([knightX+2, knightY+1]);
+                    }
+                }
+            }
+            if(emptyTile){
+                moveList.push([knightX+2, knightY+1]);
+            }
+        };
+
+        if((knightY - 1) >=1){
+            for(piece of boardState){
+                if((piece.locationX == knightX + 2) && (piece.locationY == knightY - 1)){
+                    emptyTile = false;
+                    if(piece.color != knight.color){
+                        takeList.push([knightX+2, knightY-1]);
+                    }
+                }
+            }
+            if(emptyTile){
+                moveList.push([knightX+2, knightY-1]);
+            }
+        }
+    };
+
+    //down left/right
+    if((knightY -2) >=1){
+        //right
+        if((knightX + 1) <= 8){
+            for(piece of boardState){
+                if((piece.locationX == knightX + 1) && (piece.locationY == knightY - 2)){
+                    emptyTile = false;
+                    if(piece.color != knight.color){
+                        takeList.push([knightX+1, knightY-2]);
+                    }
+                }
+            }
+            if(emptyTile){
+                moveList.push([knightX+1, knightY-2]);
+            }
+        };
+
+        if((knightX - 1) >=1){
+            for(piece of boardState){
+                if((piece.locationX == knightX - 1) && (piece.locationY == knightY - 2)){
+                    emptyTile = false;
+                    if(piece.color != knight.color){
+                        takeList.push([knightX-1, knightY-2]);
+                    }
+                }
+            }
+            if(emptyTile){
+                moveList.push([knightX-1, knightY-2]);
+            }
+        }
+    };
+
+    //left up/down
+    if((knightX - 2) >=1){
+        //right
+        if((knightY + 1) <= 8){
+            for(piece of boardState){
+                if((piece.locationX == knightX - 2) && (piece.locationY == knightY + 1)){
+                    emptyTile = false;
+                    if(piece.color != knight.color){
+                        takeList.push([knightX-2, knightY+1]);
+                    }
+                }
+            }
+            if(emptyTile){
+                moveList.push([knightX-2, knightY+1]);
+            }
+        };
+
+        if((knightY - 1) >=1){
+            for(piece of boardState){
+                if((piece.locationX == knightX - 2) && (piece.locationY == knightY - 1)){
+                    emptyTile = false;
+                    if(piece.color != knight.color){
+                        takeList.push([knightX-2, knightY-1]);
+                    }
+                }
+            }
+            if(emptyTile){
+                moveList.push([knightX-2, knightY-1]);
+            }
+        }
+    };
+
 }
+
+// export {pawnMove, kingMove, rookMove, bishopMove, queenMove, knightMove};
