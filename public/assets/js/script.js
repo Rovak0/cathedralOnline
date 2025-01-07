@@ -1,5 +1,5 @@
 //TODO
-//change the selectedList to work off of tiles instead of ids
+//put in the piece displays
 
 const gameId = document.querySelector('#gameHolder');
 const gameBoard = document.querySelector('#gameBoard');
@@ -17,10 +17,16 @@ const signupPassword = document.querySelector("#signupPassword");
 
 const queueButton = document.querySelector("#queueButton");
 
+function tester(){
+    console.log("Tester function");
+}
+
 
 //imports are wrong on the front end
 //these are copied from pieceRules.js
 function pawnMove(pawn, boardState){
+    console.log("in pawn function");
+    tester();
     //pawn's x,y and can it cap a piece
     const pawnX = pawn.locationX;
     const pawnY = pawn.locationY;
@@ -141,10 +147,11 @@ function pawnMove(pawn, boardState){
     }
 
     return [moveList, takeList];
-}
+};
 
 //kings
 function kingMove(king, boardState){
+    console.log("in king move");
     const kingX = king.locationX;
     const kingY = king.locationY;
     //don't actually need to track if the king can take because it will be naturally in 2 seperate lists
@@ -286,7 +293,7 @@ function kingMove(king, boardState){
     }
 
     return [moveList, takeList];
-}
+};
 
 //rooks
 function rookMove(rook, boardState){
@@ -405,12 +412,13 @@ function rookMove(rook, boardState){
             moveList.push([rookX, rookY-tracker]);
         }
     }
-    tracker = 0;
-    run = true;
-}
+
+    return [moveList, takeList];
+};
 
 //bishop move
 function bishopMove(bishop, boardState){
+    console.log("Inside function");
     const bishX = bishop.locationX;
     const bishY = bishop.locationY;
 
@@ -529,7 +537,10 @@ function bishopMove(bishop, boardState){
             moveList.push([bishX-xTracker, bishY + yTracker]);
         }
     }
-}
+
+    return [moveList, takeList];
+};
+
 
 //queen move
 function queenMove(queen, boardState){
@@ -540,7 +551,7 @@ function queenMove(queen, boardState){
     const takeList = rookSide[1].concat(bishSide[1]);
 
     return [moveList, takeList];
-}
+};
 
 //knights
 function knightMove(knight, boardState){
@@ -680,7 +691,8 @@ function knightMove(knight, boardState){
         }
     };
 
-}
+    return [moveList, takeList];
+};
 
 
 // create my session variables
@@ -784,6 +796,7 @@ const resetList = [
 ]
 
 let board;
+let boardId;
 // user = 1;
 
 // const tester = "abc";
@@ -842,7 +855,7 @@ for (kid of gameBoard.children){
                     tile.classList.remove("selected");
                     // if deselecting, remove the item from the select list
                     for (index in selectedList){
-                        if(selectedList[index] == tile.id){
+                        if(selectedList[index] == tile){ //.id
                             selectedList.splice(index, 1);
                         }
                     };
@@ -852,12 +865,12 @@ for (kid of gameBoard.children){
                     tile.classList.add("selected");
                     tile.style.backgroundColor = "lightblue";
                     //add the item to the select list
-                    selectedList.push(tile.id);
+                    selectedList.push(tile); //.id
                     // check if there are more than 2 entries
                     if(selectedList.length > 2){
                         //clear the first entry
                         //grab the tile based on it's stored id
-                        const clearTile = document.querySelector(`#${selectedList[0]}`);
+                        const clearTile = selectedList[0]; //document.querySelector(`#${selectedList[0]}`);
                         // clearTile.style.backgroundColor = "white";
                         if(clearTile.classList[0] == "white"){
                             clearTile.style.backgroundColor = "white";
@@ -867,19 +880,15 @@ for (kid of gameBoard.children){
                         }
                         selectedList.splice(0, 1);
                     }
-                    // console.log(selectedList);
                 }
                 // i have access to the square id value
                 
                 //find the piece in the selected list index 0
-                console.log("selected length");
                 if(selectedList.length > 0){
                     if(selectedList[0]){
                         //x and y are selcetedList[0][5] and selectedList[0][6]
                         // i know that there are either 2 or three entries on the classList
                         //if 2, then no piece
-                        console.log("selected length class");
-                        console.log(selectedList[0].classList);
                         if(selectedList[0].classList.length == 3){
                             // let pieceName;
                             let selectedPiece;
@@ -890,14 +899,71 @@ for (kid of gameBoard.children){
                             //     pieceName = selectedList[0].classList[1];
                             // }
                             //now to find the piece based off of x and y
-                            for(piece of boardState){
-                                if(piece.locationX == selcetedList[0][5]){
+
+
+                            for(piece of board){
+                                if(piece.locationY == selectedList[0].id[5]){
                                     //char ints and ints evaluate as equal
-                                    if(piece.locationY == selcetedList[0][6]){
+                                    if(piece.locationX == selectedList[0].id[4]){
+                                        // console.log(piece);
                                         selectedPiece = piece;
                                     }
                                 }
                             }
+
+                            ////////
+                            //run the piece through a switch case to give it the right function
+                            if(selectedPiece){
+                                
+                                // if(selectedPiece.name == "bishop"){
+                                    //     colorSet = bishopMove(selectedPiece, board);
+                                    // }
+                                    // else if(selectedPiece.name == "pawn"){
+                                        //     colorSet = pawnMove(selectedPiece, board);
+                                        // }
+                                        // else if(selectedPiece.name == "rook"){
+                                            //     colorSet = rookMove(selectedPiece, board);
+                                            // }
+                                            // else if(selectedPiece.name == "knight"){
+                                                //     colorSet = knightMove(selectedPiece, board);
+                                                // }
+                                                // else if(selectedPiece.name == "queen"){
+                                //     colorSet = queenMove(selectedPiece, board);
+                                // }
+                                // else if(selectedPiece.name == "king"){
+                                    //     colorSet = kingMove(selectedPiece, board);
+                                    // }
+
+                                let colorSet;
+                                
+                                switch(selectedPiece.name){
+                                    case("bishop"):
+                                        colorSet = bishopMove(selectedPiece, board);
+                                        break;
+                                    case("pawn"):
+                                        colorSet = pawnMove(selectedPiece, board);
+                                        break;
+                                    case("rook"):
+                                        colorSet = rookMove(selectedPiece, board);
+                                        break;
+                                    case("knight"):
+                                        colorSet = knightMove(selectedPiece, board);
+                                        break;
+                                    case("king"):
+                                        colorSet = kingMove(selectedPiece, board);
+                                        break;
+                                    case("queen"):
+                                        colorSet = queenMove(selectedPiece, board);
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                console.log(colorSet);
+
+                            }
+                            
+
                         }
                     }
                 }
@@ -911,11 +977,9 @@ for (kid of gameBoard.children){
 //make it a function because it will be used later
 async function loadBoard () {
     let fullBoard = (await getBoard());
-    // console.log(fullBoard.boardData.id);
-    board = fullBoard.boardData.id;
+    board = fullBoard.returnBoardState;
+    boardId = fullBoard.boardData.id;
     let boardState = fullBoard.returnBoardState;
-    // console.log(boardState.returnBoardState);
-    // console.log(boardState);
     let pieceX;
     let pieceY;
     let rowList;
@@ -1089,8 +1153,9 @@ async function submitButtonHandler(event){
 
     //make the submitted move and the piece id parts
     //selected list is a list holding strings, so to get the x/y grab the chars at index's 4/5
-    let submittedMove = [selectedList[1][4], selectedList[1][5]];
-    let startingMove = [selectedList[0][4], selectedList[0][5]];
+    // console.log("submit move: ", selectedList[1].id[4]);
+    let submittedMove = [selectedList[1].id[4], selectedList[1].id[5]];
+    let startingMove = [selectedList[0].id[4], selectedList[0].id[5]];
     // console.log(submittedMove);
     // console.log(startingMove);
     // the piece id cannot be saved on this side
@@ -1098,20 +1163,23 @@ async function submitButtonHandler(event){
 
     const boardRequest = await fetch("/api/pieces/move", {
         method: 'POST',
-        body: JSON.stringify({"boardId": board, "startingMove" : startingMove, "submittedMove": submittedMove}),
+        body: JSON.stringify({"boardId": boardId, "startingMove" : startingMove, "submittedMove": submittedMove}),
         headers: { 'Content-Type': 'application/json' }
     });
     if(boardRequest.ok) {
+        let color = true;
         for(tile of selectedList){
             //tile is the id of the tile, not the tile itself
-            // console.log(tile);
-            // console.log(document.querySelector(`#${tile}`))
-            // document.querySelector(`#${tile}`).style.backgroundColor = "white";
-            if(document.querySelector(`#${tile}`).className == "white"){
-                document.querySelector(`#${tile}`).style.backgroundColor = "white";
+            color = true;
+            for(className of tile.classList){
+                console.log("Count");
+                if(className == "white"){
+                    color = false;
+                    tile.style.backgroundColor = "white";
+                }
             }
-            else{
-                document.querySelector(`#${tile}`).style.backgroundColor = "rgb(72, 70, 70)";
+            if(color == true){
+                tile.style.backgroundColor = "rgb(72, 70, 70)";
             }
             // tile
         }
@@ -1120,7 +1188,7 @@ async function submitButtonHandler(event){
         // console.log("WORKING");
     }
     else{
-        // console.log("fail");
+        console.log("fail move piece");
     }
     // console.log(myRequest);
 }

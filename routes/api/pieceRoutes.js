@@ -6,6 +6,7 @@ const {pawnMove, kingMove, rookMove, bishopMove, queenMove, knightMove} = requir
 router.post('/move', async (req, res) => {
     //this will recieve a boardId, a pieceId, and a destination
     try{
+        console.log("Hunting text");
         console.log(req.body);
         // console.log(req.body.startingMove);
         // const pieceData = await Piece.findAll({
