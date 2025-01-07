@@ -1,3 +1,6 @@
+//TODO
+//change the selectedList to work off of tiles instead of ids
+
 const gameId = document.querySelector('#gameHolder');
 const gameBoard = document.querySelector('#gameBoard');
 const submitButton = document.querySelector("#submitMoveButton");
