@@ -126,7 +126,11 @@
 
     <script src="./assets/js/script.js"></script>
     <!-- type="module"  -->
-    <script src="./assets/js/pieceRules.js"></script>
+     <!-- html pulls in the js to index.html -->
+      <!-- this makes importing functions easy, because you don't need to -->
+       <!-- you can just call your "imported" function in your file -->
+        <!-- but it also means that the piece functions in pieceRules.js were overloading the ones in script -->
+    <!-- <script src="./assets/js/pieceRules.js"></script> -->
 
 </body>
 
