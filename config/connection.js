@@ -31,17 +31,17 @@ else {
   );
 }
 
-async function testSqlize(){
-  try{
-    await sequelize.authenticate();
-    console.log("FIND ME: Pass sequilize");
+// async function testSqlize(){
+//   try{
+//     await sequelize.authenticate();
+//     console.log("FIND ME: Pass sequilize");
   
-  }
-  catch(err){
-    console.log("FIND ME: Failed sequilize");
-  }
-}
+//   }
+//   catch(err){
+//     console.log("FIND ME: Failed sequilize");
+//   }
+// }
 
-testSqlize();
+// testSqlize();
 
 module.exports = sequelize;

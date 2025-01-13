@@ -8,8 +8,9 @@ router.post("/create", async (req,res) => {
             res.status(206).json('Missing data'); //code 206 is missing data
             return;
         }
-
+        console.log("creating");
         const userData = await Player.create(req.body);
+        console.log("Player made");
         res.status(200).json(userData);
         return;
     }
