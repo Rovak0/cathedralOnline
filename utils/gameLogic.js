@@ -72,16 +72,13 @@ async function pawnMove(boardId, pawnId, submittedMove){
             //move 1 foward
             // if(submittedMove == [pawnLocation[0], pawnLocation[1]+1]){
             if(pawnLocation[0] == submittedMove[0] && (pawnLocation[1]+1) == submittedMove[1]){
-                let legal = 1;
                 //is there a piece in that spot
                 for(piece of boardState){
                     if(piece.locationX == submittedMove[0] && piece.locationY == submittedMove[1]){
-                        console.log(piece);
-                        //change legal to false
-                        legal = 0;
+                        return 0;
                     }
                 }
-                return legal;
+                return 1;
             }
 
             //take diagonal

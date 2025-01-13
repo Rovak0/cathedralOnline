@@ -25,7 +25,6 @@ function tester(){
 //imports are wrong on the front end
 //these are copied from pieceRules.js
 function pawnMove(pawn, boardState){
-    console.log("in pawn function");
     tester();
     //pawn's x,y and can it cap a piece
     const pawnX = pawn.locationX;
@@ -151,7 +150,6 @@ function pawnMove(pawn, boardState){
 
 //kings
 function kingMove(king, boardState){
-    console.log("in king move");
     const kingX = king.locationX;
     const kingY = king.locationY;
     //don't actually need to track if the king can take because it will be naturally in 2 seperate lists
@@ -418,7 +416,6 @@ function rookMove(rook, boardState){
 
 //bishop move
 function bishopMove(bishop, boardState){
-    console.log("Inside function");
     const bishX = bishop.locationX;
     const bishY = bishop.locationY;
 
@@ -704,7 +701,8 @@ let user = sessionStorage.getItem('user_id');
 
 
 //process.env.PORT || 
-const PORT = "http://localhost:3001";
+
+const PORT = process.env.DB_PORT || "http://localhost:3001";
 //http://localhost:3001/api/board
 
 // for each square, it will needs its own event listner
@@ -905,7 +903,6 @@ for (kid of gameBoard.children){
                                 if(piece.locationY == selectedList[0].id[5]){
                                     //char ints and ints evaluate as equal
                                     if(piece.locationX == selectedList[0].id[4]){
-                                        // console.log(piece);
                                         selectedPiece = piece;
                                     }
                                 }
@@ -987,21 +984,16 @@ async function loadBoard () {
     for(kid of gameBoard.children){
         rowList = kid.children;
     }
-    // console.log(rowList);
     //reset the board
     //use the indexs to move through the resetList
     let indexX = 0;
     let indexY = 0;
     let tileImage;
     for(child of rowList){
-        // console.log(child.children);
         for(kid of child.children){
-            // console.log(kid);
-            // console.log(kid.children);
             kid.textContent = resetList[indexX][indexY];
 
             tileImage = document.querySelector(`#img${indexX}${indexY}`);
-            // console.log(tileImage);
             if(tileImage){
                 tileImage.parentElement.removeChild(tileImage);
             }
@@ -1039,7 +1031,6 @@ async function loadBoard () {
     let tile;
     let imageId;
     for(piece of boardState){
-        // console.log(piece);
         // go through each piece and read there coords
         // then compare it to the tile id [4]/[5] to place them
         pieceX = piece.locationX;
@@ -1047,7 +1038,6 @@ async function loadBoard () {
 
         column = rowList[7- (pieceY-1)];
         tile = (column.children)[pieceX-1];
-        // console.log(tile);
         
         //I have the tile and I have the piece
         // run the piece through a switch case to place the right thing into the tile
@@ -1055,7 +1045,6 @@ async function loadBoard () {
         //make the image element that will be attached to the tile
         //give the image an id that is its x/y coords
         imageId = `${pieceX-1}${pieceY-1}`;
-        // console.log(typeof(imageId));
         let pieceImage = document.createElement("img");
         // pieceImage.setAttribute(id, `${imageId}`);
         pieceImage.id = `img${imageId}`;
@@ -1143,7 +1132,6 @@ async function submitButtonHandler(event){
     // need to then send the json packet 
     // then wait for a response
     event.preventDefault();
-    console.log("submit");
     if(selectedList.length !=2){
         console.log("Not the right number of tiles");
         return;
@@ -1153,11 +1141,8 @@ async function submitButtonHandler(event){
 
     //make the submitted move and the piece id parts
     //selected list is a list holding strings, so to get the x/y grab the chars at index's 4/5
-    // console.log("submit move: ", selectedList[1].id[4]);
     let submittedMove = [selectedList[1].id[4], selectedList[1].id[5]];
     let startingMove = [selectedList[0].id[4], selectedList[0].id[5]];
-    // console.log(submittedMove);
-    // console.log(startingMove);
     // the piece id cannot be saved on this side
     // the backend must find the piece based off of the submitted move
 
@@ -1172,7 +1157,6 @@ async function submitButtonHandler(event){
             //tile is the id of the tile, not the tile itself
             color = true;
             for(className of tile.classList){
-                console.log("Count");
                 if(className == "white"){
                     color = false;
                     tile.style.backgroundColor = "white";
@@ -1185,23 +1169,19 @@ async function submitButtonHandler(event){
         }
         selectedList = []
         loadBoard();
-        // console.log("WORKING");
     }
     else{
         console.log("fail move piece");
     }
-    // console.log(myRequest);
 }
 
 async function loginHandler(event){
     event.preventDefault();
-    // console.log(loginUsername.value.trim());
     let username = loginUsername.value.trim();
     let password = loginPassword.value.trim();
     //.trim removes any blank space that may ruin things
 
     if(username && password){
-        // console.log(username + password);
         const login = await fetch('/api/user/login', {
             method: 'Post',
             body: JSON.stringify({
@@ -1211,24 +1191,16 @@ async function loginHandler(event){
             headers: { 'Content-Type': 'application/json' }
         });
 
-        // console.log(login);
         if(login.ok){
-            // console.log("Logged in");
-            // console.log(login);
             let parsedString
             for await(const chunk of login.body){
-                // console.log(chunk);
                 let decodedString = new TextDecoder().decode(chunk);
-                // console.log(decodedString);
                 parsedString = JSON.parse(decodedString);
-                // console.log(parsedString);
             }
-            // console.log(parsedString);
             user = parsedString;
             sessionStorage.setItem('user_id', parsedString);
             sessionStorage.setItem('loggedIn', true);
             
-            // console.log(user);
         }
         else{
             console.log("Fail");
@@ -1243,7 +1215,6 @@ async function signupHandler(event){
     let password = signupPassword.value.trim();
 
     if(username && password){
-        // console.log(username + password);
         const login = await fetch('/api/user/create', {
             method: 'Post',
             body: JSON.stringify({
@@ -1253,19 +1224,12 @@ async function signupHandler(event){
             headers: { 'Content-Type': 'application/json' }
         });
 
-        // console.log(login);
         if(login.ok){
-            // console.log("Logged in");
-            // console.log(login);
             let parsedString
             for await(const chunk of login.body){
-                // console.log(chunk);
                 let decodedString = new TextDecoder().decode(chunk);
-                // console.log(decodedString);
                 parsedString = JSON.parse(decodedString);
-                // console.log(parsedString);
             }
-            // console.log(parsedString);
             user = parsedString;
         }
         else{
@@ -1314,7 +1278,6 @@ if(user != 'false'){
 //run the board load every second
 setInterval(function() {
     //comment out the loadboard call to stop sending requests during development
-    // console.log(user);
     if(user != 'false'){
         loadBoard();
     }
