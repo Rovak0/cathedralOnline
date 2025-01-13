@@ -10,6 +10,7 @@ const DB_NAME = "chess_db"
 
 if (process.env.Internal_Database_URL) {
   sequelize = new Sequelize(process.env.Internal_Database_URL);
+  console.log("FIND ME: " + sequelize);
 }
 // else if(process.env.External_Database_URL){
 //   console.log("Outside base");
