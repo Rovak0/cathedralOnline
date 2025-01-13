@@ -5,7 +5,7 @@ const {Board, Piece, Player} = require("../../models");
 router.post("/create", async (req,res) => {
     try{
         if((!req.body.username) || (!req.body.password)){
-            res.status(206).json('Missing data'); //code 206 is missing data
+            res.status(400).json('Missing data'); //code 206 is missing data
             return;
         }
         console.log("creating");
@@ -15,7 +15,7 @@ router.post("/create", async (req,res) => {
         return;
     }
     catch (err){
-        res.status(400).json(err);
+        res.status(500).json("Testing end routes");
     }
 });
 
