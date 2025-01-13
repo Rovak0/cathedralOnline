@@ -702,7 +702,8 @@ let user = sessionStorage.getItem('user_id');
 // console.log("process " + process);
 // console.log("process.env " + process.env);
 
-const PORT = `postgresql://cathedral_database_user:Mt780viUC1vo0rwUj8w8o1eg2KlhObD4@dpg-cu2j7m2j1k6c73cmntug-a.oregon-postgres.render.com/cathedral_database`;
+// const PORT = `postgresql://cathedral_database_user:Mt780viUC1vo0rwUj8w8o1eg2KlhObD4@dpg-cu2j7m2j1k6c73cmntug-a.oregon-postgres.render.com/cathedral_database`;
+const PORT = `postgresql://cathedral_database_user:Mt780viUC1vo0rwUj8w8o1eg2KlhObD4@dpg-cu2j7m2j1k6c73cmntug-a/cathedral_database`
 // const PORT = process.env.DB_PORT || "http://localhost:3001";
 //http://localhost:3001/api/board
 
