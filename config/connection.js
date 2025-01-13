@@ -10,7 +10,12 @@ const DB_NAME = "chess_db"
 
 if (process.env.Internal_Database_URL) {
   sequelize = new Sequelize(process.env.Internal_Database_URL);
-} else {
+}
+// else if(process.env.External_Database_URL){
+//   console.log("Outside base");
+//   sequelize = new Sequelize(process.env.External_Database_URL);
+// }
+else {
   sequelize = new Sequelize(
     // DB_NAME,
     // DB_USER,
