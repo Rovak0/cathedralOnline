@@ -8,8 +8,8 @@ const DB_USER = "postgres"
 const DB_PASSWORD = "TestTest"
 const DB_NAME = "chess_db"
 
-if (process.env.DB_URL) {
-  sequelize = new Sequelize(process.env.DB_URL);
+if (process.env.Internal_Database_URL) {
+  sequelize = new Sequelize(process.env.Internal_Database_URL);
 } else {
   sequelize = new Sequelize(
     // DB_NAME,
