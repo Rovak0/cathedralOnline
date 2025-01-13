@@ -1228,6 +1228,8 @@ async function signupHandler(event){
             headers: { 'Content-Type': 'application/json' }
         });
 
+        console.log(login);
+
         if(login.ok){
             let parsedString
             for await(const chunk of login.body){
