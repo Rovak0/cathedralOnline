@@ -13,13 +13,39 @@ table td {
 }
 
 td img{
-    height: 60px;
     width: auto;
 }
 
-/* form{
-    display: flex
-} */
+@media screen and (min-width: 2999px ){
+    td img{
+        /* height: 5%; */
+        height: 60px;
+        /* size: fluid; */
+        width: auto;
+    }
+    table {
+        height: 750px;
+        width : 750px;
+        padding : 0px;
+        border : 5px solid green;
+    }
+}
+
+@media screen and (max-width: 2999px ){
+    td img{
+        /* height: 5%; */
+        height: 45px;
+        /* size: fluid; */
+        width: auto;
+    }
+    table {
+        height: 600px;
+        width : 600px;
+        padding : 0px;
+        border : 5px solid green;
+    }
+}
+
 
 .black{
     text-align: center;
@@ -30,4 +56,11 @@ td img{
 .white{
     text-align: center;
     background-color: white;
+}
+
+body{
+    /* width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center; */
 }

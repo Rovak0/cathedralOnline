@@ -1052,6 +1052,7 @@ async function loadBoard () {
         let pieceImage = document.createElement("img");
         // pieceImage.setAttribute(id, `${imageId}`);
         pieceImage.id = `img${imageId}`;
+        pieceImage.classList.add("responsive");
 
         switch(piece.name){
             case("pawn"):
