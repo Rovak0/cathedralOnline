@@ -31,27 +31,15 @@ Board.init(
             unique: false
           }
         },
+        currentTurn: {
+          //this will be held in binary based on white and black
+          type: DataTypes.INTEGER
+        },
         complete : {
           type: DataTypes.BOOLEAN,
           defaultValue : false
           //this will be referenced to decide which board to show a user
         }
-        // player_id: {
-        //     type: DataTypes.INTEGER,
-        //     references: {
-        //       model: 'player',
-        //       key: 'id',
-        //       unique: false
-        //     }
-        // },
-        // tiles: {
-        //     type: [DataTypes.INTEGER], //it is an array of squares
-        //     references: {
-        //       model: 'square',
-        //       key: 'id',
-        //       unique: false
-        //     }
-        // }
     },
     {
         sequelize,

@@ -489,7 +489,7 @@ async function kingMove(boardId, kingId, submittedMove){
     }
 };
 
-//rook is done
+// piece.moveCap needs to be implemented
 async function rookMove(boardId, rookId, submittedMove){
     //this will move fowards in a straight line, one at a time, until it hits a stop
     try{
@@ -514,6 +514,11 @@ async function rookMove(boardId, rookId, submittedMove){
             while(run){
                 //increment the counter and break before checking if there is a piece
                 counter++;
+                //counter is good for handling the moveCap
+                if(counter > rook.moveCap){
+                    run = false;
+                    return 0;
+                }
                 if(rookLocation[0]+counter > 8){
                     run = false;
                     return 0;
@@ -568,6 +573,10 @@ async function rookMove(boardId, rookId, submittedMove){
             while(run){
                 //increment the counter and break before checking if there is a piece
                 counter++;
+                if(counter > rook.moveCap){
+                    run = false;
+                    return 0;
+                }
                 if(rookLocation[0]-counter <= 0){
                     run = false;
                     return 0;
@@ -614,6 +623,10 @@ async function rookMove(boardId, rookId, submittedMove){
             while(run){
                 //increment the counter and break before checking if there is a piece
                 counter++;
+                if(counter > rook.moveCap){
+                    run = false;
+                    return 0;
+                }
                 if(rookLocation[1]-counter <= 0){
                     run = false;
                     return 0;
@@ -662,6 +675,10 @@ async function rookMove(boardId, rookId, submittedMove){
             while(run){
                 //increment the counter and break before checking if there is a piece
                 counter++;
+                if(counter > rook.moveCap){
+                    run = false;
+                    return 0;
+                }
                 if(rookLocation[1]+counter > 8){
                     run = false;
                     return 0;
@@ -708,7 +725,6 @@ async function rookMove(boardId, rookId, submittedMove){
     }
 };
 
-//bishop is done
 async function bishopMove(boardId, bishopId, submittedMove){
     //this will move fowards in a straight line, one at a time, until it hits a stop
     try{
@@ -734,6 +750,10 @@ async function bishopMove(boardId, bishopId, submittedMove){
             while(run){
                 //increment the counter and break before checking if there is a piece
                 counter++;
+                if(counter > bishop.moveCap){
+                    run = false;
+                    return 0;
+                }
                 if((bishopLocation[0]+counter > 8) || (bishopLocation[1]+counter > 8)){
                     run = false;
                     return 0;
@@ -783,7 +803,11 @@ async function bishopMove(boardId, bishopId, submittedMove){
             let counter = 0;
             while(run){
                 //increment the counter and break before checking if there is a piece
-                counter++;
+                counter++;            
+                if(counter > bishop.moveCap){
+                    run = false;
+                    return 0;
+                }
                 if((bishopLocation[0]-counter <= 0) || (bishopLocation[1]+counter > 8)){
                     run = false;
                     return 0;
@@ -835,6 +859,10 @@ async function bishopMove(boardId, bishopId, submittedMove){
             while(run){
                 //increment the counter and break before checking if there is a piece
                 counter++;
+                if(counter > bishop.moveCap){
+                    run = false;
+                    return 0;
+                }
                 if((bishopLocation[0]-counter <= 0) || (bishopLocation[1]-counter <= 0)){
                     run = false;
                     return 0;
@@ -883,6 +911,10 @@ async function bishopMove(boardId, bishopId, submittedMove){
             while(run){
                 //increment the counter and break before checking if there is a piece
                 counter++;
+                if(counter > bishop.moveCap){
+                    run = false;
+                    return 0;
+                }
                 if((bishopLocation[0]+counter > 8) || (bishopLocation[1]-counter <= 0)){
                     run = false;
                     return 0;

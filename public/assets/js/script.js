@@ -699,15 +699,6 @@ sessionStorage.setItem("user_id", false);
 let loggedIn = sessionStorage.getItem('logged_in');
 let user = sessionStorage.getItem('user_id');
 
-// console.log("process " + process);
-// console.log("process.env " + process.env);
-
-//local version
-// const PORT = `postgresql://cathedral_database_user:Mt780viUC1vo0rwUj8w8o1eg2KlhObD4@dpg-cu2j7m2j1k6c73cmntug-a.oregon-postgres.render.com/cathedral_database`;
-//upload version
-// const PORT = `postgresql://cathedral_database_user:Mt780viUC1vo0rwUj8w8o1eg2KlhObD4@dpg-cu2j7m2j1k6c73cmntug-a/cathedral_database`
-//local host
-// const PORT = "http://localhost:3001";
 
 // for each square, it will needs its own event listner
 
@@ -980,6 +971,9 @@ async function loadBoard () {
     let fullBoard = (await getBoard());
     board = fullBoard.returnBoardState;
     boardId = fullBoard.boardData.id;
+    // console.log(fullBoard.boardData);
+    // console.log(fullBoard.boardData.player_id1);
+    // console.log(user);
     let boardState = fullBoard.returnBoardState;
     let pieceX;
     let pieceY;
@@ -1153,7 +1147,7 @@ async function submitButtonHandler(event){
 
     const boardRequest = await fetch("/api/pieces/move", {
         method: 'POST',
-        body: JSON.stringify({"boardId": boardId, "startingMove" : startingMove, "submittedMove": submittedMove}),
+        body: JSON.stringify({"boardId": boardId, "startingMove" : startingMove, "submittedMove": submittedMove, "playerId": user}),
         headers: { 'Content-Type': 'application/json' }
     });
     if(boardRequest.ok) {

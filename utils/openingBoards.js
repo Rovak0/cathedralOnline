@@ -194,4 +194,495 @@ async function normalBoard(boardId){
     return boardState;
 }
 
-module.exports = {normalBoard};
+//cathedr'l board
+async function cathedralBoard(boardId){
+    let boardState = [];
+
+    const whiteWiz = await Piece.create({
+        board_id: boardId,
+        locationX: 1,
+        locationY: 1,
+        name: "cleric",
+        moveType: "king",
+        color : "white",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 2,
+        attackDam: 2,
+        toHit: 13,
+        health: 8,
+        currentHealth: 8,
+        ac: 19
+    });
+
+    const blackWiz = await Piece.create({
+        board_id: boardId,
+        locationX: 8,
+        locationY: 8,
+        name: "cleric",
+        moveType: "king",
+        color : "black",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 2,
+        attackDam: 2,
+        toHit: 13,
+        health: 8,
+        currentHealth: 8,
+        ac: 19
+    });
+
+    boardState.push(whiteWiz);
+    boardState.push(blackWiz);
+
+    const whiteKnight = await Piece.create({
+        board_id: boardId,
+        locationX: 3,
+        locationY: 1,
+        name: "knight",
+        moveType: "knight",
+        color : "white",
+        canTake: false,
+        moveCap: 3,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 6,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 14
+    });
+
+    const blackKnight = await Piece.create({
+        board_id: boardId,
+        locationX: 6,
+        locationY: 8,
+        name: "knight",
+        moveType: "knight",
+        color : "black",
+        canTake: false,
+        moveCap: 3,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 6,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 14
+    });
+
+    boardState.push(whiteKnight);
+    boardState.push(blackKnight);
+
+    const whiteKing = await Piece.create({
+        board_id: boardId,
+        locationX: 4,
+        locationY: 1,
+        name: "king",
+        moveType: "king",
+        color : "white",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 4,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 16
+    });
+
+    const blackKing = await Piece.create({
+        board_id: boardId,
+        locationX: 5,
+        locationY: 8,
+        name: "king",
+        moveType: "king",
+        color : "black",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 4,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 16
+    });
+
+    boardState.push(whiteKing);
+    boardState.push(blackKing);
+
+    const whiteQueen = await Piece.create({
+        board_id: boardId,
+        locationX: 5,
+        locationY: 1,
+        name: "queen",
+        moveType: "king",
+        color : "white",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 3,
+        attackDam: 1,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 19
+    });
+
+    const blackQueen = await Piece.create({
+        board_id: boardId,
+        locationX: 4,
+        locationY: 8,
+        name: "queen",
+        moveType: "king",
+        color : "black",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 3,
+        attackDam: 1,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 19
+    });
+
+    boardState.push(whiteKing);
+    boardState.push(blackQueen);
+
+    const whitePally = await Piece.create({
+        board_id: boardId,
+        locationX: 6,
+        locationY: 1,
+        name: "paladin",
+        moveType: "rook",
+        color : "white",
+        canTake: false,
+        moveCap: 2,
+        attackRan: 1,
+        attackHits: 2,
+        attackDam: 3,
+        magicDam: 1,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 15,
+        sted: true
+    });
+
+    const blackPally = await Piece.create({
+        board_id: boardId,
+        locationX: 3,
+        locationY: 8,
+        name: "paladin",
+        moveType: "rook",
+        color : "black",
+        canTake: false,
+        moveCap: 2,
+        attackRan: 1,
+        attackHits: 2,
+        attackDam: 3,
+        magicDam: 1,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 15,
+        sted: true
+    });
+
+    boardState.push(whitePally);
+    boardState.push(blackPally);
+
+    const whiteCleric = await Piece.create({
+        board_id: boardId,
+        locationX: 8,
+        locationY: 1,
+        name: "cleric",
+        moveType: "king",
+        color : "white",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 4,
+        toHit: 13,
+        health: 8,
+        currentHealth: 8,
+        ac: 19,
+    });
+
+    const blackCleric = await Piece.create({
+        board_id: boardId,
+        locationX: 1,
+        locationY: 8,
+        name: "cleric",
+        moveType: "king",
+        color : "black",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 4,
+        toHit: 13,
+        health: 8,
+        currentHealth: 8,
+        ac: 19,
+    });
+
+    boardState.push(whiteCleric);
+    boardState.push(blackCleric);
+
+    const whiteAssassin = await Piece.create({
+        board_id: boardId,
+        locationX: 2,
+        locationY: 2,
+        name: "assassin",
+        moveType: "queen",
+        color : "white",
+        canTake: false,
+        moveCap: 2,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 3,
+        armorPierce: true,
+        toHit: 9,
+        health: 10,
+        currentHealth: 10,
+        ac: 18
+    });
+
+    const blackAssassin = await Piece.create({
+        board_id: boardId,
+        locationX: 7,
+        locationY: 7,
+        name: "assassin",
+        moveType: "queen",
+        color : "black",
+        canTake: false,
+        moveCap: 2,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 3,
+        armorPierce: true,
+        toHit: 9,
+        health: 10,
+        currentHealth: 10,
+        ac: 18
+    });
+
+    boardState.push(whiteAssassin);
+    boardState.push(blackAssassin);
+
+    const whiteRanger1 = await Piece.create({
+        board_id: boardId,
+        locationX: 3,
+        locationY: 2,
+        name: "ranger",
+        moveType: "bishop",
+        color : "white",
+        canTake: false,
+        moveCap: 8,
+        attackRan: 3,
+        attackHits: 4,
+        attackDam: 1,
+        toHit: 11,
+        attackHitsRan: 4,
+        attackDamRan: 1,
+        toHitRan: 11,
+        health: 10,
+        currentHealth: 10,
+        ac: 18
+    });
+
+    const whiteRanger2 = await Piece.create({
+        board_id: boardId,
+        locationX: 6,
+        locationY: 2,
+        name: "ranger",
+        moveType: "bishop",
+        color : "white",
+        canTake: false,
+        moveCap: 8,
+        attackRan: 3,
+        attackHits: 4,
+        attackDam: 1,
+        toHit: 11,
+        attackHitsRan: 4,
+        attackDamRan: 1,
+        toHitRan: 11,
+        health: 10,
+        currentHealth: 10,
+        ac: 18
+    });
+
+    const blackRanger1 = await Piece.create({
+        board_id: boardId,
+        locationX: 3,
+        locationY: 7,
+        name: "ranger",
+        moveType: "bishop",
+        color : "black",
+        canTake: false,
+        moveCap: 8,
+        attackRan: 3,
+        attackHits: 4,
+        attackDam: 1,
+        toHit: 11,
+        attackHitsRan: 4,
+        attackDamRan: 1,
+        toHitRan: 11,
+        health: 10,
+        currentHealth: 10,
+        ac: 18
+    });
+
+    const blackRanger2 = await Piece.create({
+        board_id: boardId,
+        locationX: 6,
+        locationY: 7,
+        name: "ranger",
+        moveType: "bishop",
+        color : "black",
+        canTake: false,
+        moveCap: 8,
+        attackRan: 3,
+        attackHits: 4,
+        attackDam: 1,
+        toHit: 11,
+        attackHitsRan: 4,
+        attackDamRan: 1,
+        toHitRan: 11,
+        health: 10,
+        currentHealth: 10,
+        ac: 18
+    });
+
+    boardState.push(whiteRanger1);
+    boardState.push(whiteRanger2);
+    boardState.push(blackRanger1);
+    boardState.push(blackRanger2);
+
+    const whiteWarrior1 = await Piece.create({
+        board_id: boardId,
+        locationX: 4,
+        locationY: 2,
+        name: "warrior",
+        moveType: "king",
+        color : "white",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 2,
+        attackDam: 3,
+        toHit: 11,
+        health: 14,
+        currentHealth: 14,
+        ac: 16
+    });
+
+    const whiteWarrior2 = await Piece.create({
+        board_id: boardId,
+        locationX: 5,
+        locationY: 2,
+        name: "warrior",
+        moveType: "king",
+        color : "white",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 2,
+        attackDam: 3,
+        toHit: 11,
+        health: 14,
+        currentHealth: 14,
+        ac: 16
+    });
+
+    const blackWarrior1 = await Piece.create({
+        board_id: boardId,
+        locationX: 4,
+        locationY: 7,
+        name: "warrior",
+        moveType: "king",
+        color : "black",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 2,
+        attackDam: 3,
+        toHit: 11,
+        health: 14,
+        currentHealth: 14,
+        ac: 16
+    });
+
+    const blackWarrior2 = await Piece.create({
+        board_id: boardId,
+        locationX: 4,
+        locationY: 7,
+        name: "warrior",
+        moveType: "king",
+        color : "black",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 2,
+        attackDam: 3,
+        toHit: 11,
+        health: 14,
+        currentHealth: 14,
+        ac: 16
+    });
+
+    boardState.push(whiteWarrior1);
+    boardState.push(whiteWarrior2);
+    boardState.push(blackWarrior1);
+    boardState.push(blackWarrior2);
+
+    const whiteCrusader = await Piece.create({
+        board_id: boardId,
+        locationX: 7,
+        locationY: 2,
+        name: "crusader",
+        moveType: "bishop",
+        color : "white",
+        canTake: false,
+        moveCap: 2,
+        attackRan: 1,
+        attackHits: 6,
+        attackDam: 1,
+        toHit: 10,
+        health: 12,
+        currentHealth: 12,
+        ac: 17
+    });
+
+    const blackCrusader = await Piece.create({
+        board_id: boardId,
+        locationX: 2,
+        locationY: 7,
+        name: "crusader",
+        moveType: "bishop",
+        color : "black",
+        canTake: false,
+        moveCap: 2,
+        attackRan: 1,
+        attackHits: 6,
+        attackDam: 1,
+        toHit: 10,
+        health: 12,
+        currentHealth: 12,
+        ac: 17
+    });
+
+    boardState.push(whiteCrusader);
+    boardState.push(blackCrusader);
+
+    return boardState;
+}
+
+module.exports = {normalBoard, cathedralBoard};

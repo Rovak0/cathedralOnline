@@ -8,14 +8,24 @@ router.post('/move', async (req, res) => {
     try{
         console.log("Hunting text");
         console.log(req.body);
-        // console.log(req.body.startingMove);
-        // const pieceData = await Piece.findAll({
-        //     where: {
-        //         locationX : req.body.startingMove[0],
-        //         locationY : req.body.startingMove[1],
-        //     }
-        // });
-        // console.log(pieceData.dataValues.moveType);
+
+        //look at the board and find out whose turn it is
+        const board = await Board.findByPk(req.body.boardId);
+        //board.currentTurn is either 0 or 1
+        if(board.currentTurn == 0) {
+            //board.player_id1 == req.body.playerId is a legal move, so don't stop it
+            if(board.player_id1 != req.body.playerId){
+                res.status(200).json("Not your turn");
+                return;
+            }
+        }
+        else{
+            if(board.player_id2 != req.body.playerId){
+                res.status(200).json("Not your turn");
+                return;
+            }
+        };
+
         const boardState = await Piece.findAll(
             {
                 where: 
@@ -86,6 +96,14 @@ router.post('/move', async (req, res) => {
             //the piece has moved, so save that 
             pieceData.notMoved = false;
             await pieceData.save();
+            //switch the board turn
+            if(board.currentTurn == 0){
+                board.currentTurn = 1;
+            }
+            else{
+                board.currentTurn = 0;
+            }
+            await board.save();
             res.status(200).json("Legal empty move");
             return;
         }
@@ -112,7 +130,13 @@ router.post('/move', async (req, res) => {
             //the piece has moved, so save that 
             pieceData.notMoved = false;
             await pieceData.save();
-
+            //switch the board turn
+            if(board.currentTurn == 0){
+                board.currentTurn = 1;
+            }
+            else{
+                board.currentTurn = 0;
+            }
             res.status(200).json("Piece taken");
             return;
         }

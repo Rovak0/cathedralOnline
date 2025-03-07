@@ -47,13 +47,50 @@ class Piece extends Model {};
             type: DataTypes.BOOLEAN,
             defaultValue: true
         },
-        attack: {
+        //give the default move cap of 100, so I don't need to worry about a large board
+        moveCap: {
+            type: DataTypes.INTEGER,
+            defaultValue: 100
+        },
+        atackRan: {
+            type: DataTypes.INTEGER
+        },
+        attackHits: {
+            type: DataTypes.INTEGER
+        },
+        attackDam: {
             type: DataTypes.INTEGER,
             // allowNull: true
         },
-        toHit: {
+        magicDam: {
             type: DataTypes.INTEGER,
-            // allowNull: true
+            defaultValue: 0
+        },
+        armorPierce: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },  
+        attackHitsRan: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        attackDamRan: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        magicDamRan: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: true
+        },
+        armorPierceRan: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+            defaultValue: false
+        },  
+        toHitRan: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         },
         health: {
             type: DataTypes.INTEGER,
@@ -66,6 +103,10 @@ class Piece extends Model {};
         ac: {
             type: DataTypes.INTEGER,
             // allowNull: true
+        },
+        sted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     },
     {

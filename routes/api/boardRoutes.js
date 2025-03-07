@@ -182,10 +182,25 @@ router.post('/normal', async (req, res) => {
         };
 
         //create the board
-        const newBoard = await Board.create({
-            player_id1: user1id,
-            player_id2: user2id,
-        });
+        //need to randomize who is player 1 and 2 because that is white and black
+        let randomizer = Math.random();
+        let newBoard;
+        if(randomizer >= 0.5){
+            newBoard = await Board.create({
+                player_id1: user1id,
+                player_id2: user2id,
+                currentTurn: 0
+            });
+        }
+        else{
+            newBoard = await Board.create({
+                player_id1: user2id,
+                player_id2: user1id,
+                currentTurn: 0
+            });
+        }
+        console.log(newBoard);
+
         //normalBoard is a function that take in a board id
         const boardState = normalBoard(newBoard.id);
         res.status(200).json([newBoard, boardState]);
