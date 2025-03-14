@@ -52,7 +52,7 @@ class Piece extends Model {};
             type: DataTypes.INTEGER,
             defaultValue: 100
         },
-        atackRan: {
+        attackRan: {
             type: DataTypes.INTEGER
         },
         attackHits: {
@@ -107,6 +107,10 @@ class Piece extends Model {};
         sted: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        direction: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         }
     },
     {

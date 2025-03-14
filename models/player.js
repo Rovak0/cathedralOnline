@@ -31,7 +31,15 @@ class Player extends Model {
         inQueue: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
-        }
+        },
+        inQueueCat: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        testerQueue: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
     },
     {
         hooks: {

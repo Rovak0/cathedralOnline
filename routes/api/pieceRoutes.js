@@ -2,6 +2,7 @@ const router = require('express').Router();
 
 const {Board, Piece, Player} = require("../../models");
 const {pawnMove, kingMove, rookMove, bishopMove, queenMove, knightMove} = require('../../utils/gameLogic');
+const {attack} = require('../../utils/catLogic');
 
 router.post('/move', async (req, res) => {
     //this will recieve a boardId, a pieceId, and a destination
@@ -151,5 +152,31 @@ router.post('/move', async (req, res) => {
     }
 });
 
+router.post('/attack', async (req,res) => {
+    try{
+        //needs to be given the attacker, the defender, and the board
+        //req.body
+        let damage = await attack(req.body.attackerId, req.body.blockerId, req.body.boardId);
+        console.log(damage);
+        res.status(200).json(damage);
+    }
+    catch(err){
+        res.status(500).json(err);
+    }
+});
+
+router.post('/turn', async (req, res) => {
+    try{
+        //needs boardId (takes your turn)
+        //needs pieceId and direction
+        let piece = await Piece.findByPk(req.body.pieceId);
+        piece.direction = req.body.direction;
+        await piece.save();
+        res.status(200).json(piece.direction);
+    }
+    catch(err){
+        res.status(500).json(err);
+    }
+});
 
 module.exports = router;

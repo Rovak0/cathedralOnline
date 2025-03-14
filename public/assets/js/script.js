@@ -1116,6 +1116,28 @@ async function loadBoard () {
                 tile.appendChild(pieceImage);
                 tile.classList.add("king");
                 break;
+            case("warrior"):
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-warrior.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-warrior.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
+                tile.classList.add("warrior");
+                break;
+            case("ranger"):
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-ranger.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-ranger.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
+                tile.classList.add("ranger");
+                break;
             default:
                 break;        
         }
