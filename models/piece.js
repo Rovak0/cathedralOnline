@@ -54,6 +54,10 @@ class Piece extends Model {};
         },
         attackRan: {
             type: DataTypes.INTEGER
+        },        
+        toHit: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         },
         attackHits: {
             type: DataTypes.INTEGER
@@ -111,6 +115,9 @@ class Piece extends Model {};
         direction: {
             type: DataTypes.INTEGER,
             defaultValue: 0
+        },
+        side: {
+            type: DataTypes.STRING,
         }
     },
     {

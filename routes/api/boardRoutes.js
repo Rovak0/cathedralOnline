@@ -155,27 +155,48 @@ router.post('/normal', async (req, res) => {
             }
         });
 
-        //close all found boards
+        //close all found boards and delete all their pieces
+        let boardPieces;
         if (boardData1){
             for (board of boardData1){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
         };
         if (boardData2){
             for (board of boardData2){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
         };
         if (boardData3){
             for (board of boardData3){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
         };
         if (boardData4){
             for (board of boardData4){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
@@ -267,26 +288,47 @@ router.post('/cathedral', async (req, res) => {
         });
 
         //close all found boards
+        let boardPieces;
         if (boardData1){
             for (board of boardData1){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
         };
         if (boardData2){
             for (board of boardData2){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
         };
         if (boardData3){
             for (board of boardData3){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
         };
         if (boardData4){
             for (board of boardData4){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
@@ -378,26 +420,47 @@ router.post('/testing', async (req, res) => {
         });
 
         //close all found boards
+        let boardPieces;
         if (boardData1){
             for (board of boardData1){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
         };
         if (boardData2){
             for (board of boardData2){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
         };
         if (boardData3){
             for (board of boardData3){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }
         };
         if (boardData4){
             for (board of boardData4){
+                boardPieces = await Piece.findAll({
+                    where: {
+                        board_id : board.id
+                    }
+                });
                 board.complete = true;
                 await board.save();
             }

@@ -213,7 +213,8 @@ async function cathedralBoard(boardId){
         toHit: 13,
         health: 8,
         currentHealth: 8,
-        ac: 19
+        ac: 19,
+        side: "king"
     });
 
     const blackWiz = await Piece.create({
@@ -231,7 +232,8 @@ async function cathedralBoard(boardId){
         toHit: 13,
         health: 8,
         currentHealth: 8,
-        ac: 19
+        ac: 19,
+        side: "king"
     });
 
     boardState.push(whiteWiz);
@@ -252,7 +254,8 @@ async function cathedralBoard(boardId){
         toHit: 12,
         health: 12,
         currentHealth: 12,
-        ac: 14
+        ac: 14,
+        side: "king"
     });
 
     const blackKnight = await Piece.create({
@@ -270,7 +273,8 @@ async function cathedralBoard(boardId){
         toHit: 12,
         health: 12,
         currentHealth: 12,
-        ac: 14
+        ac: 14,
+        side: "king"
     });
 
     boardState.push(whiteKnight);
@@ -291,7 +295,8 @@ async function cathedralBoard(boardId){
         toHit: 12,
         health: 12,
         currentHealth: 12,
-        ac: 16
+        ac: 16,
+        side: "king"
     });
 
     const blackKing = await Piece.create({
@@ -309,7 +314,8 @@ async function cathedralBoard(boardId){
         toHit: 12,
         health: 12,
         currentHealth: 12,
-        ac: 16
+        ac: 16,
+        side: "king"
     });
 
     boardState.push(whiteKing);
@@ -330,7 +336,8 @@ async function cathedralBoard(boardId){
         toHit: 12,
         health: 12,
         currentHealth: 12,
-        ac: 19
+        ac: 19,
+        side: "queen"
     });
 
     const blackQueen = await Piece.create({
@@ -348,7 +355,8 @@ async function cathedralBoard(boardId){
         toHit: 12,
         health: 12,
         currentHealth: 12,
-        ac: 19
+        ac: 19,
+        side: "queen"
     });
 
     boardState.push(whiteQueen);
@@ -371,7 +379,8 @@ async function cathedralBoard(boardId){
         health: 12,
         currentHealth: 12,
         ac: 15,
-        sted: true
+        sted: true,
+        side: "queen"
     });
 
     const blackPally = await Piece.create({
@@ -391,7 +400,8 @@ async function cathedralBoard(boardId){
         health: 12,
         currentHealth: 12,
         ac: 15,
-        sted: true
+        sted: true,
+        side: "queen"
     });
 
     boardState.push(whitePally);
@@ -413,6 +423,7 @@ async function cathedralBoard(boardId){
         health: 8,
         currentHealth: 8,
         ac: 19,
+        side: "queen"
     });
 
     const blackCleric = await Piece.create({
@@ -431,6 +442,7 @@ async function cathedralBoard(boardId){
         health: 8,
         currentHealth: 8,
         ac: 19,
+        side: "queen"
     });
 
     boardState.push(whiteCleric);
@@ -452,7 +464,8 @@ async function cathedralBoard(boardId){
         toHit: 9,
         health: 10,
         currentHealth: 10,
-        ac: 18
+        ac: 18,
+        side: "king"
     });
 
     const blackAssassin = await Piece.create({
@@ -471,7 +484,8 @@ async function cathedralBoard(boardId){
         toHit: 9,
         health: 10,
         currentHealth: 10,
-        ac: 18
+        ac: 18,
+        side: "king"
     });
 
     boardState.push(whiteAssassin);
@@ -495,7 +509,8 @@ async function cathedralBoard(boardId){
         toHitRan: 9,
         health: 10,
         currentHealth: 10,
-        ac: 18
+        ac: 18,
+        side: "king"
     });
 
 
@@ -517,7 +532,8 @@ async function cathedralBoard(boardId){
         toHitRan: 9,
         health: 10,
         currentHealth: 10,
-        ac: 18
+        ac: 18,
+        side: "queen"
     });
 
     const blackRanger1 = await Piece.create({
@@ -538,7 +554,8 @@ async function cathedralBoard(boardId){
         toHitRan: 9,
         health: 10,
         currentHealth: 10,
-        ac: 18
+        ac: 18,
+        side: "king"
     });
 
     const blackRanger2 = await Piece.create({
@@ -559,7 +576,8 @@ async function cathedralBoard(boardId){
         toHitRan: 9,
         health: 10,
         currentHealth: 10,
-        ac: 18
+        ac: 18,
+        side: "queen"
     });
 
     boardState.push(whiteRanger1);
@@ -582,7 +600,8 @@ async function cathedralBoard(boardId){
         toHit: 11,
         health: 14,
         currentHealth: 14,
-        ac: 16
+        ac: 16,
+        side: "king"
     });
 
     const whiteWarrior2 = await Piece.create({
@@ -600,7 +619,8 @@ async function cathedralBoard(boardId){
         toHit: 11,
         health: 14,
         currentHealth: 14,
-        ac: 16
+        ac: 16,
+        side: "queen"
     });
 
     const blackWarrior1 = await Piece.create({
@@ -618,7 +638,8 @@ async function cathedralBoard(boardId){
         toHit: 11,
         health: 14,
         currentHealth: 14,
-        ac: 16
+        ac: 16,
+        side: "king"
     });
 
     const blackWarrior2 = await Piece.create({
@@ -636,7 +657,8 @@ async function cathedralBoard(boardId){
         toHit: 11,
         health: 14,
         currentHealth: 14,
-        ac: 16
+        ac: 16,
+        side: "queen"
     });
 
     boardState.push(whiteWarrior1);
@@ -659,7 +681,8 @@ async function cathedralBoard(boardId){
         toHit: 10,
         health: 12,
         currentHealth: 12,
-        ac: 17
+        ac: 17,
+        side: "queen"
     });
 
     const blackCrusader = await Piece.create({
@@ -677,7 +700,8 @@ async function cathedralBoard(boardId){
         toHit: 10,
         health: 12,
         currentHealth: 12,
-        ac: 17
+        ac: 17,
+        side: "queen"
     });
 
     boardState.push(whiteCrusader);
@@ -703,7 +727,8 @@ async function catBoardTest(boardId){
         toHit: 11,
         health: 14,
         currentHealth: 14,
-        ac: 16
+        ac: 16,
+        side: "king"
     });
     const blackWarrior = await Piece.create({
         board_id: boardId,
@@ -720,7 +745,8 @@ async function catBoardTest(boardId){
         toHit: 11,
         health: 14,
         currentHealth: 14,
-        ac: 16
+        ac: 16,
+        side: "king"
     });
 
     const whiteRanger = await Piece.create({
@@ -741,7 +767,8 @@ async function catBoardTest(boardId){
         toHitRan: 9,
         health: 10,
         currentHealth: 10,
-        ac: 18
+        ac: 18,
+        side: "queen"
     });
 
     const blackRanger = await Piece.create({
@@ -762,8 +789,50 @@ async function catBoardTest(boardId){
         toHitRan: 9,
         health: 10,
         currentHealth: 10,
-        ac: 18
+        ac: 18,
+        side: "queen"
     });
+
+    const whiteKing = await Piece.create({
+        board_id: boardId,
+        locationX: 4,
+        locationY: 1,
+        name: "king",
+        moveType: "king",
+        color : "white",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 4,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 16,
+        side: "king"
+    });
+
+    const blackKing = await Piece.create({
+        board_id: boardId,
+        locationX: 5,
+        locationY: 8,
+        name: "king",
+        moveType: "king",
+        color : "black",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 4,
+        toHit: 12,
+        health: 12,
+        currentHealth: 12,
+        ac: 16,
+        side: "king"
+    });
+
+    boardState.push(whiteKing);
+    boardState.push(blackKing);
 
     boardState.push(whiteWarrior);
     boardState.push(blackWarrior);
