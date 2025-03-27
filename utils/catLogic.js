@@ -7,6 +7,7 @@ const {Board, Piece, Player, Square} = require("../models");
 //attacks need to use the block mechanic, so blocks are first
 //this function will return an int that will be damage taken
 //the attack will manage the piece query and damage, so the block function doesn't need to be async
+
 function block(hits, blocker, modifiers){
     //modifiers = [backstab, queenAttack, queenBlock, kingAttack, kingBlock]
     console.log("blocking");
@@ -2023,6 +2024,934 @@ async function attack(attackerId, blockerId, boardId){
     return -1;
 }
 
+//magic
+//magic cannot be blocked
+async function lightningBolt(attackerId, blockerId, boardId){
+    let attacker = await Piece.findByPk(attackerId);
+    let blocker = await Piece.findByPk(blockerId);
+    // let board = await Piece.findByPk(boardId);
+    let boardState = await Piece.findAll({
+        where:
+            {board_id : boardId}
+    });
+
+    if(attacker.name != wizard){
+        console.log("bolt is for wizards!");
+        return -1;
+    }
+    
+    //can't cast spells when there is an enemy is in your arc
+        //the enemy must also be facing you
+    let arcRan = [];
+    switch(attacker.direction){
+        case(0):
+            arcRan = [[0, 1], [1, 1], [1, 0], [-1, 0], [-1, 1]];
+            break;
+        case(1):
+            arcRan = [[0, 1], [1, 1], [1, 0], [1, -1], [-1, 1]];
+            break;
+        case(2):
+            arcRan = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
+            break;
+        case(3):
+            arcRan = [[1, -1], [1, 1], [1, 0], [0, -1], [-1, -1]];
+            break;
+        case(4):
+            arcRan = [[0, -1], [-1, -1], [1, 0], [1, -1], [-1, 0]];
+            break;
+        case(5):
+            arcRan = [[1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]];
+            break;
+        case(6):
+            arcRan = [[0, -1], [-1, -1], [0, 1], [-1, 0], [-1, 1]];
+            break;
+        case(7):
+            arcRan = [[0, 1], [1, 1], [-1, -1], [-1, 0], [-1, 1]];
+            break;
+        default:
+            break;        
+    }
+
+    for(piece of boardState){
+        if(piece.color != attacker.color){
+            for(mod of arcRan){
+                if(piece.locationX == (attacker.locationX + mod[0])){
+                    if(piece.locationY == (attacker.locationY + mod[1])){
+                        //check if the enemy is facing you
+                        switch(attacker.direction){
+                            //to be facing each other, the attacker and piece direction must be opposite
+                            //the discontinuity is 2, 3, 4, 5
+                            case(0):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(3):
+                                        break;
+                                    case(4):
+                                        break;
+                                    case(5):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(1):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(4):
+                                        break;
+                                    case(5):
+                                        break;
+                                    case(6):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(2):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(5):
+                                        break;
+                                    case(6):
+                                        break;
+                                    case(7):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(3):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(6):
+                                        break;
+                                    case(7):
+                                        break;
+                                    case(0):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(4):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(7):
+                                        break;
+                                    case(0):
+                                        break;
+                                    case(1):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(5):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(0):
+                                        break;
+                                    case(1):
+                                        break;
+                                    case(2):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(6):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(1):
+                                        break;
+                                    case(2):
+                                        break;
+                                    case(3):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(7):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(2):
+                                        break;
+                                    case(3):
+                                        break;
+                                    case(4):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }    
+
+    //legal spell at this point
+    let legal = false;
+    let hitList = [];
+    let boltLine;
+    //the bolt runs 8 tiles in a straight line
+    //find out which direction the bolt runs
+    if(attacker.locationX == blocker.locationX){
+        if(attacker.locationY > blocker.locationY){
+            boltLine = [0, -1];
+        }
+        else{
+            boltLine = [0, 1];
+        }
+    }
+    else if(attacker.locationX > blocker.locationX){
+        //shooting left
+        if(attacker.locationY > blocker.locationY){
+            boltLine = [-1, -1];
+        }
+        else if(attacker.locationY < blocker.locationY){
+            boltLine = [-1, 1];
+        }
+        else{
+            boltLine = [-1, 0];
+        }
+    }
+    else{
+        if(attacker.locationY > blocker.locationY){
+            boltLine = [1, -1];
+        }
+        else if(attacker.locationY < blocker.locationY){
+            boltLine = [1, 1];
+        }
+        else{
+            boltLine = [1, 0];
+        }
+    }
+    // it must hit the blocker
+    let paladinHit = false;
+    for(i=1; i >= 8; i++){
+        if(paladinHit){
+            break;
+        }
+        for(piece of boardState){
+            if(piece.locationX == (attacker.locationX + i*boltLine[0])){
+                if(piece.locationY == (attacker.locationY + i*boltLine[1])){
+                    if(piece.id == blockerId){
+                        legal == true;
+                    }
+                    if(piece.name == "paladin"){
+                        paladinHit = true;
+                        //this will break out of the nearest for loop, which is the piece loop not the line
+                    }
+                    hitList.push(piece);
+                }
+            }
+        }
+    }
+
+    if(!legal){
+        console.log("failed to hit target");
+        return -1;
+    }
+
+    //check for bonuses
+    let kingAttack = false;
+    let queenAttack = false;
+    for(piece of boardState){
+        if(piece.name == "king"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        kingAttack = true;
+                    }
+                }
+            }
+        }
+        else if(piece.name == "queen"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        queenAttack = true;
+                    }
+                }
+            }
+        }
+    }
+    // let modifiers = [backstab, queenAttack, queenBlock, kingAttack, kingBlock];
+    let hit = [false, false];
+    let crit = [false, false];
+    let critFail = [false, false];
+    let dice;
+    for(i = 0; i<2; i++){
+        dice = Math.ceil(Math.random() * 20);
+        if(dice >= 19){
+            hit[i] = true;
+            crit[i] = true;
+            break;
+        }
+        if(dice >= attacker.spellDc){
+            hit[i] = true;
+        }
+        if(queenAttack){
+            if(dice == 18){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if((dice+1) >= attacker.spellDc){
+                hit[i] = true;
+                break;
+            }
+        }
+        //at this point, normal hits and queen hits have been done
+            //king reroll
+        if(!hit[i] && kingAttack){
+            kingAttack = false;
+            dice = Math.ceil(Math.random() * 20);
+            if(dice >= 19){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if(dice >= attacker.spellDc){
+                hit[i] = true;
+            }
+            if(queenAttack){
+                if(dice == 18){
+                    crit[i] = true;
+                    hit[i] = true;
+                    break;
+                }
+                if((dice+1) >= attacker.spellDc){
+                    hit[i] = true;
+                    break;
+                }
+            }
+        }
+        if(dice == 1){
+            critFail[i] = true;
+        }
+    }
+
+    if(critFail[0]){
+        //double crit fails kill the user
+        if(critFail[1]){
+            attacker.destroy();
+            await attacker.save();
+            return 0;
+        }
+        //single crit fails the spell
+        return 1;
+    }
+    else if(critFail[1]){
+        return 1;
+    }
+    else if(!hit[0]){
+        if(!hit[1]){
+            return 1;
+        }
+    }
+
+    //have hit and crit arrays
+    if(crit[0]){
+        if(crit[1]){
+            for(piece of hitList){
+                piece.currentHealth = piece.currentHealth - 6;
+                await piece.save();
+            }
+            blocker.destroy();
+            await blocker.save();
+            return 4;
+        }
+        for(piece of hitList){
+            piece.currentHealth= piece.currentHealth - 6;
+            await piece.save();
+        }
+        return 3;
+    }
+    else if(crit[1]){
+        for(piece of hitList){
+            piece.currentHealth= piece.currentHealth - 6;
+            await piece.save();
+        }
+        return 3;
+    }
+    else{
+        for(piece of hitList){
+            piece.currentHealth= piece.currentHealth - 3;
+            await piece.save();
+        }
+        return 2;
+    }
+};
+
+async function fireball(attackerId, blockerId, boardId){
+    let attacker = await Piece.findByPk(attackerId);
+    let blocker = await Piece.findByPk(blockerId);
+    let boardState = await Piece.findAll({
+        where:
+            {board_id: boardId}
+    });
+
+    if(attacker.name != wizard){
+        console.log("bolt is for wizards!");
+        return -1;
+    }
+    
+    //can't cast spells when there is an enemy is in your arc
+        //the enemy must also be facing you
+    let arcRan = [];
+    switch(attacker.direction){
+        case(0):
+            arcRan = [[0, 1], [1, 1], [1, 0], [-1, 0], [-1, 1]];
+            break;
+        case(1):
+            arcRan = [[0, 1], [1, 1], [1, 0], [1, -1], [-1, 1]];
+            break;
+        case(2):
+            arcRan = [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
+            break;
+        case(3):
+            arcRan = [[1, -1], [1, 1], [1, 0], [0, -1], [-1, -1]];
+            break;
+        case(4):
+            arcRan = [[0, -1], [-1, -1], [1, 0], [1, -1], [-1, 0]];
+            break;
+        case(5):
+            arcRan = [[1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]];
+            break;
+        case(6):
+            arcRan = [[0, -1], [-1, -1], [0, 1], [-1, 0], [-1, 1]];
+            break;
+        case(7):
+            arcRan = [[0, 1], [1, 1], [-1, -1], [-1, 0], [-1, 1]];
+            break;
+        default:
+            break;        
+    }
+
+    for(piece of boardState){
+        if(piece.color != attacker.color){
+            for(mod of arcRan){
+                if(piece.locationX == (attacker.locationX + mod[0])){
+                    if(piece.locationY == (attacker.locationY + mod[1])){
+                        //check if the enemy is facing you
+                        switch(attacker.direction){
+                            //to be facing each other, the attacker and piece direction must be opposite
+                            //the discontinuity is 2, 3, 4, 5
+                            case(0):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(3):
+                                        break;
+                                    case(4):
+                                        break;
+                                    case(5):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(1):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(4):
+                                        break;
+                                    case(5):
+                                        break;
+                                    case(6):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(2):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(5):
+                                        break;
+                                    case(6):
+                                        break;
+                                    case(7):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(3):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(6):
+                                        break;
+                                    case(7):
+                                        break;
+                                    case(0):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(4):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(7):
+                                        break;
+                                    case(0):
+                                        break;
+                                    case(1):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(5):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(0):
+                                        break;
+                                    case(1):
+                                        break;
+                                    case(2):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(6):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(1):
+                                        break;
+                                    case(2):
+                                        break;
+                                    case(3):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                            case(7):
+                                switch(piece.direction){
+                                    //each case has 3 legal outcomes and the rest are illegal
+                                    case(2):
+                                        break;
+                                    case(3):
+                                        break;
+                                    case(4):
+                                        break;
+                                    //default means that it is illegal, so fail the attack
+                                    default:
+                                        return -1;
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }    
+
+    //legal spell at this point
+    let fireLine;
+    //the bolt runs 8 tiles in a straight line
+    //find out which direction the bolt runs
+    if(attacker.locationX == blocker.locationX){
+        if(attacker.locationY > blocker.locationY){
+            fireLine = [0, -1];
+        }
+        else{
+            fireLine = [0, 1];
+        }
+    }
+    else if(attacker.locationX > blocker.locationX){
+        //shooting left
+        if(attacker.locationY > blocker.locationY){
+            fireLine = [-1, -1];
+        }
+        else if(attacker.locationY < blocker.locationY){
+            fireLine = [-1, 1];
+        }
+        else{
+            fireLine = [-1, 0];
+        }
+    }
+    else{
+        if(attacker.locationY > blocker.locationY){
+            fireLine = [1, -1];
+        }
+        else if(attacker.locationY < blocker.locationY){
+            fireLine = [1, 1];
+        }
+        else{
+            fireLine = [1, 0];
+        }
+    }
+
+    //go find the target
+    for(i=1; i >=3; i++){
+        for(piece of boardState){
+            if(piece.locationX == (attacker.locationX + i*fireLine[0])){
+                if(piece.locationY == (attacker.locationY + i*fireLine[1])){
+                    if(piece.id != blockerId){
+                        return -1;
+                    }
+                }
+            }
+        }
+    }
+
+    //paladins block wizard magic, for reasons
+    if(blocker.name == "paladin"){
+        return 0;
+    }
+
+    //check for bonuses
+    let kingAttack = false;
+    let queenAttack = false;
+    for(piece of boardState){
+        if(piece.name == "king"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        kingAttack = true;
+                    }
+                }
+            }
+        }
+        else if(piece.name == "queen"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        queenAttack = true;
+                    }
+                }
+            }
+        }
+    }
+    // let modifiers = [backstab, queenAttack, queenBlock, kingAttack, kingBlock];
+    let hit = [false, false];
+    let crit = [false, false];
+    let critFail = [false, false];
+    let dice;
+    for(i = 0; i<2; i++){
+        dice = Math.ceil(Math.random() * 20);
+        if(dice >= 19){
+            hit[i] = true;
+            crit[i] = true;
+            break;
+        }
+        if(dice >= attacker.spellDc){
+            hit[i] = true;
+        }
+        if(queenAttack){
+            if(dice == 18){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if((dice+1) >= attacker.spellDc){
+                hit[i] = true;
+                break;
+            }
+        }
+        //at this point, normal hits and queen hits have been done
+            //king reroll
+        if(!hit[i] && kingAttack){
+            kingAttack = false;
+            dice = Math.ceil(Math.random() * 20);
+            if(dice >= 19){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if(dice >= attacker.spellDc){
+                hit[i] = true;
+            }
+            if(queenAttack){
+                if(dice == 18){
+                    crit[i] = true;
+                    hit[i] = true;
+                    break;
+                }
+                if((dice+1) >= attacker.spellDc){
+                    hit[i] = true;
+                    break;
+                }
+            }
+        }
+        if(dice == 1){
+            critFail[i] = true;
+        }
+    }
+
+    if(critFail[0]){
+        //double crit fails kill the user
+        if(critFail[1]){
+            attacker.destroy();
+            await attacker.save();
+            return 0;
+        }
+        //single crit fails the spell
+        return 1;
+    }
+    else if(critFail[1]){
+        return 1;
+    }
+    else if(!hit[0]){
+        if(!hit[1]){
+            return 1;
+        }
+    }
+
+    
+    //check each of the target's 4 adjacent tiles to splash damage
+    let hitList = [blocker];
+    for(piece of boardState){
+        if(piece.locationX == (blocker.locationX + 1)){
+            if(piece.locationY == blocker.locationY){
+                hitList.push(piece);
+                continue;
+            }
+        }
+        if(piece.locationX == (blocker.locationX - 1)){
+            if(piece.locationY == blocker.locationY){
+                hitList.push(piece);
+                continue;
+            }
+        }
+        if(piece.locationX == (blocker.locationX)){
+            if(piece.locationY == (blocker.locationY + 1)){
+                hitList.push(piece);
+                continue;
+            }
+        }
+        if(piece.locationX == (blocker.locationX)){
+            if(piece.locationY == (blocker.locationY - 1)){
+                hitList.push(piece);
+                continue;
+            }
+        }
+    }
+
+    //manage damage / crits
+    if(crit[0]){
+        if(crit[1]){
+            blocker.destroy();
+            await blocker.save();
+            for(piece of hitList){
+                piece.currentHealth = piece.currentHealth - 4;
+                await piece.save();
+                return 4;
+            }
+        }
+        //normal crit
+        blocker.currentHealth = blocker.currentHealth - 6;
+        await blocker.save();
+        for(piece of hitList){
+            piece.currentHealth = piece.currentHealth - 4;
+            await piece.save();
+            return 3;
+        }
+    }
+    if(crit[1]){
+        blocker.currentHealth = blocker.currentHealth - 6;
+        await blocker.save();
+        for(piece of hitList){
+            piece.currentHealth = piece.currentHealth - 4;
+            await piece.save();
+            return 3;
+        }
+    }
+    else{
+        blocker.currentHealth = blocker.currentHealth - 3;
+        await blocker.save();
+        for(piece of hitList){
+            piece.currentHealth = piece.currentHealth - 2;
+            await piece.save();
+            return 2;
+        }
+    }
+}
+
+async function iceWave(attackerId, boardId){
+    let attacker = await Piece.findByPk(attackerId);
+    //there is no blocker for ice wave
+    let boardState = await Piece.findAll({
+        where:
+            {board_id: boardId}
+    });
+
+    if(attacker.name != wizard){
+        console.log("bolt is for wizards!");
+        return -1;
+    }
+
+    //check for bonuses
+    let kingAttack = false;
+    let queenAttack = false;
+    for(piece of boardState){
+        if(piece.name == "king"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        kingAttack = true;
+                    }
+                }
+            }
+        }
+        else if(piece.name == "queen"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        queenAttack = true;
+                    }
+                }
+            }
+        }
+    }
+    // let modifiers = [backstab, queenAttack, queenBlock, kingAttack, kingBlock];
+    let hit = [false, false];
+    let crit = [false, false];
+    let critFail = [false, false];
+    let dice;
+    for(i = 0; i<2; i++){
+        dice = Math.ceil(Math.random() * 20);
+        if(dice >= 19){
+            hit[i] = true;
+            crit[i] = true;
+            break;
+        }
+        if(dice >= attacker.spellDc){
+            hit[i] = true;
+        }
+        if(queenAttack){
+            if(dice == 18){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if((dice+1) >= attacker.spellDc){
+                hit[i] = true;
+                break;
+            }
+        }
+        //at this point, normal hits and queen hits have been done
+            //king reroll
+        if(!hit[i] && kingAttack){
+            kingAttack = false;
+            dice = Math.ceil(Math.random() * 20);
+            if(dice >= 19){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if(dice >= attacker.spellDc){
+                hit[i] = true;
+            }
+            if(queenAttack){
+                if(dice == 18){
+                    crit[i] = true;
+                    hit[i] = true;
+                    break;
+                }
+                if((dice+1) >= attacker.spellDc){
+                    hit[i] = true;
+                    break;
+                }
+            }
+        }
+        if(dice == 1){
+            critFail[i] = true;
+        }
+    }
+
+    if(critFail[0]){
+        //double crit fails kill the user
+        if(critFail[1]){
+            attacker.destroy();
+            await attacker.save();
+            return 0;
+        }
+        //single crit fails the spell
+        return 1;
+    }
+    else if(critFail[1]){
+        return 1;
+    }
+    else if(!hit[0]){
+        if(!hit[1]){
+            return 1;
+        }
+    }
 
 
-module.exports = {attack};
+        //can always use ice wave, even when in combat
+    let hitList = [];
+    for(piece of boardState){
+        if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+            if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                hitList.push(piece);
+            }
+        }
+    }
+
+    //we know it hits, but does it crit/super crit?
+    if(crit[0]){
+        if(crit[1]){
+            for(piece of hitList){
+                piece.destroy();
+                await piece.save();
+            }
+            return 4;
+        }
+        //single crit
+        for(piece of hitList){
+            piece.currentHealth = 1;
+            piece.standing = false;
+            piece.frozen = true;
+            await piece.save();
+        }
+        return 3;
+    }
+    else if(crit[1]){
+        for(piece of hitList){
+            piece.currentHealth = 1;
+            piece.standing = false;
+            piece.frozen = true;
+            await piece.save();
+        }
+        return 3;
+    }
+    //normal hit now
+    else{
+        for(piece of hitList){
+            if(piece.name != "paladin"){
+                piece.currentHealth = piece.currentHealth - 3;
+                await piece.save();
+            }
+        }
+        return 2;
+    }
+
+}
+
+
+
+module.exports = {attack, lightningBolt, fireball, iceWave};

@@ -202,7 +202,7 @@ async function cathedralBoard(boardId){
         board_id: boardId,
         locationX: 1,
         locationY: 1,
-        name: "cleric",
+        name: "wizard",
         moveType: "king",
         color : "white",
         canTake: false,
@@ -214,14 +214,15 @@ async function cathedralBoard(boardId){
         health: 8,
         currentHealth: 8,
         ac: 19,
-        side: "king"
+        side: "king",
+        spellDc: 9
     });
 
     const blackWiz = await Piece.create({
         board_id: boardId,
         locationX: 8,
         locationY: 8,
-        name: "cleric",
+        name: "wizard",
         moveType: "king",
         color : "black",
         canTake: false,
@@ -233,7 +234,8 @@ async function cathedralBoard(boardId){
         health: 8,
         currentHealth: 8,
         ac: 19,
-        side: "king"
+        side: "king",
+        spellDc: 9
     });
 
     boardState.push(whiteWiz);
@@ -380,7 +382,8 @@ async function cathedralBoard(boardId){
         currentHealth: 12,
         ac: 15,
         sted: true,
-        side: "queen"
+        side: "queen",
+        magicResistArcane: true
     });
 
     const blackPally = await Piece.create({
@@ -401,7 +404,8 @@ async function cathedralBoard(boardId){
         currentHealth: 12,
         ac: 15,
         sted: true,
-        side: "queen"
+        side: "queen",
+        magicResistArcane: true
     });
 
     boardState.push(whitePally);
@@ -423,7 +427,8 @@ async function cathedralBoard(boardId){
         health: 8,
         currentHealth: 8,
         ac: 19,
-        side: "queen"
+        side: "queen",
+        spellDc: 9
     });
 
     const blackCleric = await Piece.create({
@@ -442,7 +447,8 @@ async function cathedralBoard(boardId){
         health: 8,
         currentHealth: 8,
         ac: 19,
-        side: "queen"
+        side: "queen",
+        spellDc: 9
     });
 
     boardState.push(whiteCleric);

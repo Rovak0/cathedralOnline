@@ -118,6 +118,21 @@ class Piece extends Model {};
         },
         side: {
             type: DataTypes.STRING,
+        },
+        frozen: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        magicResistArcane: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        standing: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
+        },
+        spellDc:{
+            type: DataTypes.INTEGER
         }
     },
     {
