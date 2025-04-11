@@ -840,6 +840,49 @@ async function catBoardTest(boardId){
     boardState.push(whiteKing);
     boardState.push(blackKing);
 
+    const whiteWiz = await Piece.create({
+        board_id: boardId,
+        locationX: 1,
+        locationY: 1,
+        name: "wizard",
+        moveType: "king",
+        color : "white",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 2,
+        attackDam: 2,
+        toHit: 13,
+        health: 8,
+        currentHealth: 8,
+        ac: 19,
+        side: "king",
+        spellDc: 9
+    });
+
+    const blackCleric = await Piece.create({
+        board_id: boardId,
+        locationX: 1,
+        locationY: 8,
+        name: "cleric",
+        moveType: "king",
+        color : "black",
+        canTake: false,
+        moveCap: 1,
+        attackRan: 1,
+        attackHits: 1,
+        attackDam: 4,
+        toHit: 13,
+        health: 8,
+        currentHealth: 8,
+        ac: 19,
+        side: "queen",
+        spellDc: 9
+    });
+
+    boardState.push(whiteWiz);
+    boardState.push(blackCleric);
+
     boardState.push(whiteWarrior);
     boardState.push(blackWarrior);
     boardState.push(whiteRanger);

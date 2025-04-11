@@ -133,6 +133,10 @@ class Piece extends Model {};
         },
         spellDc:{
             type: DataTypes.INTEGER
+        },
+        magical:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
         }
     },
     {

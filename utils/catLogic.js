@@ -167,7 +167,7 @@ async function attack(attackerId, blockerId, boardId){
         }
     );
 
-    console.log("huntHere");
+    console.log("attackHere");
 
     //make sure the attack is color legal
     if(attacker.color == blocker.color){
@@ -2035,7 +2035,9 @@ async function lightningBolt(attackerId, blockerId, boardId){
             {board_id : boardId}
     });
 
-    if(attacker.name != wizard){
+    console.log("BoltFunction");
+
+    if(attacker.name != "wizard"){
         console.log("bolt is for wizards!");
         return -1;
     }
@@ -2239,7 +2241,7 @@ async function lightningBolt(attackerId, blockerId, boardId){
     }
     // it must hit the blocker
     let paladinHit = false;
-    for(i=1; i >= 8; i++){
+    for(i=1; i <= 8; i++){
         if(paladinHit){
             break;
         }
@@ -2247,7 +2249,7 @@ async function lightningBolt(attackerId, blockerId, boardId){
             if(piece.locationX == (attacker.locationX + i*boltLine[0])){
                 if(piece.locationY == (attacker.locationY + i*boltLine[1])){
                     if(piece.id == blockerId){
-                        legal == true;
+                        legal = true;
                     }
                     if(piece.name == "paladin"){
                         paladinHit = true;
@@ -2263,6 +2265,8 @@ async function lightningBolt(attackerId, blockerId, boardId){
         console.log("failed to hit target");
         return -1;
     }
+
+    console.log("Rolling to hit");
 
     //check for bonuses
     let kingAttack = false;
@@ -2403,7 +2407,7 @@ async function fireball(attackerId, blockerId, boardId){
             {board_id: boardId}
     });
 
-    if(attacker.name != wizard){
+    if(attacker.name != "wizard"){
         console.log("bolt is for wizards!");
         return -1;
     }
@@ -2605,7 +2609,7 @@ async function fireball(attackerId, blockerId, boardId){
     }
 
     //go find the target
-    for(i=1; i >=3; i++){
+    for(i=1; i <=3; i++){
         for(piece of boardState){
             if(piece.locationX == (attacker.locationX + i*fireLine[0])){
                 if(piece.locationY == (attacker.locationY + i*fireLine[1])){
@@ -2798,7 +2802,7 @@ async function iceWave(attackerId, boardId){
             {board_id: boardId}
     });
 
-    if(attacker.name != wizard){
+    if(attacker.name != "wizard"){
         console.log("bolt is for wizards!");
         return -1;
     }
@@ -2952,6 +2956,925 @@ async function iceWave(attackerId, boardId){
 
 }
 
+//cleric spells
+async function heal(attackerId, blockerId, boardId){
+    let attacker = await Piece.findByPk(attackerId);
+    let blocker = await Piece.findByPk(blockerId);
+    let boardState = await Piece.findAll({
+        where:
+            {board_id: boardId}
+    });
+
+    if(attacker.name != "cleric"){
+        console.log("Heal is for clerics.")
+        return -1;
+    }
+
+    if(!attacker.magical){
+        console.log("Cleric lost their magic already");
+        return -1;
+    }
 
 
-module.exports = {attack, lightningBolt, fireball, iceWave};
+    //you can heal yourself
+    //if not healing self, check legality
+    if(attacker != blocker){ 
+        //heal range is 2
+        //check line of sight
+        //get vector and then check facing
+        let healLine = [];
+        let healDir;
+        if(attacker.locationX > blocker.locationX){
+            // [-1, x]
+            if(attacker.locationY > blocker.locationY){
+                healLine = [-1, -1];
+                healDir = 5;
+            }
+            else if(attacker.locationY < blocker.locationY){
+                healLine = [-1, 1];
+                healDir = 7;
+            }
+            else{
+                healDir = 6;
+                healLine = [-1, 0];
+            }
+        }
+        else if(attacker.locationX < blocker.locationX){
+            // [1, x]
+            if(attacker.locationY > blocker.locationY){
+                healDir = 3;
+                healLine = [1, -1];
+            }
+            else if(attacker.locationY < blocker.locationY){
+                healDir = 1;
+                healLine = [1, 1];
+            }
+            else{
+                healDir = 2;
+                healLine = [1, 0];
+            }
+        }
+        else{
+            if(attacker.locationY > blocker.locationY){
+                healDir = 4;
+                healLine = [0, -1];
+            }
+            else {
+                healDir = 0;
+                healLine = [0, 1];
+            }
+        }
+
+        //check for legal facing
+        let facingLegal = false;
+        //switch based off of attacker direction
+            //if the attacker direction is withing 2 of bolt dir, it is legal
+            //there is a discontinuity at 7/0, so 0,1,6,7 need edge rules
+        console.log("Hunt Heal");
+
+        switch(attacker.direction){
+            case(0):
+                switch(healDir){
+                    case(6):
+                        facingLegal = true;
+                        break;
+                    case(7):
+                        facingLegal = true;
+                        break;
+                    default:
+                        if(Math.abs(attacker.direction - healDir) <= 2){
+                            facingLegal = true;
+                        }
+                        break;
+                }
+                break;
+            case(1):
+                switch(healDir){
+                    case(7):
+                        facingLegal = true;
+                        break;
+                    default:
+                        if(Math.abs(attacker.direction - healDir) <= 2){
+                            facingLegal = true;
+                        }
+                        break;
+                }
+                break;
+            case(6):
+                switch(healDir){
+                    case(0):
+                        facingLegal = true;
+                        break;
+                    default:
+                        if(Math.abs(attacker.direction - healDir) <= 2){
+                            facingLegal = true;
+                        }
+                        break;
+                }
+                break;
+            case(7):
+                switch(healDir){
+                    case(0):
+                        facingLegal = true;
+                        break;
+                    case(1):
+                        facingLegal = true;
+                        break;
+                    default:
+                        if(Math.abs(attacker.direction - healDir) <= 2){
+                            facingLegal = true;
+                        }
+                        break;
+                }
+                break;
+            default:
+                if(Math.abs(attacker.direction - healDir) <= 2){
+                    facingLegal = true;
+                }
+                break;
+        }
+        
+        if(!facingLegal){
+            return -1;
+        }
+
+        //get line of sight
+        for(i = 1; i < 3; i++){
+            for(piece of boardState){
+                if(piece.locationX == (attacker.locationX + i*healLine[0])){
+                    if(piece.locationY == (attacker.locationY + i*healLine[1])){
+                        if(piece.id != blockerId){
+                            return -1;
+                        }
+                    }
+                }
+            }
+        }
+
+        //check for bonuses
+        let kingAttack = false;
+        let queenAttack = false;
+        for(piece of boardState){
+            if(piece.name == "king"){
+                if(piece.color == attacker.color){
+                    if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                        if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                            kingAttack = true;
+                        }
+                    }
+                }
+            }
+            else if(piece.name == "queen"){
+                if(piece.color == attacker.color){
+                    if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                        if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                            queenAttack = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // let modifiers = [backstab, queenAttack, queenBlock, kingAttack, kingBlock];
+        //check for bonuses
+    let kingAttack = false;
+    let queenAttack = false;
+    for(piece of boardState){
+        if(piece.name == "king"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        kingAttack = true;
+                    }
+                }
+            }
+        }
+        else if(piece.name == "queen"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        queenAttack = true;
+                    }
+                }
+            }
+        }
+    }
+    let hit = [false, false];
+    let crit = [false, false];
+    let critFail = [false, false];
+    let dice;
+    for(i = 0; i<2; i++){
+        dice = Math.ceil(Math.random() * 20);
+        if(dice >= 19){
+            hit[i] = true;
+            crit[i] = true;
+            break;
+        }
+        if(dice >= attacker.spellDc){
+            hit[i] = true;
+        }
+        if(queenAttack){
+            if(dice == 18){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if((dice+1) >= attacker.spellDc){
+                hit[i] = true;
+                break;
+            }
+        }
+
+        //at this point, normal hits and queen hits have been done
+            //king reroll
+        if(!hit[i] && kingAttack){
+            kingAttack = false;
+            dice = Math.ceil(Math.random() * 20);
+            if(dice >= 19){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if(dice >= attacker.spellDc){
+                hit[i] = true;
+            }
+            if(queenAttack){
+                if(dice == 18){
+                    crit[i] = true;
+                    hit[i] = true;
+                    break;
+                }
+                if((dice+1) >= attacker.spellDc){
+                    hit[i] = true;
+                    break;
+                }
+            }
+        }
+        if(dice == 1){
+            critFail[i] = true;
+        }
+    }
+
+    if(critFail[0]){
+        //double crit fails kill the user
+        if(critFail[1]){
+            attacker.magical = false;
+            await attacker.save();
+            return 0;
+        }
+        //single crit fails the spell
+        return 1;
+    }
+    else if(critFail[1]){
+        return 1;
+    }
+    else if(!hit[0]){
+        if(!hit[1]){
+            return 1;
+        }
+    }
+
+    if(crit[0]){
+        if(crit[1]){
+            blocker.currentHealth = blocker.health;
+            await blocker.save();
+            return 4;
+        }
+        else{
+            blocker.currentHealth = blocker.currentHealth + 8;
+            if(blocker.currentHealth > blocker.health){
+                blocker.currentHealth = blocker.health;
+            }
+            await blocker.save();
+            return 3;
+        }
+    }
+    else if(crit[1]){
+        blocker.currentHealth = blocker.currentHealth + 8;
+        if(blocker.currentHealth > blocker.health){
+            blocker.currentHealth = blocker.health;
+        }
+        await blocker.save();
+        return 3;
+    }
+    else{
+        blocker.currentHealth = blocker.currentHealth + 4;
+        if(blocker.currentHealth > blocker.health){
+            blocker.currentHealth = blocker.health;
+        }
+        await blocker.save();
+        return 2;
+    }
+
+}
+
+async function blessedBolt(attackerId, blockerId, boardId){
+    let attacker = await Piece.findByPk(attackerId);
+    let blocker = await Piece.findByPk(blockerId);
+    let boardState = await Piece.findAll({
+        where:
+            {board_id: boardId}
+    });
+
+    if(attacker.name != "cleric"){
+        console.log("Heal is for clerics.")
+        return -1;
+    }
+    
+    if(!attacker.magical){
+        console.log("Cleric lost their magic already");
+        return -1;
+    }
+    
+    //bolt range is 2
+    //check line of sight
+    //get vector and then check facing
+    let boltLine = [];
+    let boltDir;
+    if(attacker.locationX > blocker.locationX){
+        // [-1, x]
+        if(attacker.locationY > blocker.locationY){
+            boltLine = [-1, -1];
+            boltDir = 5;
+        }
+        else if(attacker.locationY < blocker.locationY){
+            boltLine = [-1, 1];
+            boltDir = 7;
+        }
+        else{
+            boltDir = 6;
+            boltLine = [-1, 0];
+        }
+    }
+    else if(attacker.locationX < blocker.locationX){
+        // [1, x]
+        if(attacker.locationY > blocker.locationY){
+            boltDir = 3;
+            boltLine = [1, -1];
+        }
+        else if(attacker.locationY < blocker.locationY){
+            boltDir = 1;
+            boltLine = [1, 1];
+        }
+        else{
+            boltDir = 2;
+            boltLine = [1, 0];
+        }
+    }
+    else{
+        if(attacker.locationY > blocker.locationY){
+            boltDir = 4;
+            boltLine = [0, -1];
+        }
+        else {
+            boltDir = 0;
+            boltLine = [0, 1];
+        }
+    }
+    
+    //check for legal facing
+    let facingLegal = false;
+    //switch based off of attacker direction
+        //if the attacker direction is withing 2 of bolt dir, it is legal
+        //there is a discontinuity at 7/0, so 0,1,6,7 need edge rules
+    switch(attacker.direction){
+        case(0):
+            switch(boltDir){
+                case(6):
+                    facingLegal = true;
+                    break;
+                case(7):
+                    facingLegal = true;
+                    break;
+                default:
+                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                        facingLegal = true;
+                    }
+                    break;
+            }
+            break;
+        case(1):
+            switch(boltDir){
+                case(7):
+                    facingLegal = true;
+                    break;
+                default:
+                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                        facingLegal = true;
+                    }
+                    break;
+            }
+            break;
+        case(6):
+            switch(boltDir){
+                case(0):
+                    facingLegal = true;
+                    break;
+                default:
+                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                        facingLegal = true;
+                    }
+                    break;
+            }
+            break;
+        case(7):
+            switch(boltDir){
+                case(0):
+                    facingLegal = true;
+                    break;
+                case(1):
+                    facingLegal = true;
+                    break;
+                default:
+                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                        facingLegal = true;
+                    }
+                    break;
+            }
+            break;
+        default:
+            if(Math.abs(attacker.direction - boltDir) <= 2){
+                facingLegal = true;
+            }
+            break;
+    }
+    
+    if(!facingLegal){
+        return -1;
+    }
+    
+    //get line of sight
+    for(i = 1; i < 3; i++){
+        for(piece of boardState){
+            if(piece.locationX == (attacker.locationX + i*boltLine[0])){
+                if(piece.locationY == (attacker.locationY + i*boltLine[1])){
+                    if(piece.id != blockerId){
+                        return -1;
+                    }
+                }
+            }
+        }
+    }
+    //check for bonuses
+    let kingAttack = false;
+    let queenAttack = false;
+    for(piece of boardState){
+        if(piece.name == "king"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        kingAttack = true;
+                    }
+                }
+            }
+        }
+        else if(piece.name == "queen"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        queenAttack = true;
+                    }
+                }
+            }
+        }
+    }
+    // let modifiers = [backstab, queenAttack, queenBlock, kingAttack, kingBlock];
+    let hit = [false, false];
+    let crit = [false, false];
+    let critFail = [false, false];
+    let dice;
+    for(i = 0; i<2; i++){
+        dice = Math.ceil(Math.random() * 20);
+        if(dice >= 19){
+            hit[i] = true;
+            crit[i] = true;
+            break;
+        }
+        if(dice >= attacker.spellDc){
+            hit[i] = true;
+        }
+        if(queenAttack){
+            if(dice == 18){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if((dice+1) >= attacker.spellDc){
+                hit[i] = true;
+                break;
+            }
+        }
+        //at this point, normal hits and queen hits have been done
+            //king reroll
+        if(!hit[i] && kingAttack){
+            kingAttack = false;
+            dice = Math.ceil(Math.random() * 20);
+            if(dice >= 19){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if(dice >= attacker.spellDc){
+                hit[i] = true;
+            }
+            if(queenAttack){
+                if(dice == 18){
+                    crit[i] = true;
+                    hit[i] = true;
+                    break;
+                }
+                if((dice+1) >= attacker.spellDc){
+                    hit[i] = true;
+                    break;
+                }
+            }
+        }
+        if(dice == 1){
+            critFail[i] = true;
+        }
+    }
+
+    if(critFail[0]){
+        console.log("Crit Fail 0");
+        //double crit fails kill the user
+        if(critFail[1]){
+            console.log("Crit Fail No way!");
+            attacker.magical = false;
+            await attacker.save();
+            return 0;
+        }
+        //single crit fails the spell
+        return 1;
+    }
+    else if(critFail[1]){
+        return 1;
+    }
+    else if(!hit[0]){
+        if(!hit[1]){
+            return 1;
+        }
+    }
+
+    if(crit[0]){
+        if(crit[1]){
+            blocker.destroy();
+            await blocker.save();
+            return 4;
+        }
+        else{
+            blocker.currentHealth = blocker.currentHealth - 8;
+            await blocker.save();
+            return 3;
+        }
+    }
+    else if(crit[1]){
+        blocker.currentHealth = blocker.currentHealth - 8;
+        if(blocker.currentHealth > blocker.health){
+            blocker.currentHealth = blocker.health;
+        }
+        await blocker.save();
+        return 3;
+    }
+    else{
+        blocker.currentHealth = blocker.currentHealth - 4;
+        if(blocker.currentHealth > blocker.health){
+            blocker.currentHealth = blocker.health;
+        }
+        await blocker.save();
+        return 2;
+    }  
+}
+
+async function transfer(attackerId, blockerId, boardId, attackerFacing, blockerFacing){
+    let attacker = await Piece.findByPk(attackerId);
+    let blocker = await Piece.findByPk(blockerId);
+    let boardState = await Piece.findAll({
+        where: {board_id : boardId}
+    });
+
+    if(attacker.name != "cleric"){
+        console.log("Transfer is for clerics.")
+        return -1;
+    }
+
+    if(!attacker.magical){
+        console.log("Cleric lost their magic already");
+        return -1;
+    }
+
+    let warpLine = [];
+    let warpDir;
+    if(attacker.locationX > blocker.locationX){
+        // [-1, x]
+        if(attacker.locationY > blocker.locationY){
+            warpLine = [-1, -1];
+            warpDir = 5;
+        }
+        else if(attacker.locationY < blocker.locationY){
+            warpLine = [-1, 1];
+            warpDir = 7;
+        }
+        else{
+            warpDir = 6;
+            warpLine = [-1, 0];
+        }
+    }
+    else if(attacker.locationX < blocker.locationX){
+        // [1, x]
+        if(attacker.locationY > blocker.locationY){
+            warpDir = 3;
+            warpLine = [1, -1];
+        }
+        else if(attacker.locationY < blocker.locationY){
+            warpDir = 1;
+            warpLine = [1, 1];
+        }
+        else{
+            warpDir = 2;
+            warpLine = [1, 0];
+        }
+    }
+    else{
+        if(attacker.locationY > blocker.locationY){
+            warpDir = 4;
+            warpLine = [0, -1];
+        }
+        else {
+            warpDir = 0;
+            warpLine = [0, 1];
+        }
+    }
+
+    //check for legal facing
+    let facingLegal = false;
+    //switch based off of attacker direction
+        //if the attacker direction is withing 2 of bolt dir, it is legal
+        //there is a discontinuity at 7/0, so 0,1,6,7 need edge rules
+    switch(attacker.direction){
+        case(0):
+            switch(boltDir){
+                case(6):
+                    facingLegal = true;
+                    break;
+                case(7):
+                    facingLegal = true;
+                    break;
+                default:
+                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                        facingLegal = true;
+                    }
+                    break;
+            }
+            break;
+        case(1):
+            switch(boltDir){
+                case(7):
+                    facingLegal = true;
+                    break;
+                default:
+                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                        facingLegal = true;
+                    }
+                    break;
+            }
+            break;
+        case(6):
+            switch(boltDir){
+                case(0):
+                    facingLegal = true;
+                    break;
+                default:
+                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                        facingLegal = true;
+                    }
+                    break;
+            }
+            break;
+        case(7):
+            switch(boltDir){
+                case(0):
+                    facingLegal = true;
+                    break;
+                case(1):
+                    facingLegal = true;
+                    break;
+                default:
+                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                        facingLegal = true;
+                    }
+                    break;
+            }
+            break;
+        default:
+            if(Math.abs(attacker.direction - boltDir) <= 2){
+                facingLegal = true;
+            }
+            break;
+    }
+    
+    if(!facingLegal){
+        return -1;
+    }
+
+    //get line of sight
+    for(i = 1; i < 8; i++){
+        for(piece of boardState){
+            if(piece.locationX == (attacker.locationX + i*warpLine[0])){
+                if(piece.locationY == (attacker.locationY + i*warpLine[1])){
+                    if(piece.id != blockerId){
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+
+    //check for bonuses
+    let kingAttack = false;
+    let queenAttack = false;
+    for(piece of boardState){
+        if(piece.name == "king"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        kingAttack = true;
+                    }
+                }
+            }
+        }
+        else if(piece.name == "queen"){
+            if(piece.color == attacker.color){
+                if(Math.abs(piece.locationX - attacker.locationX) <= 1){
+                    if(Math.abs(piece.locationY - attacker.locationY) <= 1){
+                        queenAttack = true;
+                    }
+                }
+            }
+        }
+    }
+    // let modifiers = [backstab, queenAttack, queenBlock, kingAttack, kingBlock];
+    let hit = [false, false];
+    let crit = [false, false];
+    let critFail = [false, false];
+    let dice;
+    for(i = 0; i<2; i++){
+        dice = Math.ceil(Math.random() * 20);
+        if(dice >= 19){
+            hit[i] = true;
+            crit[i] = true;
+            break;
+        }
+        if(dice >= attacker.spellDc){
+            hit[i] = true;
+        }
+        if(queenAttack){
+            if(dice == 18){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if((dice+1) >= attacker.spellDc){
+                hit[i] = true;
+                break;
+            }
+        }
+        //at this point, normal hits and queen hits have been done
+            //king reroll
+        if(!hit[i] && kingAttack){
+            kingAttack = false;
+            dice = Math.ceil(Math.random() * 20);
+            if(dice >= 19){
+                crit[i] = true;
+                hit[i] = true;
+                break;
+            }
+            if(dice >= attacker.spellDc){
+                hit[i] = true;
+            }
+            if(queenAttack){
+                if(dice == 18){
+                    crit[i] = true;
+                    hit[i] = true;
+                    break;
+                }
+                if((dice+1) >= attacker.spellDc){
+                    hit[i] = true;
+                    break;
+                }
+            }
+        }
+        if(dice == 1){
+            critFail[i] = true;
+        }
+    }
+
+    if(critFail[0]){
+        //double crit fails kill the user
+        if(critFail[1]){
+            attacker.magical = false;
+            await attacker.save();
+            return 0;
+        }
+        //single crit fails the spell
+        return 1;
+    }
+    else if(critFail[1]){
+        return 1;
+    }
+    else if(!hit[0]){
+        if(!hit[1]){
+            return 1;
+        }
+    }
+
+    //placeholder to store locations in the swap
+    let placeholder = [];
+    if(crit[0]){
+        if(crit[1]){
+            //swap the tiles and change their directions
+            placeholder[0] = blocker.locationX;
+            placeholder[1] = blocker.locationY;
+            blocker.locationX = attacker.locationX;
+            blocker.locationY = attacker.locationY;
+            attacker.locationX = placeholder[0];
+            attacker.locationY = placeholder[1];
+            attacker.direction = attackerFacing;
+            blocker.direction = blockerFacing;
+
+            if(attacker.color == blocker.color){
+                blocker.currentHealth = blocker.health;
+            }
+            else{
+                blocker.destroy();
+            }
+            await attacker.save();
+            await blocker.save();
+            return 4;
+        }
+        else{
+            placeholder[0] = blocker.locationX;
+            placeholder[1] = blocker.locationY;
+            blocker.locationX = attacker.locationX;
+            blocker.locationY = attacker.locationY;
+            attacker.locationX = placeholder[0];
+            attacker.locationY = placeholder[1];
+            attacker.direction = attackerFacing;
+            blocker.direction = blockerFacing;
+
+            if(attacker.color == blocker.color){
+                blocker.currentHealth = blocker.currentHealth + 4;
+                if(blocker.currentHealth > blocker.health){
+                    blocker.currentHealth = blocker.health
+                }
+            }
+            else{
+                blocker.currentHealth = blocker.currentHealth - 4;
+            }
+            await attacker.save();
+            await blocker.save();
+            return 3;
+        }
+    }
+    else if(crit[1]){
+        placeholder[0] = blocker.locationX;
+        placeholder[1] = blocker.locationY;
+        blocker.locationX = attacker.locationX;
+        blocker.locationY = attacker.locationY;
+        attacker.locationX = placeholder[0];
+        attacker.locationY = placeholder[1];
+        attacker.direction = attackerFacing;
+        blocker.direction = blockerFacing;
+
+        if(attacker.color == blocker.color){
+            blocker.currentHealth = blocker.currentHealth + 4;
+            if(blocker.currentHealth > blocker.health){
+                blocker.currentHealth = blocker.health
+            }
+        }
+        else{
+            blocker.currentHealth = blocker.currentHealth - 4;
+        }
+
+        await attacker.save();
+        await blocker.save();
+        return 3;
+    }
+    else{
+        placeholder[0] = blocker.locationX;
+        placeholder[1] = blocker.locationY;
+        blocker.locationX = attacker.locationX;
+        blocker.locationY = attacker.locationY;
+        attacker.locationX = placeholder[0];
+        attacker.locationY = placeholder[1];
+        attacker.direction = attackerFacing;
+        blocker.direction = blockerFacing;
+
+        await attacker.save();
+        await blocker.save();
+        return 2;
+    }  
+    
+}
+
+module.exports = {attack, lightningBolt, fireball, iceWave, heal, blessedBolt, transfer};

@@ -3,6 +3,7 @@ const router = require('express').Router();
 const {Board, Piece, Player} = require("../../models");
 const {pawnMove, kingMove, rookMove, bishopMove, queenMove, knightMove} = require('../../utils/gameLogic');
 const {attack} = require('../../utils/catLogic');
+const {lightningBolt, fireball, iceWave, heal, blessedBolt, transfer} = require('../../utils/catLogic');
 
 router.post('/move', async (req, res) => {
     //this will recieve a boardId, a pieceId, and a destination
@@ -173,6 +174,213 @@ router.post('/turn', async (req, res) => {
         piece.direction = req.body.direction;
         await piece.save();
         res.status(200).json(piece.direction);
+    }
+    catch(err){
+        res.status(500).json(err);
+    }
+});
+
+//the spells
+router.post('/lightningBolt', async (req, res) => {
+    console.log("bolt");
+    try{
+        //needs req.body.attackerId , req.body.blockerId , req.body.boardId
+        let boltResult = await lightningBolt(req.body.attackerId, req.body.blockerId, req.body.boardId);
+        //this should return -1, 0, 1, 2, 3, 4
+        switch(boltResult){
+            case(-1):
+                res.status(400).json("Illegal move");
+                break;
+            case(0):
+                res.status(200).json("Critical fail");
+                break;
+            case(1):
+                res.status(200).json("Fail");
+                break;
+            case(2):
+                res.status(200).json("Success");
+                break;
+            case(3):
+                res.status(200).json("Critical Success");
+                break;
+            case(4):
+                res.status(200).json("Double Crit!");
+                break;
+            default:
+                res.status(500).json("Switch break");
+                break;
+        }
+    }
+    catch(err){
+        res.status(500).json(err);
+    }
+});
+
+router.post('/fireball', async (req, res) => {
+    try{
+        //needs req.body.attackerId , req.body.blockerId , req.body.boardId
+        let boltResult = await fireball(req.body.attackerId, req.body.blockerId, req.body.boardId);
+        //this should return -1, 0, 1, 2, 3, 4
+        switch(boltResult){
+            case(-1):
+                res.status(400).json("Illegal move");
+                break;
+            case(0):
+                res.status(200).json("Critical fail");
+                break;
+            case(1):
+                res.status(200).json("Fail");
+                break;
+            case(2):
+                res.status(200).json("Success");
+                break;
+            case(3):
+                res.status(200).json("Critical Success");
+                break;
+            case(4):
+                res.status(200).json("Double Crit!");
+                break;
+            default:
+                res.status(500).json("Switch break");
+                break;
+        }
+    }
+    catch(err){
+        res.status(500).json(err);
+    }
+});
+
+router.post('/iceWave', async (req, res) => {
+    try{
+        //needs req.body.attackerId , req.body.blockerId , req.body.boardId
+        let boltResult = await iceWave(req.body.attackerId, req.body.blockerId, req.body.boardId);
+        //this should return -1, 0, 1, 2, 3, 4
+        switch(boltResult){
+            case(-1):
+                res.status(400).json("Illegal move");
+                break;
+            case(0):
+                res.status(200).json("Critical fail");
+                break;
+            case(1):
+                res.status(200).json("Fail");
+                break;
+            case(2):
+                res.status(200).json("Success");
+                break;
+            case(3):
+                res.status(200).json("Critical Success");
+                break;
+            case(4):
+                res.status(200).json("Double Crit!");
+                break;
+            default:
+                res.status(500).json("Switch break");
+                break;
+        }
+    }
+    catch(err){
+        res.status(500).json(err);
+    }
+});
+
+router.post('/heal', async (req, res) => {
+    try{
+        //needs req.body.attackerId , req.body.blockerId , req.body.boardId
+        let boltResult = await heal(req.body.attackerId, req.body.blockerId, req.body.boardId);
+        //this should return -1, 0, 1, 2, 3, 4
+        console.log("Bolt result: " + boltResult);
+        switch(boltResult){
+            case(-1):
+                res.status(400).json("Illegal move");
+                break;
+            case(0):
+                res.status(200).json("Critical fail");
+                break;
+            case(1):
+                res.status(200).json("Fail");
+                break;
+            case(2):
+                res.status(200).json("Success");
+                break;
+            case(3):
+                res.status(200).json("Critical Success");
+                break;
+            case(4):
+                res.status(200).json("Double Crit!");
+                break;
+            default:
+                res.status(500).json("Switch break");
+                break;
+        }
+    }
+    catch(err){
+        res.status(500).json(err);
+    }
+});
+
+router.post('/blessedBolt', async (req, res) => {
+    try{
+        //needs req.body.attackerId , req.body.blockerId , req.body.boardId
+        let boltResult = await blessedBolt(req.body.attackerId, req.body.blockerId, req.body.boardId);
+        //this should return -1, 0, 1, 2, 3, 4
+        switch(boltResult){
+            case(-1):
+                res.status(400).json("Illegal move");
+                break;
+            case(0):
+                res.status(200).json("Critical fail");
+                break;
+            case(1):
+                res.status(200).json("Fail");
+                break;
+            case(2):
+                res.status(200).json("Success");
+                break;
+            case(3):
+                res.status(200).json("Critical Success");
+                break;
+            case(4):
+                res.status(200).json("Double Crit!");
+                break;
+            default:
+                res.status(500).json("Switch break");
+                break;
+        }
+    }
+    catch(err){
+        res.status(500).json(err);
+    }
+});
+
+router.post('/transfer', async (req, res) => {
+    try{
+        //needs req.body.attackerId , req.body.blockerId , req.body.boardId
+        let boltResult = await transfer(req.body.attackerId, req.body.blockerId, req.body.boardId, req.body.attackerDir, req.body.blockerDir);
+        //this should return -1, 0, 1, 2, 3, 4
+        switch(boltResult){
+            case(-1):
+                res.status(400).json("Illegal move");
+                break;
+            case(0):
+                res.status(200).json("Critical fail");
+                break;
+            case(1):
+                res.status(200).json("Fail");
+                break;
+            case(2):
+                res.status(200).json("Success");
+                break;
+            case(3):
+                res.status(200).json("Critical Success");
+                break;
+            case(4):
+                res.status(200).json("Double Crit!");
+                break;
+            default:
+                res.status(500).json("Switch break");
+                break;
+        }
     }
     catch(err){
         res.status(500).json(err);
