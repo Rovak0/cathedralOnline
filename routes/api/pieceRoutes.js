@@ -356,7 +356,7 @@ router.post('/blessedBolt', async (req, res) => {
 router.post('/transfer', async (req, res) => {
     try{
         //needs req.body.attackerId , req.body.blockerId , req.body.boardId
-        let boltResult = await transfer(req.body.attackerId, req.body.blockerId, req.body.boardId, req.body.attackerDir, req.body.blockerDir);
+        let boltResult = await transfer(req.body.attackerId, req.body.blockerId, req.body.boardId, req.body.attackerFacing, req.body.blockerFacing);
         //this should return -1, 0, 1, 2, 3, 4
         switch(boltResult){
             case(-1):
@@ -385,6 +385,10 @@ router.post('/transfer', async (req, res) => {
     catch(err){
         res.status(500).json(err);
     }
+});
+
+router.post('/', (req, res) => {
+    res.status(404).json("Page not found");
 });
 
 module.exports = router;

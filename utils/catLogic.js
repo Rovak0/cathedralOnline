@@ -8,6 +8,14 @@ const {Board, Piece, Player, Square} = require("../models");
 //this function will return an int that will be damage taken
 //the attack will manage the piece query and damage, so the block function doesn't need to be async
 
+async function checkPieceKill(piece){
+    if(piece.health <= 0){
+        await piece.destroy();
+        piece.save();
+    }
+}
+
+
 function block(hits, blocker, modifiers){
     //modifiers = [backstab, queenAttack, queenBlock, kingAttack, kingBlock]
     console.log("blocking");
@@ -2372,6 +2380,7 @@ async function lightningBolt(attackerId, blockerId, boardId){
             for(piece of hitList){
                 piece.currentHealth = piece.currentHealth - 6;
                 await piece.save();
+                await checkPieceKill(piece);
             }
             blocker.destroy();
             await blocker.save();
@@ -2380,6 +2389,7 @@ async function lightningBolt(attackerId, blockerId, boardId){
         for(piece of hitList){
             piece.currentHealth= piece.currentHealth - 6;
             await piece.save();
+            await checkPieceKill(piece);
         }
         return 3;
     }
@@ -2387,6 +2397,7 @@ async function lightningBolt(attackerId, blockerId, boardId){
         for(piece of hitList){
             piece.currentHealth= piece.currentHealth - 6;
             await piece.save();
+            await checkPieceKill(piece);
         }
         return 3;
     }
@@ -2394,6 +2405,7 @@ async function lightningBolt(attackerId, blockerId, boardId){
         for(piece of hitList){
             piece.currentHealth= piece.currentHealth - 3;
             await piece.save();
+            await checkPieceKill(piece);
         }
         return 2;
     }
@@ -2762,33 +2774,40 @@ async function fireball(attackerId, blockerId, boardId){
             for(piece of hitList){
                 piece.currentHealth = piece.currentHealth - 4;
                 await piece.save();
+                await checkPieceKill(piece);
                 return 4;
             }
         }
         //normal crit
         blocker.currentHealth = blocker.currentHealth - 6;
         await blocker.save();
+        await checkPieceKill(blocker);
         for(piece of hitList){
             piece.currentHealth = piece.currentHealth - 4;
             await piece.save();
+            await checkPieceKill(piece);
             return 3;
         }
     }
     if(crit[1]){
         blocker.currentHealth = blocker.currentHealth - 6;
         await blocker.save();
+        await checkPieceKill(blocker);
         for(piece of hitList){
             piece.currentHealth = piece.currentHealth - 4;
             await piece.save();
+            await checkPieceKill(piece);
             return 3;
         }
     }
     else{
         blocker.currentHealth = blocker.currentHealth - 3;
         await blocker.save();
+        await checkPieceKill(blocker);
         for(piece of hitList){
             piece.currentHealth = piece.currentHealth - 2;
             await piece.save();
+            await checkPieceKill(piece);
             return 2;
         }
     }
@@ -2930,6 +2949,7 @@ async function iceWave(attackerId, boardId){
             piece.currentHealth = 1;
             piece.standing = false;
             piece.frozen = true;
+            await checkPieceKill(piece);
             await piece.save();
         }
         return 3;
@@ -2940,6 +2960,7 @@ async function iceWave(attackerId, boardId){
             piece.standing = false;
             piece.frozen = true;
             await piece.save();
+            await checkPieceKill(piece);
         }
         return 3;
     }
@@ -2949,6 +2970,7 @@ async function iceWave(attackerId, boardId){
             if(piece.name != "paladin"){
                 piece.currentHealth = piece.currentHealth - 3;
                 await piece.save();
+                await checkPieceKill(piece);
             }
         }
         return 2;
@@ -2978,7 +3000,7 @@ async function heal(attackerId, blockerId, boardId){
 
     //you can heal yourself
     //if not healing self, check legality
-    if(attacker != blocker){ 
+    if(attackerId != blockerId){ 
         //heal range is 2
         //check line of sight
         //get vector and then check facing
@@ -3030,7 +3052,6 @@ async function heal(attackerId, blockerId, boardId){
         //switch based off of attacker direction
             //if the attacker direction is withing 2 of bolt dir, it is legal
             //there is a discontinuity at 7/0, so 0,1,6,7 need edge rules
-        console.log("Hunt Heal");
 
         switch(attacker.direction){
             case(0):
@@ -3525,22 +3546,19 @@ async function blessedBolt(attackerId, blockerId, boardId){
         else{
             blocker.currentHealth = blocker.currentHealth - 8;
             await blocker.save();
+            await checkPieceKill(piece);
             return 3;
         }
     }
     else if(crit[1]){
         blocker.currentHealth = blocker.currentHealth - 8;
-        if(blocker.currentHealth > blocker.health){
-            blocker.currentHealth = blocker.health;
-        }
         await blocker.save();
+        await checkPieceKill(piece);
         return 3;
     }
     else{
         blocker.currentHealth = blocker.currentHealth - 4;
-        if(blocker.currentHealth > blocker.health){
-            blocker.currentHealth = blocker.health;
-        }
+        await checkPieceKill(piece);
         await blocker.save();
         return 2;
     }  
@@ -3613,7 +3631,7 @@ async function transfer(attackerId, blockerId, boardId, attackerFacing, blockerF
         //there is a discontinuity at 7/0, so 0,1,6,7 need edge rules
     switch(attacker.direction){
         case(0):
-            switch(boltDir){
+            switch(warpDir){
                 case(6):
                     facingLegal = true;
                     break;
@@ -3621,38 +3639,38 @@ async function transfer(attackerId, blockerId, boardId, attackerFacing, blockerF
                     facingLegal = true;
                     break;
                 default:
-                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                    if(Math.abs(attacker.direction - warpDir) <= 2){
                         facingLegal = true;
                     }
                     break;
             }
             break;
         case(1):
-            switch(boltDir){
+            switch(warpDir){
                 case(7):
                     facingLegal = true;
                     break;
                 default:
-                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                    if(Math.abs(attacker.direction - warpDir) <= 2){
                         facingLegal = true;
                     }
                     break;
             }
             break;
         case(6):
-            switch(boltDir){
+            switch(warpDir){
                 case(0):
                     facingLegal = true;
                     break;
                 default:
-                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                    if(Math.abs(attacker.direction - warpDir) <= 2){
                         facingLegal = true;
                     }
                     break;
             }
             break;
         case(7):
-            switch(boltDir){
+            switch(warpDir){
                 case(0):
                     facingLegal = true;
                     break;
@@ -3660,19 +3678,20 @@ async function transfer(attackerId, blockerId, boardId, attackerFacing, blockerF
                     facingLegal = true;
                     break;
                 default:
-                    if(Math.abs(attacker.direction - boltDir) <= 2){
+                    if(Math.abs(attacker.direction - warpDir) <= 2){
                         facingLegal = true;
                     }
                     break;
             }
             break;
         default:
-            if(Math.abs(attacker.direction - boltDir) <= 2){
+            if(Math.abs(attacker.direction - warpDir) <= 2){
                 facingLegal = true;
             }
             break;
     }
     
+
     if(!facingLegal){
         return -1;
     }
