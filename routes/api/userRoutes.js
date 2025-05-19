@@ -75,4 +75,29 @@ router.post("/dropQueue", async (req, res) => {
     }
 });
 
+//these 2 are for checking if the user is currently in a queue
+router.post("/getChessQueue", async (req, res) => {
+    let user = req.body.user;
+    try{
+        user = await Player.findByPk(user);
+        res.status(200).json(user.inQueue);
+    }
+    catch(err){
+        res.status(500).json(err)
+        return;
+    }
+});
+
+router.post("/getCatQueue", async (req, res) => {
+    let user = req.body.user;
+    try{
+        user = await Player.findByPk(user);
+        res.status(200).json(user.inQueueCat);
+    }
+    catch(err){
+        res.status(500).json(err)
+        return;
+    }
+});
+
 module.exports = router;

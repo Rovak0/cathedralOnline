@@ -13,6 +13,6 @@ setInterval(async function() {
     if(queue == false){
         //direct the user to the chess page
         //make the chess page
-        window.location.href = "/chess.html";
+        window.location.href = "/cathedral.html";
     }
 });

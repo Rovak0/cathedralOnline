@@ -16,6 +16,7 @@ async function queueButtonHandlerChess(event){
 
         if(queue.ok){
             //nothing currently changes when in the queue
+            window.location.href = "/chessQueue.html";
             console.log("entered queue");
         }
     }
@@ -39,6 +40,7 @@ async function queueButtonHandlerCat(event){
         if(queue.ok){
             //nothing currently changes when in the queue
             console.log("entered queue");
+            window.location.href = "/catQueue.html";
         }
     }
     else{
