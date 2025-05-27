@@ -2,6 +2,12 @@ const gameId = document.querySelector('#gameHolder');
 const gameBoard = document.querySelector('#gameBoard');
 const submitButton = document.querySelector("#submitMoveButton");
 
+
+
+//some constants in case I ever change things away from 8*8
+const boardHeight = 8;
+const boardWidth = 8;
+
 //imports are wrong on the front end
 //these are copied from pieceRules.js
 function pawnMove(pawn, boardState){
@@ -672,6 +678,653 @@ function knightMove(knight, boardState){
 };
 
 
+//make a line of sight function to centralize all line of sight calculations
+//line of sight does not handle facing, because it gives all 8 directions
+    //it is up to the functions that use line of sight to handle facing
+async function lineOfSight(distance, origin){
+    //distance is how long the line is
+    //origin will be fed in as [x,y] pair
+    //return will be what it can hit
+    // let fullBoard = (await getBoard());
+    let fullBoard = pageBoard;
+    board = fullBoard.returnBoardState;
+    
+    let hitList = [];
+    let tracer = 0;
+    //running is here to break out of the while loop
+    let running = true;
+    //straight line up
+    while((origin[1] + tracer) <= boardHeight){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        if(!running){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[1] + tracer)){
+                if(piece.locaitonY == (origin[0])){
+                    hitList.push(piece);
+                    running = false;
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    tracer = 0;
+    running = true;
+    //up and right
+    while(((origin[0] + tracer) <= boardWidth) && ((origin[1] + tracer) <= boardHeight)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        if(!running){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] + tracer)){
+                if(piece.locaitonY == (origin[1] + tracer)){
+                    hitList.push(piece);
+                    running = false;
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    running = true;
+    tracer = 0;
+    //right
+    while(((origin[0] + tracer) <= boardWidth)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        if(!running){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] + tracer)){
+                if(piece.locaitonY == (origin[1])){
+                    hitList.push(piece);
+                    running = false;
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    running = true;
+    tracer = 0;
+    //down and right
+    while(((origin[0] + tracer) <= boardHeight) && ((origin[1] - tracer) > 0)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        if(!running){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] + tracer)){
+                if(piece.locaitonY == (origin[1] - tracer)){
+                    hitList.push(piece);
+                    running = false;
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    running = true;
+    tracer = 0;
+    //down
+    while(((origin[1] - tracer) > 0)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        if(!running){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0])){
+                if(piece.locaitonY == (origin[1] - tracer)){
+                    hitList.push(piece);
+                    running = false;
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    running = true;
+    tracer = 0;
+    //down and left
+    while(((origin[0] - tracer) > 0) && ((origin[1] - tracer) > 0)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        if(!running){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] - tracer)){
+                if(piece.locaitonY == (origin[1] - tracer)){
+                    hitList.push(piece);
+                    running = false;
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    running = true;
+    tracer = 0;
+    //left
+    while(((origin[0] - tracer) > 0)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        if(!running){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] - tracer)){
+                if(piece.locaitonY == (origin[1])){
+                    hitList.push(piece);
+                    running = false;
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    running = true;
+    tracer = 0;
+    //left and up
+    while(((origin[0] - tracer) > 0) && ((origin[1] + tracer) <= boardHeight)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        if(!running){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] - tracer)){
+                if(piece.locaitonY == (origin[1] + tracer)){
+                    hitList.push(piece);
+                    running = false;
+                    break;
+                }
+            }
+        }
+    }
+
+    return hitList;
+}
+
+async function pierceLOS(distance, origin){
+        //distance is how long the line is
+    //origin will be fed in as [x,y] pair
+    //return will be what it can hit
+    // let fullBoard = (await getBoard());
+    let fullBoard = pageBoard;
+    board = fullBoard.returnBoardState;
+    
+    let hitList = [];
+    tracer = 0;
+    //straight line up
+    while((origin[1] + tracer) <= boardHeight){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[1] + tracer)){
+                if(piece.locaitonY == (origin[0])){
+                    hitList.push(piece);
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    tracer = 0;
+    //up and right
+    while(((origin[0] + tracer) <= boardWidth) && ((origin[1] + tracer) <= boardHeight)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] + tracer)){
+                if(piece.locaitonY == (origin[1] + tracer)){
+                    hitList.push(piece);
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    tracer = 0;
+    //right
+    while(((origin[0] + tracer) <= boardWidth)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] + tracer)){
+                if(piece.locaitonY == (origin[1])){
+                    hitList.push(piece);
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    tracer = 0;
+    //down and right
+    while(((origin[0] + tracer) <= boardHeight) && ((origin[1] - tracer) > 0)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] + tracer)){
+                if(piece.locaitonY == (origin[1] - tracer)){
+                    hitList.push(piece);
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    tracer = 0;
+    //down
+    while(((origin[1] - tracer) > 0)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0])){
+                if(piece.locaitonY == (origin[1] - tracer)){
+                    hitList.push(piece);
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    tracer = 0;
+    //down and left
+    while(((origin[0] - tracer) > 0) && ((origin[1] - tracer) > 0)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] - tracer)){
+                if(piece.locaitonY == (origin[1] - tracer)){
+                    hitList.push(piece);
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    tracer = 0;
+    //left
+    while(((origin[0] - tracer) > 0)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] - tracer)){
+                if(piece.locaitonY == (origin[1])){
+                    hitList.push(piece);
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    tracer = 0;
+    //left and up
+    while(((origin[0] - tracer) > 0) && ((origin[1] + tracer) <= boardHeight)){
+        tracer++;
+        if(tracer > distance){
+            break;
+        }
+        for(piece of board){
+            if(piece.locaitonX == (origin[0] - tracer)){
+                if(piece.locaitonY == (origin[1] + tracer)){
+                    hitList.push(piece);
+                    break;
+                }
+            }
+        }
+    }
+    //reset the tracer between lines
+    tracer = 0;
+
+    return hitList;
+}
+
+function findTile(target){
+    //target is [x,y] coordinates from pieces
+        //pieces are on tiles 1-8 because chess
+    let rowList;
+    //for some reason, it only works in a for loop
+    // not really a for loop because there is 1 child
+        // idk man
+    for(kid of gameBoard.children){
+        rowList = kid.children;
+    }
+
+    //the [x,y] is one more than the index
+    let targetRow = rowList[target[0] -1];
+    let targetTile = targetRow[target[1] -1];
+    return targetTile;
+}
+
+//TODO in combat check
+function meleeAttack(attacker, blocker){
+    //will be fed the attacker and blocker pieces
+    //needs to resolve legality
+    //will be part of the attackButtonHandler
+    //needs to check if the pieces are within range, and if the attacker is facing the right direction
+
+    //returns are 0, 1, 2 for illegal, normal, backstabbing
+
+    //attacker - blocker means that positive is to the left, and negative is to the right
+    let distanceX = attacker.locationX - blocker.locationX;
+    if((distanceX < -1) || (distanceX > 1)){
+        return 0;
+    }
+    let distanceY = attacker.locationY - blocker.locationY;
+    if((distanceY < -1) || (distanceY > 1)){
+        return 0;
+    }
+
+    //the pieces are next to each other, now to handle facing
+    //just find out if it illegal
+        //backstabbing means there is a step after this
+    switch(distanceX){
+        case(-1):
+            switch(distanceY){
+                case(-1):
+                    switch(attacker.direction){
+                        case(4):
+                            return 0;
+                            break;
+                        case(5):
+                            return 0;
+                            break;
+                        case(6):
+                            return 0;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case(0):
+                    switch(attacker.direction){
+                        case(5):
+                            return 0;
+                            break;
+                        case(6):
+                            return 0;
+                            break;
+                        case(7):
+                            return 0;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case(1):
+                    switch(attacker.direction){
+                        case(0):
+                            return 0;
+                            break;
+                        case(6):
+                            return 0;
+                            break;
+                        case(7):
+                            return 0;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            break;
+            
+        case(0):
+            switch(distanceY){
+                case(-1):
+                    switch(attacker.direction){
+                        case(3):
+                            return 0;
+                            break;
+                        case(4):
+                            return 0;
+                            break;
+                        case(5):
+                            return 0;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case(1):
+                    switch(attacker.direction){
+                        case(0):
+                            return 0;
+                            break;
+                        case(1):
+                            return 0;
+                            break;
+                        case(7):
+                            return 0;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            break;
+        
+        case(1):
+        switch(distanceY){
+            case(-1):
+                switch(attacker.direction){
+                    case(2):
+                        return 0;
+                        break;
+                    case(3):
+                        return 0;
+                        break;
+                    case(4):
+                        return 0;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case(0):
+                switch(attacker.direction){
+                    case(1):
+                        return 0;
+                        break;
+                    case(2):
+                        return 0;
+                        break;
+                    case(3):
+                        return 0;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case(1):
+                switch(attacker.direction){
+                    case(0):
+                        return 0;
+                        break;
+                    case(1):
+                        return 0;
+                        break;
+                    case(2):
+                        return 0;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+        break;
+    }
+
+    //now for backstabbing
+    //if the target and the attacker are within 1 direction point, backstab
+    //also 0 and 7 backstab each other
+    switch(attacker.direction){
+        case(0):
+            if(blocker.direction == 7){
+                return 2;
+            }
+            else{
+                if(Math.abs(attacker.direction - blocker.direction) <= 1){
+                    return 2;
+                }
+                else{
+                    return 1;
+                }
+            }
+            break;
+        case(7):
+            if(blocker.direction == 0){
+                return 2;
+            }
+            else{
+                if(Math.abs(attacker.direction - blocker.direction) <= 1){
+                    return 2;
+                }
+                else{
+                    return 1;
+                }
+            }
+            break;
+        default:
+            if(Math.abs(attacker.direction - blocker.direction) <= 1){
+                return 2;
+            }
+            else{
+                return 1;
+            }
+            break;
+    }
+
+}
+
+//spell functions
+async function fireBall(caster, target){
+    //the cast gives distance and origin
+        //origin from the caster itself, distance from the spell
+    if(caster.name != "wizard"){
+        //not legal
+        return 0;
+    };
+    let hitList = lineOfSight(3, [caster.locationX, caster.locationY]);
+    //the hitList gives full pieces, doesn't always work on matching with sql
+        //meta data messes it up server side
+    for(piece of hitList){
+        if(piece.id == target.id){
+            //target hits, it's legal.  Return 1
+            return 1;
+        }
+    }
+    //if no piece is the target, return illegal
+    return 0;
+}
+
+async function blessedBolt(caster, target){
+    //the cast gives distance and origin
+        //origin from the caster itself, distance from the spell
+    if(caster.name != "cleric"){
+        //not legal
+        return 0;
+    };
+    let hitList = lineOfSight(2, [caster.locationX, caster.locationY]);
+    //the hitList gives full pieces, doesn't always work on matching with sql
+        //meta data messes it up server side
+    for(piece of hitList){
+        if(piece.id == target.id){
+            //target hits, it's legal.  Return 1
+            return 1;
+        }
+    }
+    //if no piece is the target, return illegal
+    return 0;
+}
+
+async function heal(caster, target){
+    //the cast gives distance and origin
+        //origin from the caster itself, distance from the spell
+    if(caster.name != "cleric"){
+        //not legal
+        return 0;
+    };
+    let hitList = lineOfSight(2, [caster.locationX, caster.locationY]);
+    //the hitList gives full pieces, doesn't always work on matching with sql
+        //meta data messes it up server side
+    for(piece of hitList){
+        if(piece.id == target.id){
+            //target hits, it's legal.  Return 1
+            return 1;
+        }
+    }
+    //if no piece is the target, return illegal
+    return 0;
+}
+
+async function trade(caster, target){
+    //the cast gives distance and origin
+        //origin from the caster itself, distance from the spell
+    if(caster.name != "cleric"){
+        //not legal
+        return 0;
+    };
+    let hitList = lineOfSight(8, [caster.locationX, caster.locationY]);
+    //the hitList gives full pieces, doesn't always work on matching with sql
+        //meta data messes it up server side
+    for(piece of hitList){
+        if(piece.id == target.id){
+            //target hits, it's legal.  Return 1
+            return 1;
+        }
+    }
+    //if no piece is the target, return illegal
+    return 0;
+}
+
 // create my session variables
 // sessionStorage.setItem("logged_in", false);
 // sessionStorage.setItem("user_id", false);
@@ -768,11 +1421,9 @@ const resetList = [
     ],
 ]
 
+let pageBoard;
 let board;
 let boardId;
-// user = 1;
-
-// const tester = "abc";
 
 //make a function that queries the server for the board state and returns 3 objects, boardData, boardState, and opponent
 async function getBoard () {
@@ -948,12 +1599,11 @@ for (kid of gameBoard.children){
 //load each piece into its tile
 //make it a function because it will be used later
 async function loadBoard () {
-    let fullBoard = (await getBoard());
+    // let fullBoard = (await getBoard());
+    //full board was a variable at the start of creation, but has been removed to minimized server requests
+    let fullBoard = pageBoard;
     board = fullBoard.returnBoardState;
     boardId = fullBoard.boardData.id;
-    // console.log(fullBoard.boardData);
-    // console.log(fullBoard.boardData.player_id1);
-    // console.log(user);
     let boardState = fullBoard.returnBoardState;
     let pieceX;
     let pieceY;
@@ -1188,9 +1838,10 @@ if(user != 'false'){
 }
 
 //run the board load every second
-setInterval(function() {
+setInterval(async function() {
     //comment out the loadboard call to stop sending requests during development
     if(user != 'false'){
+        pageBoard = (await getBoard());
         loadBoard();
     }
 }, 1000);
