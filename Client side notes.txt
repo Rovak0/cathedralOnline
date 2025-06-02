@@ -1,0 +1,33 @@
+For the client side
+
+Make 3 pages, one for login/sign up
+	1 for normal chess
+	1 for cathedral
+
+Pages
+	It goes sign up, then a page to put you in normal chess or cathedral
+	Queues need holding pages
+	Cathedral needs a rules page
+
+Normal chess
+	Make and indicator for whose turn it is
+
+Cathedral
+	Need buttons for actions
+	All need a turn button
+	All need an attack button
+	All need a move button
+	Some need ranged attack buttons
+	Some need spell buttons
+
+	Make the buttons a list, and when selecting a tile, add actions to the list or remove them from the list
+
+TODO
+	Create the action buttons
+	Make the action buttons appear and disappear when needed
+	Make the buttons connect to the server
+
+
+
+How to handle the special action buttons
+When a tile is selected, check if the tile has a piece, then check if the piece can perform a special action

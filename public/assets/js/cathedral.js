@@ -2,6 +2,18 @@ const gameId = document.querySelector('#gameHolder');
 const gameBoard = document.querySelector('#gameBoard');
 const submitButton = document.querySelector("#submitMoveButton");
 
+//         <ul id="gameActionList">
+{/* <li><button id="submitMoveButton">Submit Move</button></li>
+<li><button id="turnButton">Submit Piece Turn</button></li>
+<li><button id="attackButton">Submit Attack</button></li>
+</ul> */}
+const actionList = document.querySelector('#gameActionList');
+const moveButton = document.querySelector('#submitMoveButton');
+const turnButton = document.querySelector('#turnButton');
+const meleeAttackButton = document.querySelector('#attackButton');
+
+//objects on the list at all times will be submit move, turn, and melee attack
+    //actions will be greyed out if the move is illegal
 
 
 //some constants in case I ever change things away from 8*8
@@ -283,6 +295,7 @@ function kingMove(king, boardState){
 function rookMove(rook, boardState){
     const rookX = rook.locationX;
     const rookY = rook.locationY;
+    let moveCap = rook.moveCap;
 
     const moveList = [];
     const takeList = [];
@@ -293,6 +306,10 @@ function rookMove(rook, boardState){
     while(run){
         //tracker is how far the rook has moved
         tracker++;
+        //use the tracker to check for move cap as well
+        if(tracker > moveCap){
+            break;
+        }
         //set up bounds
         if((rookX + tracker) > 8){
             run = false;
@@ -322,6 +339,9 @@ function rookMove(rook, boardState){
         //tracker is how far the rook has moved
         tracker++;
         //set up bounds
+        if(tracker > moveCap){
+            break;
+        }
         if((rookX - tracker) <= 0){
             run = false;
             break;
@@ -349,6 +369,9 @@ function rookMove(rook, boardState){
         //tracker is how far the rook has moved
         tracker++;
         //set up bounds
+        if(tracker > moveCap){
+            break;
+        }
         if((rookY + tracker) > 8){
             run = false;
             break;
@@ -377,6 +400,9 @@ function rookMove(rook, boardState){
         //tracker is how far the rook has moved
         tracker++;
         //set up bounds
+        if(tracker > moveCap){
+            break;
+        }
         if((rookY - tracker) <= 0){
             run = false;
             break;
@@ -404,6 +430,7 @@ function rookMove(rook, boardState){
 function bishopMove(bishop, boardState){
     const bishX = bishop.locationX;
     const bishY = bishop.locationY;
+    let moveCap = bishop.moveCap;
 
     const moveList = [];
     const takeList = [];
@@ -417,6 +444,10 @@ function bishopMove(bishop, boardState){
     while(run){
         xTracker++;
         yTracker++;
+        //use the absolute value of trackers to check for move cap
+        if(Math.abs(xTracker) > moveCap){
+            break;
+        }
         if((bishX + xTracker >8) || (bishY + yTracker >8)){
             run = false;
             break;
@@ -445,6 +476,9 @@ function bishopMove(bishop, boardState){
     while(run){
         xTracker++;
         yTracker++;
+        if(Math.abs(xTracker) > moveCap){
+            break;
+        }
         if((bishX + xTracker >8) || (bishY - yTracker <= 0)){
             run = false;
             break;
@@ -473,6 +507,9 @@ function bishopMove(bishop, boardState){
     while(run){
         xTracker++;
         yTracker++;
+        if(Math.abs(xTracker) > moveCap){
+            break;
+        }
         if((bishX - xTracker <= 0) || (bishY - yTracker <= 0)){
             run = false;
             break;
@@ -501,6 +538,9 @@ function bishopMove(bishop, boardState){
     while(run){
         xTracker++;
         yTracker++;
+        if(Math.abs(xTracker) > moveCap){
+            break;
+        }
         if((bishX - xTracker <= 0) || (bishY + yTracker > 8)){
             run = false;
             break;
@@ -527,8 +567,8 @@ function bishopMove(bishop, boardState){
 
 //queen move
 function queenMove(queen, boardState){
-    const rookSide = rookMove(queen, boardState);
-    const bishSide = bishopMove(queen, boardState);
+    const rookSide = rookMove(queen, boardState, queen.moveCap);
+    const bishSide = bishopMove(queen, boardState, queen.moveCap);
 
     const moveList = rookSide[0].concat(bishSide[0]);
     const takeList = rookSide[1].concat(bishSide[1]);
@@ -703,8 +743,8 @@ async function lineOfSight(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[1] + tracer)){
-                if(piece.locaitonY == (origin[0])){
+            if(piece.locationX == (origin[1])){
+                if(piece.locationY == (origin[0] + tracer)){
                     hitList.push(piece);
                     running = false;
                     break;
@@ -725,8 +765,8 @@ async function lineOfSight(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] + tracer)){
-                if(piece.locaitonY == (origin[1] + tracer)){
+            if(piece.locationX == (origin[0] + tracer)){
+                if(piece.locationY == (origin[1] + tracer)){
                     hitList.push(piece);
                     running = false;
                     break;
@@ -747,8 +787,8 @@ async function lineOfSight(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] + tracer)){
-                if(piece.locaitonY == (origin[1])){
+            if(piece.locationX == (origin[0] + tracer)){
+                if(piece.locationY == (origin[1])){
                     hitList.push(piece);
                     running = false;
                     break;
@@ -769,8 +809,8 @@ async function lineOfSight(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] + tracer)){
-                if(piece.locaitonY == (origin[1] - tracer)){
+            if(piece.locationX == (origin[0] + tracer)){
+                if(piece.locationY == (origin[1] - tracer)){
                     hitList.push(piece);
                     running = false;
                     break;
@@ -791,8 +831,8 @@ async function lineOfSight(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0])){
-                if(piece.locaitonY == (origin[1] - tracer)){
+            if(piece.locationX == (origin[0])){
+                if(piece.locationY == (origin[1] - tracer)){
                     hitList.push(piece);
                     running = false;
                     break;
@@ -813,8 +853,8 @@ async function lineOfSight(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] - tracer)){
-                if(piece.locaitonY == (origin[1] - tracer)){
+            if(piece.locationX == (origin[0] - tracer)){
+                if(piece.locationY == (origin[1] - tracer)){
                     hitList.push(piece);
                     running = false;
                     break;
@@ -835,8 +875,8 @@ async function lineOfSight(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] - tracer)){
-                if(piece.locaitonY == (origin[1])){
+            if(piece.locationX == (origin[0] - tracer)){
+                if(piece.locationY == (origin[1])){
                     hitList.push(piece);
                     running = false;
                     break;
@@ -857,8 +897,8 @@ async function lineOfSight(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] - tracer)){
-                if(piece.locaitonY == (origin[1] + tracer)){
+            if(piece.locationX == (origin[0] - tracer)){
+                if(piece.locationY == (origin[1] + tracer)){
                     hitList.push(piece);
                     running = false;
                     break;
@@ -887,8 +927,8 @@ async function pierceLOS(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[1] + tracer)){
-                if(piece.locaitonY == (origin[0])){
+            if(piece.locationX == (origin[1] + tracer)){
+                if(piece.locationY == (origin[0])){
                     hitList.push(piece);
                     break;
                 }
@@ -904,8 +944,8 @@ async function pierceLOS(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] + tracer)){
-                if(piece.locaitonY == (origin[1] + tracer)){
+            if(piece.locationX == (origin[0] + tracer)){
+                if(piece.locationY == (origin[1] + tracer)){
                     hitList.push(piece);
                     break;
                 }
@@ -921,8 +961,8 @@ async function pierceLOS(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] + tracer)){
-                if(piece.locaitonY == (origin[1])){
+            if(piece.locationX == (origin[0] + tracer)){
+                if(piece.locationY == (origin[1])){
                     hitList.push(piece);
                     break;
                 }
@@ -938,8 +978,8 @@ async function pierceLOS(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] + tracer)){
-                if(piece.locaitonY == (origin[1] - tracer)){
+            if(piece.locationX == (origin[0] + tracer)){
+                if(piece.locationY == (origin[1] - tracer)){
                     hitList.push(piece);
                     break;
                 }
@@ -955,8 +995,8 @@ async function pierceLOS(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0])){
-                if(piece.locaitonY == (origin[1] - tracer)){
+            if(piece.locationX == (origin[0])){
+                if(piece.locationY == (origin[1] - tracer)){
                     hitList.push(piece);
                     break;
                 }
@@ -972,8 +1012,8 @@ async function pierceLOS(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] - tracer)){
-                if(piece.locaitonY == (origin[1] - tracer)){
+            if(piece.locationX == (origin[0] - tracer)){
+                if(piece.locationY == (origin[1] - tracer)){
                     hitList.push(piece);
                     break;
                 }
@@ -989,8 +1029,8 @@ async function pierceLOS(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] - tracer)){
-                if(piece.locaitonY == (origin[1])){
+            if(piece.locationX == (origin[0] - tracer)){
+                if(piece.locationY == (origin[1])){
                     hitList.push(piece);
                     break;
                 }
@@ -1006,8 +1046,8 @@ async function pierceLOS(distance, origin){
             break;
         }
         for(piece of board){
-            if(piece.locaitonX == (origin[0] - tracer)){
-                if(piece.locaitonY == (origin[1] + tracer)){
+            if(piece.locationX == (origin[0] - tracer)){
+                if(piece.locationY == (origin[1] + tracer)){
                     hitList.push(piece);
                     break;
                 }
@@ -1021,6 +1061,7 @@ async function pierceLOS(distance, origin){
 }
 
 function findTile(target){
+    //this function turns the locationX and locationY of a piece into the tile the piece is on
     //target is [x,y] coordinates from pieces
         //pieces are on tiles 1-8 because chess
     let rowList;
@@ -1037,7 +1078,32 @@ function findTile(target){
     return targetTile;
 }
 
-//TODO in combat check
+//this function will find the content of the tile (if any)
+function findContent(tile){
+    //the function will be fed a tile
+    //the tile can't just be asked if it has a piece on it
+    //it does know its id
+    //and all tile with pieces have an image attached to them
+    //go find out if there is an image attached to them, and use x,y to find the piece
+    let indexX = tile.id[4];
+    let indexY = tile.id[5];
+    let tileImage = document.querySelector(`#img${indexX}${indexY}`);
+    if(!tileImage){
+        return 0;
+    }
+    let fullBoard = pageBoard;
+    board = fullBoard.returnBoardState;
+    for(piece of board){
+        if(piece.locationX == indexX){
+            if(piece.locationY == indexY){
+                return piece;
+            }
+        }
+    }
+    return -1;
+}
+
+
 function meleeAttack(attacker, blocker){
     //will be fed the attacker and blocker pieces
     //needs to resolve legality
@@ -1242,6 +1308,16 @@ function meleeAttack(attacker, blocker){
             break;
     }
 
+}
+
+function rangedAttack(attacker, blocker){
+    let hitList = lineOfSight(attacker.attackRan, [attacker.locationX, attacker.locationY]);
+    for(piece of hitList){
+        if(piece.id == blocker.id){
+            return 1;
+        }
+    }
+    return 0;
 }
 
 //spell functions
@@ -1465,9 +1541,11 @@ for (kid of gameBoard.children){
                 let selected = false;
                 for(classCs of tile.classList){
                     if(classCs == "selected"){
+                        //find out if the tile is selected
                         selected = true;
                     }
                 }
+                //if selected, reset to original color and remove from list
                 if(selected){
                     if(tile.classList[0] == "white"){
                         tile.style.backgroundColor = "white";
@@ -1513,53 +1591,27 @@ for (kid of gameBoard.children){
                         //x and y are selcetedList[0][5] and selectedList[0][6]
                         // i know that there are either 2 or three entries on the classList
                         //if 2, then no piece
-                        if(selectedList[0].classList.length == 3){
+                        if(selectedList[0].classList.length >= 3){
                             // let pieceName;
-                            let selectedPiece;
-                            // if(selectedList[0].classList[1] == "selected"){
-                            //     pieceName = selectedList[0].classList[2];
-                            // }
-                            // else{
-                            //     pieceName = selectedList[0].classList[1];
-                            // }
-                            //now to find the piece based off of x and y
+                            let selectedPiece = findContent(selectedList[0]);
+                            //TODO create the buttons and add the event listeners
 
-
-                            for(piece of board){
-                                if(piece.locationY == selectedList[0].id[5]){
-                                    //char ints and ints evaluate as equal
-                                    if(piece.locationX == selectedList[0].id[4]){
-                                        selectedPiece = piece;
-                                    }
-                                }
-                            }
+                            //made redundent by findContent function
+                            // for(piece of board){
+                            //     if(piece.locationY == selectedList[0].id[5]){
+                            //         //char ints and ints evaluate as equal
+                            //         if(piece.locationX == selectedList[0].id[4]){
+                            //             selectedPiece = piece;
+                            //         }
+                            //     }
+                            // }
 
                             ////////
                             //run the piece through a switch case to give it the right function
                             if(selectedPiece){
-                                
-                                // if(selectedPiece.name == "bishop"){
-                                    //     colorSet = bishopMove(selectedPiece, board);
-                                    // }
-                                    // else if(selectedPiece.name == "pawn"){
-                                        //     colorSet = pawnMove(selectedPiece, board);
-                                        // }
-                                        // else if(selectedPiece.name == "rook"){
-                                            //     colorSet = rookMove(selectedPiece, board);
-                                            // }
-                                            // else if(selectedPiece.name == "knight"){
-                                                //     colorSet = knightMove(selectedPiece, board);
-                                                // }
-                                                // else if(selectedPiece.name == "queen"){
-                                //     colorSet = queenMove(selectedPiece, board);
-                                // }
-                                // else if(selectedPiece.name == "king"){
-                                    //     colorSet = kingMove(selectedPiece, board);
-                                    // }
-
                                 let colorSet;
                                 
-                                switch(selectedPiece.name){
+                                switch(selectedPiece.moveType){
                                     case("bishop"):
                                         colorSet = bishopMove(selectedPiece, board);
                                         break;
@@ -1581,8 +1633,6 @@ for (kid of gameBoard.children){
                                     default:
                                         break;
                                 }
-
-                                console.log(colorSet);
 
                             }
                             
@@ -1776,7 +1826,6 @@ async function loadBoard () {
     }
 }
 
-
 //event handler functions
 async function submitButtonHandler(event){
     // need to collect the data from the cells and bundle them into a json packet
@@ -1826,6 +1875,257 @@ async function submitButtonHandler(event){
     }
 }
 
+async function fireballHandler(event){
+    //the caster is the selectedList[0] and the target is selectedList[1]
+    event.preventDefault();
+    if(selectedList.length !=2){
+        console.log("Not the right number of tiles");
+        return;
+    }
+    if(findContent(selectedList[1]) == 0){
+        console.log("Fireball must have a target");
+        return;
+    }
+
+    const boardRequest = await fetch("/api/pieces/fireball", {
+        method: 'POST',
+        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(boardRequest.ok) {
+        let color = true;
+        for(tile of selectedList){
+            //tile is the id of the tile, not the tile itself
+            color = true;
+            for(className of tile.classList){
+                if(className == "white"){
+                    color = false;
+                    tile.style.backgroundColor = "white";
+                }
+            }
+            if(color == true){
+                tile.style.backgroundColor = "rgb(72, 70, 70)";
+            }
+            // tile
+        }
+        selectedList = []
+        loadBoard();
+    }
+    else{
+        console.log("fail fireball");
+    }
+
+}
+
+async function lightningBoltHandler(event){
+    //the caster is the selectedList[0] and the target is selectedList[1]
+    event.preventDefault();
+    if(selectedList.length !=2){
+        console.log("Not the right number of tiles");
+        return;
+    }
+    if(findContent(selectedList[1]) == 0){
+        console.log("Spell must have a target");
+        return;
+    }
+
+    const boardRequest = await fetch("/api/pieces/lightningBolt", {
+        method: 'POST',
+        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(boardRequest.ok) {
+        let color = true;
+        for(tile of selectedList){
+            //tile is the id of the tile, not the tile itself
+            color = true;
+            for(className of tile.classList){
+                if(className == "white"){
+                    color = false;
+                    tile.style.backgroundColor = "white";
+                }
+            }
+            if(color == true){
+                tile.style.backgroundColor = "rgb(72, 70, 70)";
+            }
+            // tile
+        }
+        selectedList = []
+        loadBoard();
+    }
+    else{
+        console.log("fail to magic");
+    }
+
+}
+
+async function healHandler(event){
+    //the caster is the selectedList[0] and the target is selectedList[1]
+    event.preventDefault();
+    if(selectedList.length !=2){
+        console.log("Not the right number of tiles");
+        return;
+    }
+    if(findContent(selectedList[1]) == 0){
+        console.log("Spell must have a target");
+        return;
+    }
+
+    const boardRequest = await fetch("/api/pieces/heal", {
+        method: 'POST',
+        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(boardRequest.ok) {
+        let color = true;
+        for(tile of selectedList){
+            //tile is the id of the tile, not the tile itself
+            color = true;
+            for(className of tile.classList){
+                if(className == "white"){
+                    color = false;
+                    tile.style.backgroundColor = "white";
+                }
+            }
+            if(color == true){
+                tile.style.backgroundColor = "rgb(72, 70, 70)";
+            }
+            // tile
+        }
+        selectedList = []
+        loadBoard();
+    }
+    else{
+        console.log("fail to magic");
+    }
+
+}
+
+async function blessedBoltHandler(event){
+    //the caster is the selectedList[0] and the target is selectedList[1]
+    event.preventDefault();
+    if(selectedList.length !=2){
+        console.log("Not the right number of tiles");
+        return;
+    }
+    if(findContent(selectedList[1]) == 0){
+        console.log("Spell must have a target");
+        return;
+    }
+
+    const boardRequest = await fetch("/api/pieces/blessedBolt", {
+        method: 'POST',
+        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(boardRequest.ok) {
+        let color = true;
+        for(tile of selectedList){
+            //tile is the id of the tile, not the tile itself
+            color = true;
+            for(className of tile.classList){
+                if(className == "white"){
+                    color = false;
+                    tile.style.backgroundColor = "white";
+                }
+            }
+            if(color == true){
+                tile.style.backgroundColor = "rgb(72, 70, 70)";
+            }
+            // tile
+        }
+        selectedList = []
+        loadBoard();
+    }
+    else{
+        console.log("fail to magic");
+    }
+
+}
+
+async function transferHandler(event){
+    //the caster is the selectedList[0] and the target is selectedList[1]
+    event.preventDefault();
+    if(selectedList.length !=2){
+        console.log("Not the right number of tiles");
+        return;
+    }
+    if(findContent(selectedList[1]) == 0){
+        console.log("Spell must have a target");
+        return;
+    }
+
+    const boardRequest = await fetch("/api/pieces/transfer", {
+        method: 'POST',
+        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(boardRequest.ok) {
+        let color = true;
+        for(tile of selectedList){
+            //tile is the id of the tile, not the tile itself
+            color = true;
+            for(className of tile.classList){
+                if(className == "white"){
+                    color = false;
+                    tile.style.backgroundColor = "white";
+                }
+            }
+            if(color == true){
+                tile.style.backgroundColor = "rgb(72, 70, 70)";
+            }
+            // tile
+        }
+        selectedList = []
+        loadBoard();
+    }
+    else{
+        console.log("fail to magic");
+    }
+
+}
+
+async function iceWaveHandler(event){
+    //the caster is the selectedList[0] and the target is selectedList[1]
+    event.preventDefault();
+    if(selectedList.length !=2){
+        console.log("Not the right number of tiles");
+        return;
+    }
+    if(findContent(selectedList[1]) == 0){
+        console.log("Spell must have a target");
+        return;
+    }
+
+    const boardRequest = await fetch("/api/pieces/iceWave", {
+        method: 'POST',
+        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    if(boardRequest.ok) {
+        let color = true;
+        for(tile of selectedList){
+            //tile is the id of the tile, not the tile itself
+            color = true;
+            for(className of tile.classList){
+                if(className == "white"){
+                    color = false;
+                    tile.style.backgroundColor = "white";
+                }
+            }
+            if(color == true){
+                tile.style.backgroundColor = "rgb(72, 70, 70)";
+            }
+            // tile
+        }
+        selectedList = []
+        loadBoard();
+    }
+    else{
+        console.log("fail to magic");
+    }
+
+}
 
 //handle the submit button
 submitButton.addEventListener('click', submitButtonHandler);
