@@ -285,6 +285,7 @@ router.post('/iceWave', async (req, res) => {
 });
 
 router.post('/heal', async (req, res) => {
+    console.log("Hunt here, cast heal");
     try{
         //needs req.body.attackerId , req.body.blockerId , req.body.boardId
         let boltResult = await heal(req.body.attackerId, req.body.blockerId, req.body.boardId);

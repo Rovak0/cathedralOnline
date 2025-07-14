@@ -16,6 +16,29 @@ td img{
     width: auto;
 }
 
+.seriesList li{
+    display:inline-block;
+}
+
+.parallelList li{
+    display:list-item;
+}
+
+.specialActions li{
+    display: none;
+}
+
+.specialButton{
+    display:none;
+    /* visibility: none; */
+}
+
+/* this removes the markers from lists */
+li::marker {
+    content: "";
+}
+
+
 @media screen and (min-width: 2999px ){
     td img{
         /* height: 5%; */

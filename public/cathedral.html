@@ -99,10 +99,25 @@
         </table>
 
         <!-- by having actions be a list, I can add or remove actions -->
-        <ul id="gameActionList">
-            <li><button id="submitMoveButton">Submit Move</button></li>
-            <li><button id="turnButton">Submit Piece Turn</button></li>
-            <li><button id="attackButton">Submit Attack</button></li>
+         <ul id="actionListList" class="seriesList">
+            <li>
+                <ul id="gameActionList" class="parallelList">
+                    <li><button id="submitMoveButton">Submit Move</button></li>
+                    <li><button id="turnButton">Submit Piece Turn</button></li>
+                    <li><button id="attackButton">Submit Attack</button></li>
+                </ul>
+            </li>
+            <li>
+                <!-- I can't make action buttons move out of the way when invisible -->
+                 <!-- I'm just going to have 3 buttons, and they will do different things depending -->
+                  <!-- on what Piece is in the tile using the action -->
+                <ul id="specialActions" class="parallelList">
+                    <!-- <li><button id="specialAction1">Action 1</button></li> -->
+                    <li><button id="specialAction1" class="specialButton">Action 1</button></li>
+                    <li><button id="specialAction2" class="specialButton">Action 2</button></li>
+                    <li><button id="specialAction3" class="specialButton">Action 3</button></li>
+                </ul>
+            </li>
         </ul>
         
 

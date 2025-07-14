@@ -2,6 +2,11 @@ const gameId = document.querySelector('#gameHolder');
 const gameBoard = document.querySelector('#gameBoard');
 const submitButton = document.querySelector("#submitMoveButton");
 
+const actionButton1 = document.querySelector("#specialAction1");
+const actionButton2 = document.querySelector("#specialAction2");
+const actionButton3 = document.querySelector("#specialAction3");
+
+
 //         <ul id="gameActionList">
 {/* <li><button id="submitMoveButton">Submit Move</button></li>
 <li><button id="turnButton">Submit Piece Turn</button></li>
@@ -1087,12 +1092,7 @@ function findContent(tile){
     //go find out if there is an image attached to them, and use x,y to find the piece
     let indexX = tile.id[4];
     let indexY = tile.id[5];
-    let tileImage = document.querySelector(`#img${indexX}${indexY}`);
-    if(!tileImage){
-        return 0;
-    }
-    let fullBoard = pageBoard;
-    board = fullBoard.returnBoardState;
+    let board = pageBoard.returnBoardState;
     for(piece of board){
         if(piece.locationX == indexX){
             if(piece.locationY == indexY){
@@ -1100,7 +1100,22 @@ function findContent(tile){
             }
         }
     }
-    return -1;
+    return 0;
+
+    // let tileImage = document.querySelector(`#img${indexX}${indexY}`);
+    // if(!tileImage){
+    //     return 0;
+    // }
+    // let fullBoard = pageBoard;
+    // board = fullBoard.returnBoardState;
+    // for(piece of board){
+    //     if(piece.locationX == indexX){
+    //         if(piece.locationY == indexY){
+    //             return piece;
+    //         }
+    //     }
+    // }
+    // return -1;
 }
 
 
@@ -1405,8 +1420,9 @@ async function trade(caster, target){
 // sessionStorage.setItem("logged_in", false);
 // sessionStorage.setItem("user_id", false);
 
-let loggedIn = sessionStorage.getItem('logged_in');
-let user = sessionStorage.getItem('user_id');
+let loggedIn = localStorage.getItem('logged_in');
+let user = localStorage.getItem('user_id');
+console.log("user_id: " + user);
 
 
 // for each square, it will needs its own event listner
@@ -1536,6 +1552,7 @@ for (kid of gameBoard.children){
             const tile = document.querySelector(`#${square.id}`);
             // square.style.backgroundColor = "blue";
             tile.addEventListener('click', function () {
+
                 //removing from selection
                 // let classes = [tile.classList];
                 let selected = false;
@@ -1561,6 +1578,12 @@ for (kid of gameBoard.children){
                             selectedList.splice(index, 1);
                         }
                     };
+                    //if there are no tiles selected, remove all extra action buttons
+                    if(selectedList.length == 0){
+                        actionButton1.style.display = "none";
+                        actionButton2.style.display = "none";
+                        actionButton3.style.display = "none";
+                    }
                 }
                 //adding to selection
                 else{
@@ -1571,16 +1594,24 @@ for (kid of gameBoard.children){
                     // check if there are more than 2 entries
                     if(selectedList.length > 2){
                         //clear the first entry
+                            //change of plans -- if a 3rd tile is selected, instead clear all tiles
+
                         //grab the tile based on it's stored id
-                        const clearTile = selectedList[0]; //document.querySelector(`#${selectedList[0]}`);
+                        // const clearTile = selectedList[0]; //document.querySelector(`#${selectedList[0]}`);
                         // clearTile.style.backgroundColor = "white";
-                        if(clearTile.classList[0] == "white"){
-                            clearTile.style.backgroundColor = "white";
+                        for(clearTile of selectedList){
+                            if(clearTile.classList[0] == "white"){
+                                clearTile.style.backgroundColor = "white";
+                            }
+                            else{
+                                clearTile.style.backgroundColor = "rgb(72, 70, 70)";
+                            }
                         }
-                        else{
-                            clearTile.style.backgroundColor = "rgb(72, 70, 70)";
-                        }
-                        selectedList.splice(0, 1);
+                        selectedList = [];
+                        //remove special actions
+                        actionButton1.style.display = "none";
+                        actionButton2.style.display = "none";
+                        actionButton3.style.display = "none";
                     }
                 }
                 // i have access to the square id value
@@ -1594,7 +1625,43 @@ for (kid of gameBoard.children){
                         if(selectedList[0].classList.length >= 3){
                             // let pieceName;
                             let selectedPiece = findContent(selectedList[0]);
-                            //TODO create the buttons and add the event listeners
+                            console.log(selectedList[0] + "   The List");
+                            console.log(selectedPiece);
+                            //event listener functions are made elsewhere, I just need to make the buttons and attach 
+                                //the listeners to them
+                            //need to check what kind of piece it is, and add actions based off of type
+                            switch(selectedPiece.name){
+                                case("wizard"):
+                                    actionButton1.textContent = "Fireball";
+                                    actionButton2.textContent = "Lightning Bolt";
+                                    actionButton3.textContent = "Ice Wave";
+
+                                    actionButton1.style.display = "list-item";
+                                    actionButton2.style.display = "list-item";
+                                    actionButton3.style.display = "list-item";
+
+                                    break;
+                                case("cleric"):
+                                    console.log("In cleric");
+                                    actionButton1.textContent = "Heal";
+                                    actionButton2.textContent = "Blessed Bolt";
+                                    actionButton3.textContent = "Transfer";
+
+                                    actionButton1.style.display = "list-item";
+                                    actionButton2.style.display = "list-item";
+                                    actionButton3.style.display = "list-item";
+
+                                    break;
+                                case("ranger"):
+                                    actionButton1.textContent = "Ranged Attack";
+                                    actionButton1.style.display = "list-item";
+                                    break;
+                                default:
+                                    actionButton1.style.display = "none";
+                                    actionButton2.style.display = "none";
+                                    actionButton3.style.display = "none";
+                                    break;
+                            }                  
 
                             //made redundent by findContent function
                             // for(piece of board){
@@ -1818,6 +1885,61 @@ async function loadBoard () {
                 tile.appendChild(pieceImage);
                 tile.classList.add("ranger");
                 break;
+            case("assassin"):
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-assassin.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-assassin.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
+                tile.classList.add("assassin");
+                break;
+            case("cleric"):
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-bishop.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-bishop.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
+                tile.classList.add("cleric");
+                break;
+            case("crusader"):
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-crusader.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-crusader.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
+                tile.classList.add("crusader");
+                break;
+            case("paladin"):
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-paladin.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-paladin.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
+                tile.classList.add("paladin");
+                break;
+            case("wizard"):
+                if(piece.color == 'white'){
+                    pieceImage.src = './assets/images/white-wizard.png';
+                }
+                else if(piece.color == 'black'){
+                    pieceImage.src = './assets/images/black-wizard.png';
+                }
+                tile.textContent="";
+                tile.appendChild(pieceImage);
+                tile.classList.add("wizard");
+                break;
             default:
                 break;        
         }
@@ -1827,7 +1949,7 @@ async function loadBoard () {
 }
 
 //event handler functions
-async function submitButtonHandler(event){
+async function moveButtonHandler(event){
     // need to collect the data from the cells and bundle them into a json packet
     // need to then send the json packet 
     // then wait for a response
@@ -1875,273 +1997,242 @@ async function submitButtonHandler(event){
     }
 }
 
-async function fireballHandler(event){
-    //the caster is the selectedList[0] and the target is selectedList[1]
+async function specialActionHandler(event){
     event.preventDefault();
     if(selectedList.length !=2){
         console.log("Not the right number of tiles");
         return;
     }
     if(findContent(selectedList[1]) == 0){
-        console.log("Fireball must have a target");
+        console.log("Attack must have a target");
         return;
     }
-
-    const boardRequest = await fetch("/api/pieces/fireball", {
-        method: 'POST',
-        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if(boardRequest.ok) {
-        let color = true;
-        for(tile of selectedList){
-            //tile is the id of the tile, not the tile itself
-            color = true;
-            for(className of tile.classList){
-                if(className == "white"){
-                    color = false;
-                    tile.style.backgroundColor = "white";
+    // console.log(this.textContent);
+    //this.textContent gives the text the button displays
+    let boardRequest;
+    switch(this.textContent){
+        case("Fireball"):
+            boardRequest = await fetch("/api/pieces/fireball", {
+                method: 'POST',
+                body: JSON.stringify({"boardId": boardId, "attackerId" : findContent(selectedList[0]).id, "blockerId": findContent(selectedList[1]).id, "playerId": user}),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if(boardRequest.ok) {
+                let color = true;
+                for(tile of selectedList){
+                    //tile is the id of the tile, not the tile itself
+                    color = true;
+                    for(className of tile.classList){
+                        if(className == "white"){
+                            color = false;
+                            tile.style.backgroundColor = "white";
+                        }
+                    }
+                    if(color == true){
+                        tile.style.backgroundColor = "rgb(72, 70, 70)";
+                    }
+                    // tile
                 }
+                selectedList = []
+                // loadBoard();
             }
-            if(color == true){
-                tile.style.backgroundColor = "rgb(72, 70, 70)";
+            else{
+                console.log("fail to magic");
             }
-            // tile
-        }
-        selectedList = []
-        loadBoard();
+            break;
+        case("Lightning Bolt"):
+            boardRequest = await fetch("/api/pieces/lightningBolt", {
+                method: 'POST',
+                body: JSON.stringify({"boardId": boardId, "attackerId" : findContent(selectedList[0]).id, "blockerId": findContent(selectedList[1]).id, "playerId": user}),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if(boardRequest.ok) {
+                let color = true;
+                for(tile of selectedList){
+                    //tile is the id of the tile, not the tile itself
+                    color = true;
+                    for(className of tile.classList){
+                        if(className == "white"){
+                            color = false;
+                            tile.style.backgroundColor = "white";
+                        }
+                    }
+                    if(color == true){
+                        tile.style.backgroundColor = "rgb(72, 70, 70)";
+                    }
+                    // tile
+                }
+                selectedList = []
+                // loadBoard();
+            }
+            else{
+                console.log("fail to magic");
+            }
+            break;
+        case("Ice Wave"):
+            boardRequest = await fetch("/api/pieces/fireball", {
+                method: 'POST',
+                body: JSON.stringify({"boardId": boardId, "attackerId" : findContent(selectedList[0]).id, "blockerId": findContent(selectedList[1]).id, "playerId": user}),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if(boardRequest.ok) {
+                let color = true;
+                for(tile of selectedList){
+                    //tile is the id of the tile, not the tile itself
+                    color = true;
+                    for(className of tile.classList){
+                        if(className == "white"){
+                            color = false;
+                            tile.style.backgroundColor = "white";
+                        }
+                    }
+                    if(color == true){
+                        tile.style.backgroundColor = "rgb(72, 70, 70)";
+                    }
+                    // tile
+                }
+                selectedList = []
+                // loadBoard();
+            }
+            else{
+                console.log("fail to magic");
+            }
+            break;
+        case("Heal"):
+            boardRequest = await fetch("/api/pieces/heal", {
+                method: 'POST',
+                body: JSON.stringify({"boardId": boardId, "attackerId" : findContent(selectedList[0]).id, "blockerId": findContent(selectedList[1]).id, "playerId": user}),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if(boardRequest.ok) {
+                let color = true;
+                for(tile of selectedList){
+                    //tile is the id of the tile, not the tile itself
+                    color = true;
+                    for(className of tile.classList){
+                        if(className == "white"){
+                            color = false;
+                            tile.style.backgroundColor = "white";
+                        }
+                    }
+                    if(color == true){
+                        tile.style.backgroundColor = "rgb(72, 70, 70)";
+                    }
+                    // tile
+                }
+                selectedList = []
+                // loadBoard();
+            }
+            else{
+                console.log("fail to magic");
+            }
+            break;
+        case("Blessed Bolt"):
+            boardRequest = await fetch("/api/pieces/blessedBolt", {
+                method: 'POST',
+                body: JSON.stringify({"boardId": boardId, "attackerId" : findContent(selectedList[0]).id, "blockerId": findContent(selectedList[1]).id, "playerId": user}),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if(boardRequest.ok) {
+                let color = true;
+                for(tile of selectedList){
+                    //tile is the id of the tile, not the tile itself
+                    color = true;
+                    for(className of tile.classList){
+                        if(className == "white"){
+                            color = false;
+                            tile.style.backgroundColor = "white";
+                        }
+                    }
+                    if(color == true){
+                        tile.style.backgroundColor = "rgb(72, 70, 70)";
+                    }
+                    // tile
+                }
+                selectedList = []
+                // loadBoard();
+            }
+            else{
+                console.log("fail to magic");
+            }
+            break;
+        case("Transfer"):
+            boardRequest = await fetch("/api/pieces/transfer", {
+                method: 'POST',
+                body: JSON.stringify({"boardId": boardId, "attackerId" : findContent(selectedList[0]).id, "blockerId": findContent(selectedList[1]).id, "playerId": user}),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if(boardRequest.ok) {
+                let color = true;
+                for(tile of selectedList){
+                    //tile is the id of the tile, not the tile itself
+                    color = true;
+                    for(className of tile.classList){
+                        if(className == "white"){
+                            color = false;
+                            tile.style.backgroundColor = "white";
+                        }
+                    }
+                    if(color == true){
+                        tile.style.backgroundColor = "rgb(72, 70, 70)";
+                    }
+                    // tile
+                }
+                selectedList = []
+                // loadBoard();
+            }
+            else{
+                console.log("fail to magic");
+            }
+            break;
+        case("Ranged Attack"):
+            boardRequest = await fetch("/api/pieces/rangedAttack", {
+                method: 'POST',
+                body: JSON.stringify({"boardId": boardId, "attackerId" : findContent(selectedList[0]).id, "blockerId": findContent(selectedList[1]).id, "playerId": user}),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if(boardRequest.ok) {
+                let color = true;
+                for(tile of selectedList){
+                    //tile is the id of the tile, not the tile itself
+                    color = true;
+                    for(className of tile.classList){
+                        if(className == "white"){
+                            color = false;
+                            tile.style.backgroundColor = "white";
+                        }
+                    }
+                    if(color == true){
+                        tile.style.backgroundColor = "rgb(72, 70, 70)";
+                    }
+                    // tile
+                }
+                selectedList = []
+                // loadBoard();
+            }
+            else{
+                console.log("fail to magic");
+            }
+            break;
     }
-    else{
-        console.log("fail fireball");
-    }
-
 }
 
-async function lightningBoltHandler(event){
-    //the caster is the selectedList[0] and the target is selectedList[1]
-    event.preventDefault();
-    if(selectedList.length !=2){
-        console.log("Not the right number of tiles");
-        return;
-    }
-    if(findContent(selectedList[1]) == 0){
-        console.log("Spell must have a target");
-        return;
-    }
-
-    const boardRequest = await fetch("/api/pieces/lightningBolt", {
-        method: 'POST',
-        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if(boardRequest.ok) {
-        let color = true;
-        for(tile of selectedList){
-            //tile is the id of the tile, not the tile itself
-            color = true;
-            for(className of tile.classList){
-                if(className == "white"){
-                    color = false;
-                    tile.style.backgroundColor = "white";
-                }
-            }
-            if(color == true){
-                tile.style.backgroundColor = "rgb(72, 70, 70)";
-            }
-            // tile
-        }
-        selectedList = []
-        loadBoard();
-    }
-    else{
-        console.log("fail to magic");
-    }
-
-}
-
-async function healHandler(event){
-    //the caster is the selectedList[0] and the target is selectedList[1]
-    event.preventDefault();
-    if(selectedList.length !=2){
-        console.log("Not the right number of tiles");
-        return;
-    }
-    if(findContent(selectedList[1]) == 0){
-        console.log("Spell must have a target");
-        return;
-    }
-
-    const boardRequest = await fetch("/api/pieces/heal", {
-        method: 'POST',
-        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if(boardRequest.ok) {
-        let color = true;
-        for(tile of selectedList){
-            //tile is the id of the tile, not the tile itself
-            color = true;
-            for(className of tile.classList){
-                if(className == "white"){
-                    color = false;
-                    tile.style.backgroundColor = "white";
-                }
-            }
-            if(color == true){
-                tile.style.backgroundColor = "rgb(72, 70, 70)";
-            }
-            // tile
-        }
-        selectedList = []
-        loadBoard();
-    }
-    else{
-        console.log("fail to magic");
-    }
-
-}
-
-async function blessedBoltHandler(event){
-    //the caster is the selectedList[0] and the target is selectedList[1]
-    event.preventDefault();
-    if(selectedList.length !=2){
-        console.log("Not the right number of tiles");
-        return;
-    }
-    if(findContent(selectedList[1]) == 0){
-        console.log("Spell must have a target");
-        return;
-    }
-
-    const boardRequest = await fetch("/api/pieces/blessedBolt", {
-        method: 'POST',
-        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if(boardRequest.ok) {
-        let color = true;
-        for(tile of selectedList){
-            //tile is the id of the tile, not the tile itself
-            color = true;
-            for(className of tile.classList){
-                if(className == "white"){
-                    color = false;
-                    tile.style.backgroundColor = "white";
-                }
-            }
-            if(color == true){
-                tile.style.backgroundColor = "rgb(72, 70, 70)";
-            }
-            // tile
-        }
-        selectedList = []
-        loadBoard();
-    }
-    else{
-        console.log("fail to magic");
-    }
-
-}
-
-async function transferHandler(event){
-    //the caster is the selectedList[0] and the target is selectedList[1]
-    event.preventDefault();
-    if(selectedList.length !=2){
-        console.log("Not the right number of tiles");
-        return;
-    }
-    if(findContent(selectedList[1]) == 0){
-        console.log("Spell must have a target");
-        return;
-    }
-
-    const boardRequest = await fetch("/api/pieces/transfer", {
-        method: 'POST',
-        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if(boardRequest.ok) {
-        let color = true;
-        for(tile of selectedList){
-            //tile is the id of the tile, not the tile itself
-            color = true;
-            for(className of tile.classList){
-                if(className == "white"){
-                    color = false;
-                    tile.style.backgroundColor = "white";
-                }
-            }
-            if(color == true){
-                tile.style.backgroundColor = "rgb(72, 70, 70)";
-            }
-            // tile
-        }
-        selectedList = []
-        loadBoard();
-    }
-    else{
-        console.log("fail to magic");
-    }
-
-}
-
-async function iceWaveHandler(event){
-    //the caster is the selectedList[0] and the target is selectedList[1]
-    event.preventDefault();
-    if(selectedList.length !=2){
-        console.log("Not the right number of tiles");
-        return;
-    }
-    if(findContent(selectedList[1]) == 0){
-        console.log("Spell must have a target");
-        return;
-    }
-
-    const boardRequest = await fetch("/api/pieces/iceWave", {
-        method: 'POST',
-        body: JSON.stringify({"boardId": boardId, "attackerId" : selectedList[0].id, "blockerId": selectedList[1].id, "playerId": user}),
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if(boardRequest.ok) {
-        let color = true;
-        for(tile of selectedList){
-            //tile is the id of the tile, not the tile itself
-            color = true;
-            for(className of tile.classList){
-                if(className == "white"){
-                    color = false;
-                    tile.style.backgroundColor = "white";
-                }
-            }
-            if(color == true){
-                tile.style.backgroundColor = "rgb(72, 70, 70)";
-            }
-            // tile
-        }
-        selectedList = []
-        loadBoard();
-    }
-    else{
-        console.log("fail to magic");
-    }
-
-}
+actionButton1.addEventListener('click', specialActionHandler);
+actionButton2.addEventListener('click', specialActionHandler);
+actionButton3.addEventListener('click', specialActionHandler);
 
 //handle the submit button
-submitButton.addEventListener('click', submitButtonHandler);
+moveButton.addEventListener('click', moveButtonHandler);
 
 
 //these are the things that run on load or continously
 //user is a string
-if(user != 'false'){
-    loadBoard();
-}
 
 //run the board load every second
 setInterval(async function() {
     //comment out the loadboard call to stop sending requests during development
     if(user != 'false'){
-        pageBoard = (await getBoard());
+        pageBoard = await getBoard();
         loadBoard();
     }
 }, 1000);

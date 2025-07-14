@@ -2,9 +2,6 @@ const gameId = document.querySelector('#gameHolder');
 const gameBoard = document.querySelector('#gameBoard');
 const submitButton = document.querySelector("#submitMoveButton");
 
-function tester(){
-    console.log("Tester function");
-}
 
 
 //imports are wrong on the front end

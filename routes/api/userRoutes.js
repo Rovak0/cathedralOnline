@@ -92,7 +92,15 @@ router.post("/getCatQueue", async (req, res) => {
     let user = req.body.user;
     try{
         user = await Player.findByPk(user);
-        res.status(200).json(user.inQueueCat);
+        console.log("hunt here: " + user.inQueueCat);
+        if(user.inQueueCat){
+            res.status(200).json("1");
+        }
+        else{
+            res.status(200).json("0");
+        }
+        // res.status(200).json(user.inQueueCat);
+        // res.status(200).json(true);
     }
     catch(err){
         res.status(500).json(err)

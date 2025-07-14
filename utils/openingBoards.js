@@ -650,7 +650,7 @@ async function cathedralBoard(boardId){
 
     const blackWarrior2 = await Piece.create({
         board_id: boardId,
-        locationX: 4,
+        locationX: 5,
         locationY: 7,
         name: "warrior",
         moveType: "king",
